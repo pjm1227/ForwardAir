@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forwardair_fleet_management/components/button_widget.dart';
-import 'package:forwardair_fleet_management/screens/terms_condition.dart';
+import 'package:forwardair_fleet_management/screens/terms_condition_screen.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/theme.dart' as Theme;
@@ -15,6 +15,7 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.black, // status bar color
   ));
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(DrivingConfirmation());
 }
 

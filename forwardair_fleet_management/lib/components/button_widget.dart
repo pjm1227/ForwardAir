@@ -18,7 +18,20 @@ class ButtonWidget extends StatelessWidget {
   ///On Pressed Event
   final GestureTapCallback onPressed;
 
-  const ButtonWidget({Key key, this.text, this.padding, this.onPressed})
+  //Font size
+  final double fontSize;
+
+  //color
+  final Color colorButton, colorText;
+
+  const ButtonWidget(
+      {Key key,
+      this.text,
+      this.padding,
+      this.onPressed,
+      this.fontSize,
+      this.colorButton,
+      this.colorText})
       : super(key: key);
 
   @override
@@ -28,23 +41,23 @@ class ButtonWidget extends StatelessWidget {
         padding: padding != null
             ? padding
             : EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
-        child: RaisedButton(
+        child: MaterialButton(
           child: Container(
             child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-              text,
-              style: TextStyle(
-                    color: Colors.white,
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                text,
+                style: TextStyle(
+                    color: colorText != null ? colorText : AppColors.colorWhite,
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: fontSize != null ? fontSize : 20,
                     fontFamily: Constants.FONT_FAMILY_ROBOTO),
-            ),
-                )),
+              ),
+            )),
           ),
           onPressed: onPressed,
-          color: AppColors.colorRed,
+          color: colorButton != null ? colorButton : AppColors.colorRed,
         ));
   }
 }
