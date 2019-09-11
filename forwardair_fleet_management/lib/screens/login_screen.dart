@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+
+import 'package:forwardair_fleet_management/screens/drawermenu.dart';
+
 class LoginPage extends StatelessWidget
 {
   @override
@@ -6,7 +10,12 @@ class LoginPage extends StatelessWidget
 
     return Scaffold(
       body: Center(
-        child: Text('Login Page'),
+        child: InkWell(child: Text('Login Page'), onTap:() {
+          Navigator.push(
+              context,
+              PageTransition(
+                  type: PageTransitionType.fade, child: HomePage()));
+        })
       ),
     );
   }
