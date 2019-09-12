@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
 import 'package:forwardair_fleet_management/blocs/states/dashboardstate.dart';
+import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/dashboardresponsemodel.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:forwardair_fleet_management/screens/featurecomingsoon.dart';
-import 'package:forwardair_fleet_management/screens/callandmailservice.dart';
+import 'package:forwardair_fleet_management/utility/callandmailservice.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
-import 'package:forwardair_fleet_management/blocs/fa_dashboard_bloc.dart';
+import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -25,7 +27,7 @@ class DashboardState extends State<DashboardPage> {
   DashboardBloc _dashboardBloc = DashboardBloc();
   //To make a call and send mail
   var _service = CallsAndMailService();
-
+  final RefreshController _refreshController = RefreshController(initialRefresh:  false);
   //To Dispose the DashboardBloc
   @override
   void dispose() {
@@ -37,62 +39,80 @@ class DashboardState extends State<DashboardPage> {
   Widget build(BuildContext context) {
 
     _dashboardBloc.dispatch(FetchDashboardEvent());
-     DashboardResponseModel _dashboardDataModel = DashboardResponseModel();
+    Dashboard_DB_Model _dashboardDataModel = Dashboard_DB_Model();
 
     return new Scaffold(
       backgroundColor: AppColors.colorDashboard_Bg,
-      body: BlocBuilder<DashboardBloc, dynamic>(
-        bloc: _dashboardBloc,
-        builder: (context, state) {
-          if (state is InitialState) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is DashboardError) {
-            return Center(
-              child: Text('failed to fetch posts'),
-            );
-          } else if (state is DashboardLoaded) {
-
-            if (state.dashboardData.isEmpty) {
+      body:
+        SmartRefresher(
+        controller: _refreshController,
+        enablePullDown: true,
+          header: WaterDropHeader(),
+        onRefresh: ()  {
+          _dashboardBloc.dispatch(FetchDashboardEvent());
+    },child:
+      BlocBuilder<DashboardBloc, dynamic>(
+          bloc: _dashboardBloc,
+          builder: (context, state) {
+            if (state is InitialState) {
               return Center(
-                child: Text('no data'),
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is DashboardError) {
+              return Center(
+                child: Text('Failed to fetch details'),
+              );
+            } else if (state is DashboardLoaded) {
+               if (state.dashboardData != null) {
+//                 if (state.dashboardData.isEmpty) {
+//                   return Center(
+//                     child: Text('no data'),
+//                   );
+//                 }
+                 //To populate This Month data initially
+                 for(var i = 0; i < state.dashboardData.length; i++) {
+                   if (state.dashboardData[i].dashboardPeriod == Constants.TEXT_DASHBOARD_PERIOD) {
+                     _dashboardDataModel = state.dashboardData[i];
+                   }
+                 } //End
+               }
+
+              return ListView.builder(
+
+                  scrollDirection: Axis.vertical,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: 4,
+                  itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return _buildThisWeekWidget();
+                        }
+                        if (index == 1) {
+                          return _buildWidgetTotalLoadsAndMiles( _dashboardDataModel.loadedLoads != null ?
+                              '${_dashboardDataModel.loadedLoads}' : 'NA',
+                              _dashboardDataModel.totalMiles != null ? '${_dashboardDataModel.totalMiles}' : 'NA');
+                        } else if (index == 2) {
+                          return _buildFuelWidget(
+                              _dashboardDataModel.totalTractorGallons != null ? '${_dashboardDataModel.totalTractorGallons}' : 'NA',
+                              _dashboardDataModel.totalFuelCost != null ? '${_dashboardDataModel.totalFuelCost}' : 'NA');
+                        } else {
+                          return _buildNetCompensationWidget(
+                              Constants.TEXT_NET_CONPENSATION,
+                              _dashboardDataModel.netAmt != null ? '${_dashboardDataModel.netAmt}' : 'NA',
+                              _dashboardDataModel.grossAmt != null ? '${_dashboardDataModel.grossAmt}' : 'NA',
+                              _dashboardDataModel.deductions != null ? '${_dashboardDataModel.deductions}' : 'NA');
+                        }
+                  },
+
               );
             }
-            //To populate This Month data initially
-            for(var i = 0; i < state.dashboardData.length; i++) {
-              if (state.dashboardData[i].dashboardPeriod == Constants.TEXT_DASHBOARD_PERIOD) {
-                _dashboardDataModel = state.dashboardData[i];
-              }
-            } //End
-            return new ListView.builder(
-              itemCount: 4,
-              itemBuilder: (BuildContext context, int index) {
-                    if (index == 0) {
-                      return _buildThisWeekWidget();
-                    }
-                    if (index == 1) {
-                      return _buildWidgetTotalLoadsAndMiles( _dashboardDataModel.loadedLoads != null ?
-                          '${_dashboardDataModel.loadedLoads}' : 'NA',
-                          _dashboardDataModel.totalMiles != null ? '${_dashboardDataModel.totalMiles}' : 'NA');
-                    } else if (index == 2) {
-                      return _buildFuelWidget(
-                          _dashboardDataModel.totalTractorGallons != null ? '${_dashboardDataModel.totalTractorGallons}' : 'NA',
-                          _dashboardDataModel.totalFuelCost != null ? '${_dashboardDataModel.totalFuelCost}' : 'NA');
-                    } else {
-                      return _buildNetCompensationWidget(
-                          Constants.TEXT_NET_CONPENSATION,
-                          _dashboardDataModel.netAmt != null ? '${_dashboardDataModel.netAmt}' : 'NA',
-                          _dashboardDataModel.grossAmt != null ? '${_dashboardDataModel.grossAmt}' : 'NA',
-                          _dashboardDataModel.deductions != null ? '${_dashboardDataModel.deductions}' : 'NA');
-                    }
-              },
-            );
-          }
-        },
-      ),
+          },
+        ),),
       bottomNavigationBar: _bottomNavigationBarWidget(),
     );
+  }
+
+  _refresh() {
+     _dashboardBloc.dispatch(FetchDashboardEvent());
   }
 
   Widget _bottomNavigationBarWidget() {

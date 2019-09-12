@@ -5,7 +5,7 @@ import 'package:forwardair_fleet_management/screens/dashboard_page.dart';
 import 'package:forwardair_fleet_management/screens/featurecomingsoon.dart';
 import 'package:forwardair_fleet_management/utility/Constants.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
-import 'package:forwardair_fleet_management/screens/expandablecontainer.dart';
+import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -280,54 +280,6 @@ class _HomePageState extends State<HomePage> {
         ],
       );
     }
-//    else if (index == 11) {
-////      return Container(
-////        height: 45,
-////        child: Container(
-////          color: Colors.white,
-////          child: Material(
-////            child: InkWell(
-////              child: Row(
-////                mainAxisAlignment: MainAxisAlignment.start,
-////                children: <Widget>[
-////                  Padding(
-////                    padding: const EdgeInsets.only(left: 25.0),
-////                    child: SizedBox(
-////                        width: 24,
-////                        height: 24,
-////                        child: Image.asset(_selectedIndex == index
-////                            ? _selectedItemImages[index]
-////                            : _imageNames[index])),
-////                  ),
-////                  Padding(
-////                    padding: const EdgeInsets.only(left: 15.0),
-////                    child: Text(
-////                      _drawerMenuItems[index],
-////                      style: _titleStyle,
-////                    ),
-////                  ),
-////                ],
-////              ),
-////              onTap: () async {
-////                 expandFlag = false;
-////                _expandedListIndex = 0;
-//////                SharedPreferences prefs = await SharedPreferences.getInstance();
-//////                prefs.remove('userName');
-//////                prefs.remove('saved');
-//////                prefs.remove('password');
-//////                Navigator.push(
-//////                    context,
-//////                    PageTransition(
-//////                        type: PageTransitionType.fade,
-//////                        duration: Duration(milliseconds: 300),
-//////                        child: LoginPage()));
-////              },
-////            ),
-////            color: Colors.transparent,
-////          ),
-////        ),
-////      );
-////    }
     else {
       return Container(
         height: 45,

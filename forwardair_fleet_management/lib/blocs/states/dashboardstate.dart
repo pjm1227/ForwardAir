@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/dashboardresponsemodel.dart';
 
 //This class is responsible to handle the states for Dashboard page
@@ -14,7 +15,7 @@ class DashboardError extends DashboardState {}
 
 //It will handle Loaded state for Dashboard page
 class DashboardLoaded extends DashboardState {
-  final List<DashboardResponseModel> dashboardData;
+  final List<Dashboard_DB_Model> dashboardData;
 
   DashboardLoaded({
     this.dashboardData
