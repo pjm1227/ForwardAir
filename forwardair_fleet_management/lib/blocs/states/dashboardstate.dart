@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
-import 'package:forwardair_fleet_management/models/webservice/dashboardresponsemodel.dart';
 
 //This class is responsible to handle the states for Dashboard page
 abstract class DashboardState extends Equatable {

@@ -20,6 +20,7 @@ class Dashboard_DBProvider {
   String totalMiles = 'totalMiles';
   String loadedMiles = 'loadedMiles';
   String emptyMiles = 'emptyMiles';
+  String totalLoads = 'totalLoads';
   String loadedLoads = 'loadedLoads';
   String emptyLoads = 'emptyLoads';
   String totalTractorGallons = 'totalTractorGallons';
@@ -58,9 +59,8 @@ class Dashboard_DBProvider {
     await db.execute("""CREATE TABLE $tableName($colId INTEGER PRIMARY KEY AUTOINCREMENT, $companyCd TEXT, 
                     $contractorCd TEXT, $weekStart TEXT,$weekEnd TEXT, $month INTEGER, $year TEXT, 
                     $tractorCount INTEGER, $totalMiles INTEGER, $loadedMiles INTEGER, $emptyMiles INTEGER, 
-                    $loadedLoads INTEGER, $emptyLoads INTEGER,
-                    $totalTractorGallons DOUBLE, $totalFuelCost DOUBLE, $grossAmt DOUBLE, $deductions DOUBLE,
-                     $netAmt DOUBLE, $dashboardPeriod TEXT )""");
+                    $totalLoads INTEGER, $loadedLoads INTEGER, $emptyLoads INTEGER, $totalTractorGallons DOUBLE,
+                    $totalFuelCost DOUBLE, $grossAmt DOUBLE, $deductions DOUBLE, $netAmt DOUBLE, $dashboardPeriod TEXT )""");
   }
 
   //To get all Dashboard Objs from the DB

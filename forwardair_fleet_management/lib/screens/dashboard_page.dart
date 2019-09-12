@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
 import 'package:forwardair_fleet_management/blocs/states/dashboardstate.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
-import 'package:forwardair_fleet_management/models/webservice/dashboardresponsemodel.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,8 +86,8 @@ class DashboardState extends State<DashboardPage> {
                           return _buildThisWeekWidget();
                         }
                         if (index == 1) {
-                          return _buildWidgetTotalLoadsAndMiles( _dashboardDataModel.loadedLoads != null ?
-                              '${_dashboardDataModel.loadedLoads}' : 'NA',
+                          return _buildWidgetTotalLoadsAndMiles( _dashboardDataModel.totalLoads != null ?
+                              '${_dashboardDataModel.totalLoads}' : 'NA',
                               _dashboardDataModel.totalMiles != null ? '${_dashboardDataModel.totalMiles}' : 'NA');
                         } else if (index == 2) {
                           return _buildFuelWidget(

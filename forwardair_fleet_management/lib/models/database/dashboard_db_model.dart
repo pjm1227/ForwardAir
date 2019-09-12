@@ -20,6 +20,7 @@ class Dashboard_DB_Model {
   int totalMiles;
   int loadedMiles;
   int emptyMiles;
+  int totalLoads;
   int loadedLoads;
   int emptyLoads;
   double totalTractorGallons;
@@ -39,6 +40,7 @@ class Dashboard_DB_Model {
     this.tractorCount,
     this.totalMiles,
     this.loadedMiles,
+    this.totalLoads,
     this.emptyMiles,
     this.loadedLoads,
     this.emptyLoads,
@@ -66,6 +68,7 @@ class Dashboard_DB_Model {
     map["totalMiles"] = totalMiles == null ? null : totalMiles;
     map["loadedMiles"] = loadedMiles == null ? null : loadedMiles;
     map["emptyMiles"] = emptyMiles == null ? null : emptyMiles;
+    map["totalLoads"] = totalLoads == null ? null : totalLoads;
     map["loadedLoads"] = loadedLoads == null ? null : loadedLoads;
     map["emptyLoads"] = emptyLoads == null ? null : emptyLoads;
     map["totalTractorGallons"] = totalTractorGallons == null ? null : totalTractorGallons;
@@ -89,6 +92,7 @@ class Dashboard_DB_Model {
     this.totalMiles = json["totalMiles"] == null ? null : json["totalMiles"];
     this.loadedMiles = json["loadedMiles"] == null ? null : json["loadedMiles"];
     this.emptyMiles = json["emptyMiles"] == null ? null : json["emptyMiles"];
+    this.totalLoads = json["totalLoads"] == null ? null : json["totalLoads"];
     this.loadedLoads = json["loadedLoads"] == null ? null : json["loadedLoads"];
     this.emptyLoads = json["emptyLoads"] == null ? null : json["emptyLoads"];
     this.totalTractorGallons = json["totalTractorGallons"] == null ? null : json["totalTractorGallons"];
