@@ -24,6 +24,7 @@ dependencies:
   connectivity: ^0.4.4
   sqflite: ^1.1.6+4
   pull_to_refresh:
+  package_info:
 
 dev_dependencies:
   flutter_test:

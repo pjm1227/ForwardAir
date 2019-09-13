@@ -3,7 +3,7 @@
 import 'package:http/http.dart' as http;
 
 //import 'package:forwardair_fleet_management/models/webservice/dashboardresponsemodel.dart';
-import 'package:forwardair_fleet_management/utility/Constants.dart';
+import 'package:forwardair_fleet_management/utility/endpoints.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 
 class APIManager {
@@ -13,16 +13,18 @@ class APIManager {
 
   //To Load Dashboard Detail from the server
   Future<List<Dashboard_DB_Model>> loadDashboardDataFromServer() async {
-    final url = '${Constants.BASE_URL}/${Constants.DASHBOARD_URL}/5';
+    final url = '${EndPoints.BASE_URL}/${EndPoints.DASHBOARD_URL}/5';
     var response = await http.post(url, headers: {
       'Accept': contentType,
       'Authorization': authrizationToken
     }).timeout(Duration(seconds: 30));
-
+    print('Request api');
     if (response.statusCode == 200) {
+      print('Success api response');
       var jsonResponse = Dashboard_DB_Model().dashboardDBModelFromJson(response.body); //convert.jsonDecode(response.body);
       return jsonResponse;
     } else {
+      print('Failed api response');
       throw Exception("Failed to dashboard details");
     }
   }

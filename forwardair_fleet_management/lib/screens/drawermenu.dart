@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:package_info/package_info.dart';
 
 import 'package:forwardair_fleet_management/screens/dashboard_page.dart';
 import 'package:forwardair_fleet_management/screens/featurecomingsoon.dart';
-import 'package:forwardair_fleet_management/utility/Constants.dart';
+import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.dart';
 
@@ -15,8 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  _HomePageState();
 
   List _drawerMenuItems = [
     Constants.TEXT_SAFETY_INCIDENTS,
@@ -65,6 +64,22 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   bool expandFlag = false;
   int _expandedListIndex = 0;
+  String versionNumer = '';
+
+  @override
+  initState() {
+    super.initState();
+    // Add listeners to this class
+    getVersionNumberOfTheApp();
+  }
+
+  Future<String> getVersionNumberOfTheApp() async{
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      versionNumer = packageInfo.version;
+    });
+    return versionNumer;
+  }
 
   _onSelected(int index) {
     setState(() {
@@ -76,6 +91,17 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _expandedListIndex = index;
     });
+  }
+
+  Text _versionNumberWidgte() {
+    return Text(
+      Constants.TEXT_VERSION_NUMBER + versionNumer,
+      style: TextStyle(
+          fontWeight: FontWeight.normal,
+          fontFamily: Constants.FONT_FAMILY_ROBOTO,
+          fontSize: 10,
+          color: AppColors.colorRed),
+    );
   }
 
   _buildRowExpandedRows(int index) {
@@ -393,6 +419,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+                  Positioned(bottom: 0, right: 10,child:_versionNumberWidgte()
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: ListTile(
@@ -423,7 +451,8 @@ class _HomePageState extends State<HomePage> {
                                 fontFamily: Constants.FONT_FAMILY_ROBOTO,
                                 fontSize: 16,
                                 color: Colors.white),
-                          )),
+                          )
+                      ),
                     ),
                   ),
                 ],

@@ -30,10 +30,8 @@ class Constants {
   static const String FONT_FAMILY_ROBOTO_MEDIUM = 'Roboto-Medium';
   static const String FONT_FAMILY_ROBOTO_BOLD = 'Roboto-Bold';
 
-  static const String BASE_URL = 'https://test-api.forwardair.com';
-  static const String DASHBOARD_URL = 'driverapprest/rest/secure/dashboards';
-
   //Drawer Menu
+  static const String TEXT_VERSION_NUMBER = 'Version ';
   static const String TEXT_SAFETY_INCIDENTS = 'Safety & Incidents';
   static const String TEXT_DASHBOARD = 'Dashboard';
   static const String TEXT_NOTIFICATION = 'Notification';

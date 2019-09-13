@@ -1,3 +1,5 @@
+import 'dart:async' as prefix0;
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 import 'dart:async';
@@ -70,6 +72,13 @@ class Dashboard_DBProvider {
     return result;
   }
 
+  //To update data into DB
+  Future<int> updateDashboardDB(Dashboard_DB_Model _dashboardModel) async{
+    Database db = await this.database;
+    var result = await db.update(tableName, _dashboardModel.toMap(), where: '$colId = ?', whereArgs: [_dashboardModel.id]);
+    return result;
+  }
+
 //To insert data into DB
   Future<int> insertIntoDashboardDB(Dashboard_DB_Model apiModel) async{
     Database db = await this.database;
@@ -90,13 +99,36 @@ class Dashboard_DBProvider {
     return result;
   }
 
-//To fetch and convert map to List
-  Future<List<Dashboard_DB_Model>> convertMaplistToDashboardList() async {
+  Future<bool> isDashboardPeriodeExist(Dashboard_DB_Model _model) async{
+    final db = await database;
+     var queryResult = await db.rawQuery('SELECT * FROM $tableName WHERE $dashboardPeriod = "${_model.dashboardPeriod}"');
+    if (queryResult.length > 0) {
+       return true;
+    } else {
+       return false;
+    }
+  }
+
+  //To fetch each model and convert map
+  Future<Dashboard_DB_Model> fetchAnItemAndconvertMapToDashboard() async {
+
+    //Fetch all data from DB for each model
+    var mapList = await getAllObjectsFromDB();
+    var dashboard = Dashboard_DB_Model();
+    int count = mapList.length;
+    for (int i = 0; i < count; i++) {
+      dashboard = Dashboard_DB_Model.fromMapObject(mapList[i]);
+    }
+    return dashboard;
+  }
+
+  //To fetch all list and convert map to List
+  Future<List<Dashboard_DB_Model>> fetchAllAndConvertMaplistToDashboardList() async {
     //Fetch all data from DB
     var mapList = await getAllObjectsFromDB();
     var dashboardList = List<Dashboard_DB_Model>();
     int count =  mapList.length;
-    for (int i = 0; i < count;   i++ ) {
+    for (int i = 0; i < count; i++ ) {
       dashboardList.add(Dashboard_DB_Model.fromMapObject(mapList[i]));
     }
     return dashboardList;
