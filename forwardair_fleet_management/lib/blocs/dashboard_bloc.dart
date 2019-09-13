@@ -3,14 +3,15 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
 import 'package:forwardair_fleet_management/blocs/states/dashboardstate.dart';
-import 'package:forwardair_fleet_management/databasemanager/dashboard/dashboard_db_provider.dart';
+//import 'package:forwardair_fleet_management/databasemanager/dashboard/dashboard_db_provider.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/apimanager.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
+import 'package:forwardair_fleet_management/databasemanager/dashboard_table_manager.dart';
 
 class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   //DB provider
-  Dashboard_DBProvider _dashboard_dbProvider = Dashboard_DBProvider();
+  DashboardManager _dashboard_dbProvider = DashboardManager();
 
   //Fetched Array From DB
   List<Dashboard_DB_Model> dashboardItemsFromDB = [];
@@ -65,8 +66,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
                 .fetchAnItemAndconvertMapToDashboard();
 
             final isExist = await _dashboard_dbProvider.isDashboardPeriodeExist(_apimodel);
-
-            if (isExist == true) {
+            if (isExist) {
               print('update $index)');
               _dashboard_dbProvider.updateDashboardDB(_apimodel);
             } else {
