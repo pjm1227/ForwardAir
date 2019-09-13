@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:forwardair_fleet_management/models/login_model.dart';
+import 'package:forwardair_fleet_management/utility/endpoints.dart';
 import 'package:http/http.dart' as http;
 
 ///This class has API calling methods
@@ -42,5 +44,19 @@ class ApiMethods {
     } else {
       return '{Something went wrong}';
     }
+  }
+
+  //This method is used to make API call in POST
+  Future<http.Response> postRequest(
+      String url, String tokens, String body) async {
+    print(url);
+    var request = "'$body'";
+    print(request.toString());
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": tokens != null ? tokens : null
+    };
+    final response = await http.post(url, body: body, headers: headers);
+    return response;
   }
 }
