@@ -33,4 +33,56 @@ class Constants {
   static const String FONT_FAMILY_ROBOTO = 'Roboto';
   static const String FONT_FAMILY_ROBOTO_MEDIUM = 'Roboto-Medium';
   static const String FONT_FAMILY_ROBOTO_BOLD = 'Roboto-Bold';
+
+  static const String BASE_URL = 'https://test-api.forwardair.com';
+  static const String DASHBOARD_URL = 'driverapprest/rest/secure/dashboards';
+
+  //Drawer Menu
+  static const String TEXT_SAFETY_INCIDENTS = 'Safety & Incidents';
+  static const String TEXT_DASHBOARD = 'Dashboard';
+  static const String TEXT_NOTIFICATION = 'Notification';
+  static const String TEXT_MODULES = 'MODULES';
+  static const String TEXT_FLEET_TRACKER = 'Fleet Tracker';
+  static const String TEXT_SETTLEMENTS = 'Settlement';
+  static const String TEXT_REFERRAL_PROGRAM = 'Referral Program';
+  static const String TEXT_NOTIFICATION_OF_UNAVALIABILITY = 'Notification of unavailability';
+  static const String TEXT_COMPANY_NEWS = 'Company News';
+  static const String TEXT_PROFILE = 'Profile';
+  static const String TEXT_SETTINGS = 'Settings';
+  static const String TEXT_LOGOUT = 'Logout';
+  static const String TEXT_REPORT_ACCIDENT = 'Report Accident';
+  static const String TEXT_REPORT_BREAKDOWN = 'Report Breakdown';
+  static const String TEXT_REPORT_INCIDENTOROTHER = 'Report Incident/Other';
+  static const String TEXT_VIEW_HISTORY = 'View History';
+  static const String TEXT_FLEET_OWNER = 'Fleet Owner';
+  //Dashboard
+  static const String TEXT_NET_CONPENSATION = 'Net Compensation';
+  static const String TEXT_QUICK_CONTACT = 'QUICK CONTACT';
+  static const String TEXT_DISPATCH = 'Dispatch';
+  static const String TEXT_SAFETY_OFFICER = 'Safety Officer';
+  static const String TEXT_REFERRAL_AND_DRIVERRELATION = 'Referral & Driver Relation';
+  static const String TEXT_THISWEEK = 'This Week';
+  static const String TEXT_LASTWEEK = 'Last Week';
+  static const String TEXT_PREV_SETTLEMENT_PERIOD = 'Previous Settlement Period';
+  static const String TEXT_THISMONTH = 'This Month';
+  static const String TEXT_CANCEL  =  'Cancel';
+  static const String TEXT_TOTAL_LOADS = 'Total Loads';
+  static const String TEXT_TOTAL_MILES = 'Total Miles';
+  static const String TEXT_FUEL = 'Fuel';
+  static const String TEXT_TOTAL_GALLONS = 'Total Gallons';
+  static const String TEXT_TOTAL_FUEL_AMOUNT = 'Total Fuel Amount';
+  static const String TEXT_GROSS_COMPENSATION = 'Gross Compensation';
+  static const String TEXT_DEDUCTIONS = 'Deductions';
+  static const String TEXT_DASHBOARD_PERIOD = "M";
+  //Quick Contact Details
+  //1. Dispatch
+  static const String TEXT_DISPATCH_QUCKCONTACT_EMAIL = 'FA_dispatch@forwardair.com';
+  static const String TEXT_DISPATCH_PHONENUMBER =  '800-497-5012';
+  //2. Safety
+  static const String TEXT_SAFETY_QUCKCONTACT_EMAIL = 'Safetyapp@forwardair.com';
+  static const String TEXT_SAFETY_PHONENUMBER =  '888-423-2472';
+  //2. Driver Relations
+  static const String TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL = 'contractorrelations@forwardair.com';
+  static const String TEXT_DRIVER_RELATIONS_PHONENUMBER =  '855-585-8574';
+
 }

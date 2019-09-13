@@ -18,9 +18,14 @@ dependencies:
   meta:
   fluttertoast:
   flutter_bloc:
+  page_transition: ^1.1.4
+  auto_size_text: ^2.1.0
+  url_launcher: ^5.1.2
+  connectivity: ^0.4.4
+  pull_to_refresh:
   sqflite:
   path_provider:
-  connectivity:
+
 
 dev_dependencies:
   flutter_test:
