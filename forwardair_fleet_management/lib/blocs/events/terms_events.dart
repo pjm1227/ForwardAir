@@ -15,7 +15,7 @@ class AcceptEvent extends TermsEvents {
   final bool isChecked ;
   AcceptEvent({@required this.isChecked}) : assert(isChecked !=null);
 }
-
+//Checkbox event, It will happen at checkbox click
 class CheckBoxEvent extends TermsEvents
 {
   final bool isChecked ;

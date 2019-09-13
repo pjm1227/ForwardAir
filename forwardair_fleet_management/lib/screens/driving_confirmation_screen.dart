@@ -2,15 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:forwardair_fleet_management/blocs/barrels/driving_conformation.dart';
 import 'package:forwardair_fleet_management/components/button_widget.dart';
 import 'package:forwardair_fleet_management/screens/terms_condition_screen.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/theme.dart' as Theme;
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'login_screen.dart';
 
 //Main function of an app
 //App must start from here
-void main() {
+main() async {
   //Setup the status bar color
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.black, // status bar color
@@ -34,19 +38,53 @@ class DrivingConfirmation extends StatelessWidget {
   }
 }
 
-class DrivingPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return DrivingPageState();
-  }
-}
-
 //Handling the state of this page here
-class DrivingPageState extends State<DrivingPage> {
+class DrivingPage extends StatelessWidget {
+  final DrivingConformationBloc _conformationBloc = DrivingConformationBloc();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
+        body: BlocListener<DrivingConformationBloc, DrivingConfirmationState>(
+      bloc: _conformationBloc,
+      listener: (context, state) {
+        if (state is CloseState) {
+          exit(0);
+        } else if (state is NotDrivingState) {
+          print(state.isTermsAccepted);
+          if (!state.isTermsAccepted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TermsConditions()),
+            );
+          }
+          /* else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TermsConditions()),
+            );
+          }*/
+        }
+      },
+      child: BlocBuilder<DrivingConformationBloc, DrivingConfirmationState>(
+          bloc: _conformationBloc,
+          builder: (context, state) {
+            print(state);
+            if (state is NotDrivingState) {
+              if (state.isTermsAccepted) {
+                return LoginPage();
+              } else {
+                return _mainWidget();
+              }
+            } else {
+              return _mainWidget();
+            }
+          }),
+    ));
+  }
+
+  Widget _mainWidget() {
+    return Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +94,7 @@ class DrivingPageState extends State<DrivingPage> {
             Expanded(flex: 5, child: _middleWidget()),
             Expanded(flex: 2, child: _bottomWidget()),
           ]),
-    ));
+    );
   }
 
   //Bottom widget with two buttons
@@ -66,7 +104,7 @@ class DrivingPageState extends State<DrivingPage> {
       children: <Widget>[
         ButtonWidget(
           text: Constants.TEXT_NOT_DRIVING,
-          onPressed: () => _goToNext(),
+          onPressed: () => _conformationBloc.dispatch(NotDrivingEvent()),
           padding:
               EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
         ),
@@ -79,7 +117,7 @@ class DrivingPageState extends State<DrivingPage> {
                   color: AppColors.colorRed, fontWeight: FontWeight.bold),
             ),
           ),
-          onTap: () => exit(0),
+          onTap: () => _conformationBloc.dispatch(CloseEvent()),
         )
       ],
     );
@@ -142,14 +180,6 @@ class DrivingPageState extends State<DrivingPage> {
           ),
         )
       ],
-    );
-  }
-
-  //This method is used to go to next screen.
-  _goToNext() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => TermsConditions()),
     );
   }
 }

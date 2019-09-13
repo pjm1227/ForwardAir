@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:forwardair_fleet_management/utility/constants.dart';
-import 'package:forwardair_fleet_management/utility/utils.dart';
-
+import 'package:forwardair_fleet_management/databasemanager/database_helper.dart';
+import 'package:forwardair_fleet_management/databasemanager/terms_manager.dart';
+import 'package:forwardair_fleet_management/models/database/terms_model.dart';
+import 'package:forwardair_fleet_management/utility/endpoints.dart';
 import 'events/terms_events.dart';
 import 'states/terms_state.dart';
 
@@ -22,13 +23,21 @@ class TermsBloc extends Bloc<TermsEvents, TermsStates> {
       yield CheckBoxState(accepted: event.isChecked);
     }
     if (event is AcceptEvent) {
-      print('Accept Event');
-      print(event.isChecked);
-      if (event.isChecked)
-        yield AcceptState();
-      else {
-        Utils.showToast(Constants.ACCEPT_TERMS_CONDITION);
+      if (event.isChecked) {
+        //User accepted the terms and condition now add data in DB
+        _insertIntoDB();
+        yield AcceptState(accepted: true);
+      } else {
+        yield InitialState();
+        yield AcceptState(accepted: false);
       }
     }
+  }
+
+  //This method insert user acceptance into DB
+  void _insertIntoDB() async {
+    var termManager = TermsManager();
+    var termsModel = TermsModel(id: 0, isTermsAccepted: true);
+    await termManager.insertTermsData(termsModel.toMap());
   }
 }

@@ -14,7 +14,12 @@ class InitialState extends TermsStates {}
 class DeclineState extends TermsStates {}
 
 //It will handle the Accept state for the page
-class AcceptState extends TermsStates {}
+class AcceptState extends TermsStates {
+  final bool accepted;
+
+  AcceptState({@required this.accepted}) : super([accepted]);
+}
+
 //It will handle the state for checkbox
 class CheckBoxState extends TermsStates {
   final bool accepted;

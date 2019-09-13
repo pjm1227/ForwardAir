@@ -28,13 +28,6 @@ class TermsConditions extends StatelessWidget {
   //TermsBloc
   TermsBloc _termsBloc = new TermsBloc();
 
-  /*@override
-  void initState() {
-    //Initializing Terms bloc here
-    _termsBloc = TermsBloc();
-    super.initState();
-  }*/
-
   @override
   Widget build(BuildContext context) {
     //For status bar color
@@ -43,27 +36,42 @@ class TermsConditions extends StatelessWidget {
     ));
     //It returns BlocBuilder, That means it will refresh itself and which we're passing
     //TermsBloc and Terms State, State is using to manage or replace widgets.
-    return BlocBuilder<TermsBloc, TermsStates>(
+    return Scaffold(
+      body: BlocListener<TermsBloc, TermsStates>(
         bloc: _termsBloc,
-        builder: (context, state) {
-          print('State is $state');
-          if (state is DeclineState) {
-            return DrivingConfirmation();
-          } else if (state is AcceptState) {
-            return LoginPage();
-          } else if (state is CheckBoxState) {
-            isChecked = state.accepted;
-            return _initialWidget(context);
-          } else {
-            return _initialWidget(context);
+        listener: (context, state) {
+          if (state is AcceptState) {
+            if (!state.accepted) {
+              Utils.showSnackBar(Constants.ACCEPT_TERMS_CONDITION, context);
+            }
           }
-        });
+        },
+        child: BlocBuilder<TermsBloc, TermsStates>(
+            bloc: _termsBloc,
+            builder: (context, state) {
+              print('State is $state');
+              if (state is DeclineState) {
+                return DrivingConfirmation();
+              } else if (state is AcceptState) {
+                if (state.accepted) {
+                  return LoginPage();
+                } else {
+                  return _initialWidget(context);
+                }
+              } else if (state is CheckBoxState) {
+                isChecked = state.accepted;
+                return _initialWidget(context);
+              } else {
+                return _initialWidget(context);
+              }
+            }),
+      ),
+    );
   }
 
   //Initial widget to show user
   Widget _initialWidget(BuildContext context) {
-    return Scaffold(
-        body: SingleChildScrollView(
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -100,7 +108,7 @@ class TermsConditions extends StatelessWidget {
           _buttonsWidget(context),
         ],
       ),
-    ));
+    );
   }
 
   //Checkbox widget

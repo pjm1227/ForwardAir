@@ -22,9 +22,13 @@ class Constants {
       'eu tincidunt tortor.';
   static const String APP_CAN_DETECT =
       'App can detect when you may be driving and automatically bring up this notification';
-  static const String CHECKBOX_TEXT = 'By Signing In with Forward Air,you are accepting the Terms and Conditions';
+  static const String CHECKBOX_TEXT =
+      'By Signing In with Forward Air,you are accepting the Terms and Conditions';
   static const String TEXT_ACCEPT = 'I ACCEPT';
-  static const String ACCEPT_TERMS_CONDITION = 'Please accept terms and conditions';
+  static const String ACCEPT_TERMS_CONDITION =
+      'Please accept terms and conditions';
+  static const String NO_INTERNET_FOUND = 'No internet!';
+  static const String INVALID_CREDENTIALS = 'Invalid Credentials';
   static const String TEXT_DECLINE = 'I DECLINE';
   static const String FONT_FAMILY_ROBOTO = 'Roboto';
   static const String FONT_FAMILY_ROBOTO_MEDIUM = 'Roboto-Medium';
