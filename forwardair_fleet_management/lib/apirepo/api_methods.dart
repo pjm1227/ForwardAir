@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:forwardair_fleet_management/models/login_model.dart';
-import 'package:forwardair_fleet_management/utility/endpoints.dart';
+import 'package:forwardair_fleet_management/models/error_model.dart';
 import 'package:http/http.dart' as http;
 
 ///This class has API calling methods
@@ -22,41 +21,52 @@ class ApiMethods {
   }
 
   //This method is used to make API call in POST
-  Future<String> requestInPost(String url, String tokens, String body) async {
+  Future<dynamic> requestInPost(String url, String tokens, String body) async {
     print(url);
     //var json = '{"userName":"leasuretrucking@aol.com","password":"TESTING"}';
     var request = "'$body'";
-    print(request.toString());
+    print('Request body is $request');
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": tokens != null ? tokens : null
     };
-    final response = await http.post(url, body: body, headers: headers);
-    print(response.statusCode);
-    if (response.statusCode == 200)
-      return response.body;
-    else if (response.statusCode == 400) {
-      return response.body;
-    } else if (response.statusCode == 401) {
-      return '{Unauthorized Error}';
-    } else if (response.statusCode == 500) {
-      return '{Server not responding}';
-    } else {
-      return '{Something went wrong}';
+    var responseJson;
+    try {
+      final response = await http
+          .post(url, body: body, headers: headers)
+          .timeout(Duration(seconds: 20));
+      responseJson = _returnResponse(response);
+    } on TimeoutException catch (_) {
+      var map = '{"errorMessage": "Timeout"}';
+      responseJson = ErrorModel.fromJson(json.decode(map));
     }
+    print('response model is $responseJson');
+    return responseJson;
   }
 
-  //This method is used to make API call in POST
-  Future<http.Response> postRequest(
-      String url, String tokens, String body) async {
-    print(url);
-    var request = "'$body'";
-    print(request.toString());
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-      "Authorization": tokens != null ? tokens : null
-    };
-    final response = await http.post(url, body: body, headers: headers);
-    return response;
+  //Exception handling based on result codes
+  dynamic _returnResponse(http.Response response) {
+    switch (response.statusCode) {
+      case 200:
+        var responseJson = json.decode(response.body.toString());
+        print(responseJson);
+        return response.body;
+      case 400:
+        final errorModel = ErrorModel.fromJson(json.decode(response.body));
+        return errorModel;
+      case 401:
+        final errorModel = ErrorModel.fromJson(json.decode(response.body));
+        return errorModel;
+      case 403:
+        final errorModel = ErrorModel.fromJson(json.decode(response.body));
+        return errorModel;
+      case 500:
+        final errorModel = ErrorModel.fromJson(json.decode(response.body));
+        return errorModel;
+      default:
+        var map = '{"errorMessage": "Something went wrong"}';
+        final errorModel = ErrorModel.fromJson(json.decode(map));
+        return errorModel;
+    }
   }
 }

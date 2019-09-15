@@ -1,14 +1,12 @@
 import 'package:bloc/bloc.dart';
-import 'package:forwardair_fleet_management/apirepo/api_methods.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/login.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 import 'package:forwardair_fleet_management/models/error_model.dart';
 import 'package:forwardair_fleet_management/models/login_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/login_request.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
-import 'package:forwardair_fleet_management/utility/endpoints.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
-import 'package:http/src/response.dart';
+import 'package:forwardair_fleet_management/apirepo/repository.dart';
 
 //Login Bloc,All business logic for login page will goes here
 class LoginBloc extends Bloc<LoginEvents, LoginStates> {
@@ -22,7 +20,6 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
     LoginEvents event,
   ) async* {
     if (event is ObSecureEvent) {
-      print(event.isVisible);
       yield ObSecureState(isVisible: event.isVisible);
     }
     if (event is LoginPressedEvent) {
@@ -30,23 +27,26 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
     }
   }
 
+//This method is called to validate views and making API call
   Stream<LoginStates> _validation(String userName, String userPassword) async* {
     if (userName.isEmpty) {
       yield LoginInitialState();
-      yield FormErrorState(emailError: 'Please enter Email');
+      yield FormErrorState(errorMessage: 'Please enter Email');
     } else if (!_isValidEmail(userName)) {
       yield LoginInitialState();
-      yield FormErrorState(emailError: 'Please enter a valid Email');
+      yield FormErrorState(errorMessage: 'Please enter a valid Email');
     } else if (userPassword.isEmpty) {
       yield LoginInitialState();
-      yield FormErrorState(emailError: 'Please enter a password');
+      yield FormErrorState(errorMessage: 'Please enter a password');
     } else {
-      if (Utils.isConnectionAvailable() != null) {
+      //Check for internet connection
+      var isConnection = await Utils.isConnectionAvailable();
+      if (isConnection) {
         //And make API call here
         yield* makeAPiCall(userName, userPassword);
       } else {
         yield LoginInitialState();
-        yield FormErrorState(emailError: Constants.NO_INTERNET_FOUND);
+        yield FormErrorState(errorMessage: Constants.NO_INTERNET_FOUND);
       }
     }
   }
@@ -62,26 +62,29 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
   // And save user data into DB
   Stream<LoginStates> makeAPiCall(String userName, String userPassword) async* {
     yield LoginLoadingState();
-    var apiMethods = ApiMethods();
     var request = LoginRequest(userName, userPassword);
     var body = request.toJson();
     print(body.toString());
-    var response = await apiMethods.requestInPost(
-        EndPoints.LOGIN_URL, null, body.toString());
-    print('Respose $response');
-    try {
-      var loginModel = loginModelFromJson(response);
-      //print(loginModel.userDetails.isUserLoggedIn);
-      await _insertIntoDB(loginModel);
-      yield LoginSuccessState();
-    } on TypeError {
-      print('Response in Type $response');
-      var errorModel = errorModelFromJson(response);
-      yield LoginInitialState();
-      yield FormErrorState(emailError: response);
+    final _repository = Repository();
+    var result = await _repository.makeLoginRequest(body.toString());
+    print('Result is $result');
+    //Check if result is an instance of LoginModel or ErrorModel
+    //If it's LoginModel then insert data into DB else show error message
+    if (result is ErrorModel) {
+      yield FormErrorState(errorMessage: result.errorMessage);
+    } else {
+      try {
+        var loginModel = loginModelFromJson(result);
+        await _insertIntoDB(loginModel);
+        yield LoginSuccessState();
+      } catch (_) {
+        yield FormErrorState(errorMessage: Constants.SOMETHING_WRONG);
+        print("db Exception");
+      }
     }
   }
 
+  //This method is used to insert data in user table after user logged in successfully.
   Future<int> _insertIntoDB(LoginModel loginModel) async {
     var userManager = UserManager();
     var userModel = UserDetails(
@@ -103,9 +106,6 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
       activetractors: loginModel.userDetails.activetractors,
       isUserLoggedIn: true,
     );
-    print('Inserting into DB...');
-    var id = await userManager.insertTermsData(userModel.toMap());
-    print('Inserted $id');
-    return id;
+    return await userManager.insertTermsData(userModel.toMap());
   }
 }

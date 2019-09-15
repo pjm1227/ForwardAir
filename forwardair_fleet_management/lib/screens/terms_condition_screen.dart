@@ -12,7 +12,7 @@ import 'package:bloc/bloc.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/screens/drawermenu.dart';
 
-import 'driving_confirmation_screen.dart';
+import '../main.dart';
 import 'login_screen.dart';
 
 /*class TermsConditions extends StatefulWidget {
@@ -27,7 +27,7 @@ class TermsConditions extends StatelessWidget {
   var isChecked = false;
 
   //TermsBloc
-  TermsBloc _termsBloc = new TermsBloc();
+  final TermsBloc _termsBloc = new TermsBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -41,30 +41,27 @@ class TermsConditions extends StatelessWidget {
       body: BlocListener<TermsBloc, TermsStates>(
         bloc: _termsBloc,
         listener: (context, state) {
+          if (state is CheckBoxState) {
+            isChecked = state.accepted;
+          }
           if (state is AcceptState) {
             if (!state.accepted) {
               Utils.showSnackBar(Constants.ACCEPT_TERMS_CONDITION, context);
+            } else {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  (Route<dynamic> route) => false);
             }
           }
         },
         child: BlocBuilder<TermsBloc, TermsStates>(
             bloc: _termsBloc,
             builder: (context, state) {
-              print('State is $state');
+              print('Terms Page $state');
               if (state is DeclineState) {
                 return DrivingConfirmation();
-              } else if (state is AcceptState) {
-                if (state.accepted) {
-                  return  LoginPage();
-                } else {
-                  return _initialWidget(context);
-                }
-              } else if (state is CheckBoxState) {
-                isChecked = state.accepted;
-                return _initialWidget(context);
-              } else {
-                return _initialWidget(context);
               }
+              return _initialWidget(context);
             }),
       ),
     );
@@ -78,10 +75,13 @@ class TermsConditions extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           //Container for showing image
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: Image.asset(
-              'images/ic_fa_logo.png',
+          Padding(
+            padding: const EdgeInsets.only(top:16.0),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Image.asset(
+                'images/ic_fa_logo.png',
+              ),
             ),
           ),
           //Text widget for Text of terms of service

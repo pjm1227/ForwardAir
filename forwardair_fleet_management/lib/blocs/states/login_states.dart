@@ -10,14 +10,18 @@ class LoginInitialState extends LoginStates {}
 
 class LoginLoadingState extends LoginStates {}
 
-class LoginFailureState extends LoginStates {}
+class LoginFailureState extends LoginStates {
+  final String errorMessage;
+
+  LoginFailureState({@required this.errorMessage}) : super([errorMessage]);
+}
 
 class LoginSuccessState extends LoginStates {}
 
 class FormErrorState extends LoginStates {
-  final String emailError;
+  final String errorMessage;
 
-  FormErrorState({@required this.emailError}) : super([emailError]);
+  FormErrorState({@required this.errorMessage}) : super([errorMessage]);
 }
 
 class ObSecureState extends LoginStates {

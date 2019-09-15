@@ -10,10 +10,14 @@ class UserManager {
   Future<UserDetails> getData() async {
     Database db = await DatabaseHelper.instance.database;
     var result = await db.rawQuery('SELECT * FROM $tableName');
-    List<UserDetails> list = result.isNotEmpty
-        ? result.map((c) => UserDetails.fromMapObject(c)).toList()
-        : [];
-    return list != null && list.isNotEmpty ? list[0] : null;
+    try {
+      List<UserDetails> list = result.isNotEmpty
+          ? result.map((c) => UserDetails.fromMapObject(c)).toList()
+          : [];
+      return list != null && list.isNotEmpty ? list[0] : null;
+    } catch (_) {
+      return null;
+    }
   }
 
   //Insert into table

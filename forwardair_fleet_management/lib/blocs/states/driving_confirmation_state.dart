@@ -11,7 +11,9 @@ class InitialState extends DrivingConfirmationState {}
 class CloseState extends DrivingConfirmationState {}
 
 class NotDrivingState extends DrivingConfirmationState {
-  final bool isTermsAccepted;
+  final bool isTermsAccepted, isUserLoggedIn;
 
-  NotDrivingState({@required this.isTermsAccepted}) : super([isTermsAccepted]);
+  NotDrivingState(
+      {@required this.isTermsAccepted, @required this.isUserLoggedIn})
+      : super([isTermsAccepted, isUserLoggedIn]);
 }

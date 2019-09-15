@@ -83,12 +83,13 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE $termsAcceptedTable ($columnId INTEGER PRIMARY KEY, $columnIsAccepted INTEGER NOT NULL)');
     await db.execute(
-        'CREATE TABLE user_table ($id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, $token TEXT, $emailAddress TEXT, $fullName TEXT,'
-        ' $userId TEXT, $stationCd TEXT, $participantId TEXT, $phone TEXT, $companyCd TEXT,'
-        ' $contractorcd TEXT, $driverid TEXT, $driveroid TEXT, $faauthuseroid TEXT, $xrefoid TEXT, '
-        ' $faauthuserid TEXT, $usertype TEXT, $activetractors TEXT,'
-        ' $isUserLoggedIn INTEGER NOT NULL)');
-    await db.execute("""CREATE TABLE $tableName($colId INTEGER PRIMARY KEY AUTOINCREMENT, $companyCd TEXT, 
+        '''CREATE TABLE user_table ($id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, $token TEXT, $emailAddress TEXT, $fullName TEXT,
+         $userId TEXT, $stationCd TEXT, $participantId TEXT, $phone TEXT, $companyCd TEXT,
+         $contractorcd TEXT, $driverid TEXT, $driveroid TEXT, $faauthuseroid INTEGER NOT NULL, $xrefoid INTEGER NOT NULL,
+         $faauthuserid TEXT, $usertype TEXT, $activetractors INTEGER NOT NULL,
+         $isUserLoggedIn INTEGER NOT NULL)''');
+    await db.execute(
+        """CREATE TABLE $tableName($colId INTEGER PRIMARY KEY AUTOINCREMENT, $companyCd TEXT, 
                     $contractorCd TEXT, $weekStart TEXT,$weekEnd TEXT, $month INTEGER, $year TEXT, 
                     $tractorCount INTEGER, $totalMiles INTEGER, $loadedMiles INTEGER, $emptyMiles INTEGER, 
                     $totalLoads INTEGER, $loadedLoads INTEGER, $emptyLoads INTEGER, $totalTractorGallons DOUBLE,

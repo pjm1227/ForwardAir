@@ -30,6 +30,7 @@ class Constants {
   static const String NO_INTERNET_FOUND = 'No internet!';
   static const String INVALID_CREDENTIALS = 'Invalid Credentials';
   static const String TEXT_DECLINE = 'I DECLINE';
+  static const String SOMETHING_WRONG = 'Something went wrong!';
   static const String FONT_FAMILY_ROBOTO = 'Roboto';
   static const String FONT_FAMILY_ROBOTO_MEDIUM = 'Roboto-Medium';
   static const String FONT_FAMILY_ROBOTO_BOLD = 'Roboto-Bold';

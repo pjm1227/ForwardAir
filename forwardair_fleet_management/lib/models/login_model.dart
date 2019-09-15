@@ -32,6 +32,7 @@ class LoginModel {
 }
 
 class UserDetails {
+  int id;
   String token;
   String emailAddress;
   String fullName;
@@ -41,8 +42,8 @@ class UserDetails {
   String phone;
   String companyCd;
   String contractorcd;
-  dynamic driverid;
-  dynamic driveroid;
+  String driverid;
+  String driveroid;
   int faauthuseroid;
   int xrefoid;
   String faauthuserid;
@@ -52,6 +53,7 @@ class UserDetails {
   List<UserGroup> userGroups;
 
   UserDetails({
+    this.id,
     this.token,
     this.emailAddress,
     this.fullName,
@@ -74,6 +76,7 @@ class UserDetails {
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
+    map['id'] = id;
     map['token'] = token;
     map['emailAddress'] = emailAddress;
     map['fullName'] = fullName;
@@ -95,6 +98,7 @@ class UserDetails {
   }
 
   UserDetails.fromMapObject(Map<String, dynamic> map) {
+    id = map['id'];
     token = map['token'];
     emailAddress = map['emailAddress'];
     fullName = map['fullName'];
@@ -105,6 +109,7 @@ class UserDetails {
     companyCd = map['companyCd'];
     contractorcd = map['contractorcd'];
     driverid = map['driverid'];
+    driveroid = map['driveroid'];
     faauthuseroid = map['faauthuseroid'];
     xrefoid = map['xrefoid'];
     faauthuserid = map['faauthuserid'];
