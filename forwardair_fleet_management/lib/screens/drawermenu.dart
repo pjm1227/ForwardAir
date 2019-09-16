@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:forwardair_fleet_management/blocs/barrels/login.dart';
+import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
+import 'package:forwardair_fleet_management/main.dart';
 import 'package:forwardair_fleet_management/screens/login_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:package_info/package_info.dart';
@@ -8,6 +11,8 @@ import 'package:forwardair_fleet_management/screens/featurecomingsoon.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.dart';
+import 'package:forwardair_fleet_management/models/login_model.dart';
+import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 
 class HomePage extends StatefulWidget {
   HomePage();
@@ -64,15 +69,26 @@ class _HomePageState extends State<HomePage> {
   bool expandFlag = false;
   int _expandedListIndex = 0;
   String versionNumer = '';
+  UserDetails _userDetails = UserDetails();
 
+  //Initial State
   @override
   initState() {
     super.initState();
-    // Add listeners to this class
-    getVersionNumberOfTheApp();
+    _fetchUserDetails();
+    _getVersionNumberOfTheApp();
   }
 
-  Future<String> getVersionNumberOfTheApp() async {
+  //Fetch Loggin User Data
+  Future<UserDetails> _fetchUserDetails() async {
+    var userManager = UserManager();
+    _userDetails = await userManager.getData();
+    setState(() {});
+    return _userDetails;
+  }
+
+  //Fetch Version of the app
+  Future<String> _getVersionNumberOfTheApp() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       versionNumer = packageInfo.version;
@@ -80,18 +96,21 @@ class _HomePageState extends State<HomePage> {
     return versionNumer;
   }
 
+  //To update the index
   _onSelected(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  //Index of Expanded List
   _onExpandedListViewIndex(int index) {
     setState(() {
       _expandedListIndex = index;
     });
   }
 
+  //To display versionNumber
   Text _versionNumberWidgte() {
     return Text(
       Constants.TEXT_VERSION_NUMBER + versionNumer,
@@ -103,6 +122,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //To display report list versionNumber
   _buildRowExpandedRows(int index) {
     String title = '';
     switch (index) {
@@ -145,6 +165,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //To display SAFETY AND ACCIDENT widget
   Widget _safetyAndAccidentsExpandableWidget(int index) {
     final _titleStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
@@ -352,11 +373,14 @@ class _HomePageState extends State<HomePage> {
                       break;
                     case 11:
                       {
+                        logoutAction();
+
                         //Logout
                         Navigator.push(
                             context,
                             PageTransition(
-                                type: PageTransitionType.fade, child: LoginPage()));
+                                type: PageTransitionType.fade,
+                                child: DrivingConfirmation()));
                       }
                       break;
                     default:
@@ -373,121 +397,117 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-//  getUserName() async {
-//    SharedPreferences prefs = await SharedPreferences.getInstance();
-//    var un = prefs.getString('userName');
-//    if (un != null) {
-//      loggedInUser = un;
-//    } else {
-//      loggedInUser = 'User Name';
-//    }
-//  }
+  //Log out
+  Future logoutAction() async {
+    final userManager = UserManager();
+    return await userManager.deleteAll();
+  }
 
   @override
   Widget build(BuildContext context) {
+
     final _appBarStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
         fontSize: 18,
         fontWeight: FontWeight.w600,
         color: Colors.white);
 
-    return SafeArea(
-      child: new Scaffold(
-        appBar: new AppBar(
-          iconTheme: new IconThemeData(color: Colors.white),
-          centerTitle: false,
-          title: new Text(
-            Constants.TEXT_DASHBOARD,
-            style: _appBarStyle,
+    return new Scaffold(
+      appBar: new AppBar(
+        iconTheme: new IconThemeData(color: Colors.white),
+        centerTitle: false,
+        title: new Text(
+          Constants.TEXT_DASHBOARD,
+          style: _appBarStyle,
+        ),
+        backgroundColor: AppColors.colorAppBar,
+        actions: <Widget>[
+          InkWell(
+            child: SizedBox(
+                width: 30,
+                height: 30,
+                child: Image.asset('images/ic_notfication_white.png')),
+            onTap: () {
+              navigateToFeatureComingSoonPage();
+            },
           ),
-          backgroundColor: AppColors.colorAppBar,
-          actions: <Widget>[
-            InkWell(
-              child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: Image.asset('images/ic_notfication_white.png')),
-              onTap: () {
-                navigateToFeatureComingSoonPage();
-              },
+          InkWell(
+            child: SizedBox(
+                width: 30,
+                height: 30,
+                child: Image.asset('images/ic_more.png')),
+            onTap: () {
+              navigateToFeatureComingSoonPage();
+            },
+          ),
+        ],
+      ),
+      body: DashboardPage(),
+      drawer: new Drawer(
+          child: Container(
+        height: MediaQuery.of(context).size.height,
+        color: Colors.white,
+        child: ListView(
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("images/img_bg_top_login.png"),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                Positioned(
+                    bottom: 0, right: 10, child: _versionNumberWidgte()),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: ListTile(
+                    leading: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: new CircleAvatar(
+                          child: Image.asset('images/ic_profile_pic.png')),
+                    ),
+                    title: Container(
+                        padding: EdgeInsets.only(top: 15),
+                        height: 40,
+                        child: Text(
+                          _userDetails.fullName == null
+                              ? 'User Name'
+                              : _userDetails.fullName,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Roboto',
+                              fontSize: 16,
+                              color: Colors.white),
+                        )),
+                    subtitle: Container(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          Constants.TEXT_FLEET_OWNER,
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontFamily: Constants.FONT_FAMILY_ROBOTO,
+                              fontSize: 16,
+                              color: Colors.white),
+                        )),
+                  ),
+                ),
+              ],
             ),
-            InkWell(
-              child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: Image.asset('images/ic_more.png')),
-              onTap: () {
-                navigateToFeatureComingSoonPage();
-              },
+            ListView.builder(
+              padding: EdgeInsets.only(top: 10),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) => _buildRow(index),
+              itemCount: _drawerMenuItems.length,
             ),
           ],
         ),
-        body: DashboardPage(),
-        drawer: new Drawer(
-            child: Container(
-          height: MediaQuery.of(context).size.height,
-          color: Colors.white,
-          child: ListView(
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    height: 150,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("images/img_bg_top_login.png"),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                      bottom: 0, right: 10, child: _versionNumberWidgte()),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: ListTile(
-                      leading: SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: new CircleAvatar(
-                            child: Image.asset('images/ic_profile_pic.png')),
-                      ),
-                      title: Container(
-                          padding: EdgeInsets.only(top: 15),
-                          height: 40,
-                          child: Text(
-                            //loggedInUser
-                            'User Name',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto',
-                                fontSize: 16,
-                                color: Colors.white),
-                          )),
-                      subtitle: Container(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Text(
-                            Constants.TEXT_FLEET_OWNER,
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                                fontSize: 16,
-                                color: Colors.white),
-                          )),
-                    ),
-                  ),
-                ],
-              ),
-              ListView.builder(
-                padding: EdgeInsets.only(top: 10),
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => _buildRow(index),
-                itemCount: _drawerMenuItems.length,
-              ),
-            ],
-          ),
-        )),
-      ),
+      )),
     );
   }
 

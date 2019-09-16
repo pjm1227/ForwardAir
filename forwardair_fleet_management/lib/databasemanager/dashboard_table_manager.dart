@@ -43,9 +43,9 @@ class DashboardManager {
   Future<bool> isDashboardPeriodeExist(Dashboard_DB_Model _model) async{
     Database db = await DatabaseHelper.instance.database;
     var queryResult = await db.rawQuery('SELECT * FROM $tableName WHERE dashboardPeriod = "${_model.dashboardPeriod}"');
-    var queryAll= await db.rawQuery('SELECT * FROM $tableName');
-    print(" size ${queryAll.length}");
-    print('SELECT * FROM $tableName WHERE dashboardPeriod = "${_model.dashboardPeriod}"');
+   // var queryAll= await db.rawQuery('SELECT * FROM $tableName');
+    //print(" size ${queryAll.length}");
+   // print('SELECT * FROM $tableName WHERE dashboardPeriod = "${_model.dashboardPeriod}"');
     if (queryResult.length > 0) {
       return true;
     } else {

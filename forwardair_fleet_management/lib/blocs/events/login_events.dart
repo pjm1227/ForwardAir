@@ -19,3 +19,11 @@ class ObSecureEvent extends LoginEvents {
 
   ObSecureEvent({@required this.isVisible}) : super([isVisible]);
 }
+
+//This event will call once user taps on logout
+
+class LogoutPressedEvent extends LoginEvents {
+
+  LogoutPressedEvent()
+      : super([]);
+}

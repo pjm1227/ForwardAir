@@ -33,7 +33,7 @@ class ApiMethods {
     var responseJson;
     try {
       final response = await http
-          .post(url, body: body, headers: headers)
+          .post(url, body: body == null ? null : body, headers: headers)
           .timeout(Duration(seconds: 20));
       responseJson = _returnResponse(response);
     } on TimeoutException catch (_) {

@@ -8,6 +8,7 @@ import 'package:forwardair_fleet_management/models/database/dashboard_db_model.d
 import 'package:forwardair_fleet_management/models/webservice/dashboard_request.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/databasemanager/dashboard_table_manager.dart';
+import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 
 class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   //DB provider
@@ -24,6 +25,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
 
   @override
   Stream<DashboardState> mapEventToState(DashboardEvents event) async* {
+
     if (event is FetchDashboardEvent) {
       try {
         if (currentState is InitialState) {
@@ -52,11 +54,14 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
 
   Future<List<Dashboard_DB_Model>> _fetchDashboardDetails() async {
 
+    var userManager = UserManager();
+    var userModel = await userManager.getData();
+
     await Utils.checkTheInternetConnection().then((intenet) async {
       if (intenet != null && intenet) {
         // Internet Present Case
         //Load API Data
-        final dashboardItems = await apiManager.loadDashboardDataFromServer();
+        final dashboardItems = await apiManager.loadDashboardDataFromServer(userModel.token != null ? userModel.token : '');
         if (dashboardItems.length > 0) {
           // await _dashboard_dbProvider.deleteAll();
           for (var index = 0; index < dashboardItems.length; index++) {
