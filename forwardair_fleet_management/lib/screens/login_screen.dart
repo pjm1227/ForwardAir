@@ -146,8 +146,8 @@ class LoginState extends State<LoginPage> {
                                       : false)),
                               child: Icon(
                                 isPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                                 semanticLabel: isPasswordVisible
                                     ? 'show password'
                                     : 'hide password',
@@ -163,13 +163,16 @@ class LoginState extends State<LoginPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
-                        child: ButtonWidget(
-                          onPressed: () => _loginBloc.dispatch(
-                              LoginPressedEvent(
-                                  userName: _textControllerEmail.text,
-                                  userPassword: _textControllerPassword.text)),
-                          text: 'LOGIN',
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: Container(
+                          height: 50,
+                          child: ButtonWidget(
+                            onPressed: () => _loginBloc.dispatch(
+                                LoginPressedEvent(
+                                    userName: _textControllerEmail.text,
+                                    userPassword: _textControllerPassword.text)),
+                            text: 'LOGIN',
+                          ),
                         ),
                       ),
                     ],
