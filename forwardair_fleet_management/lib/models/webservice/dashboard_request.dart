@@ -16,7 +16,7 @@ class DashboardRequest {
     var response = await http.post(url, headers: {
       'Accept': Constants.TEXT_CONTENT_TYPE,
       'Authorization': authrizationToken
-    }).timeout(Duration(seconds: 30));
+    }).timeout(Duration(seconds: 20));
     if (response.statusCode == 200) {
       var jsonResponse = Dashboard_DB_Model().dashboardDBModelFromJson(response.body);
       return jsonResponse;
