@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forwardair_fleet_management/screens/login_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:package_info/package_info.dart';
 
@@ -9,14 +10,12 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.dart';
 
 class HomePage extends StatefulWidget {
-
   HomePage();
   @override
   _HomePageState createState() => new _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   List _drawerMenuItems = [
     Constants.TEXT_SAFETY_INCIDENTS,
     Constants.TEXT_DASHBOARD,
@@ -73,7 +72,7 @@ class _HomePageState extends State<HomePage> {
     getVersionNumberOfTheApp();
   }
 
-  Future<String> getVersionNumberOfTheApp() async{
+  Future<String> getVersionNumberOfTheApp() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       versionNumer = packageInfo.version;
@@ -130,7 +129,9 @@ class _HomePageState extends State<HomePage> {
             child: Text(title,
                 style: new TextStyle(
                   fontSize: 15.0,
-                  fontWeight: _expandedListIndex == index ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight: _expandedListIndex == index
+                      ? FontWeight.w600
+                      : FontWeight.normal,
                   fontFamily: Constants.FONT_FAMILY_ROBOTO,
                   color: Colors.black,
                 )),
@@ -138,7 +139,7 @@ class _HomePageState extends State<HomePage> {
           onTap: () {
             _onExpandedListViewIndex(index);
             // navigateToFeatureComingSoonPage();
-          } ,
+          },
         ),
       ),
     );
@@ -169,8 +170,9 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 height: 45,
                 child: Container(
-                  color:
-                      _selectedIndex == index ? AppColors.redColorWithTwentyOpacity : Colors.white,
+                  color: _selectedIndex == index
+                      ? AppColors.redColorWithTwentyOpacity
+                      : Colors.white,
                   child: Material(
                     child: InkWell(
                       child: Row(
@@ -188,14 +190,14 @@ class _HomePageState extends State<HomePage> {
                             child: SizedBox(
                                 width: 24,
                                 height: 24,
-                                child:  Image.asset(_selectedIndex == index
+                                child: Image.asset(_selectedIndex == index
                                     ? _selectedItemImages[index]
                                     : _imageNames[index])),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0),
-                            child:
-                            Text(_drawerMenuItems[index], style: _titleStyle),
+                            child: Text(_drawerMenuItems[index],
+                                style: _titleStyle),
                           ),
                         ],
                       ),
@@ -229,7 +231,7 @@ class _HomePageState extends State<HomePage> {
         fontWeight: FontWeight.normal,
         color: AppColors.colorBlack);
     final _moduleTitleStyle = TextStyle(
-        fontFamily:  Constants.FONT_FAMILY_ROBOTO,
+        fontFamily: Constants.FONT_FAMILY_ROBOTO,
         fontSize: 14,
         fontWeight: FontWeight.normal,
         color: AppColors.colorGrey);
@@ -305,8 +307,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       );
-    }
-    else {
+    } else {
       return Container(
         height: 45,
         child: Container(
@@ -350,10 +351,14 @@ class _HomePageState extends State<HomePage> {
                       }
                       break;
                     case 11:
-                       {
-                         //Logout
-                       }
-                       break;
+                      {
+                        //Logout
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade, child: LoginPage()));
+                      }
+                      break;
                     default:
                       {
                         navigateToFeatureComingSoonPage();
@@ -381,7 +386,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final _appBarStyle = TextStyle(
-        fontFamily:  Constants.FONT_FAMILY_ROBOTO,
+        fontFamily: Constants.FONT_FAMILY_ROBOTO,
         fontSize: 18,
         fontWeight: FontWeight.w600,
         color: Colors.white);
@@ -397,8 +402,24 @@ class _HomePageState extends State<HomePage> {
           ),
           backgroundColor: AppColors.colorAppBar,
           actions: <Widget>[
-            SizedBox(width: 30,height: 30,child: Image.asset('images/ic_notfication_white.png')),
-            SizedBox(width: 30,height: 30,child: Image.asset('images/ic_more.png')),
+            InkWell(
+              child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Image.asset('images/ic_notfication_white.png')),
+              onTap: () {
+                navigateToFeatureComingSoonPage();
+              },
+            ),
+            InkWell(
+              child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Image.asset('images/ic_more.png')),
+              onTap: () {
+                navigateToFeatureComingSoonPage();
+              },
+            ),
           ],
         ),
         body: DashboardPage(),
@@ -419,8 +440,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Positioned(bottom: 0, right: 10,child:_versionNumberWidgte()
-                  ),
+                  Positioned(
+                      bottom: 0, right: 10, child: _versionNumberWidgte()),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: ListTile(
@@ -451,8 +472,7 @@ class _HomePageState extends State<HomePage> {
                                 fontFamily: Constants.FONT_FAMILY_ROBOTO,
                                 fontSize: 16,
                                 color: Colors.white),
-                          )
-                      ),
+                          )),
                     ),
                   ),
                 ],
@@ -478,4 +498,3 @@ class _HomePageState extends State<HomePage> {
             type: PageTransitionType.fade, child: FeaturesComingSoonPage()));
   }
 }
-

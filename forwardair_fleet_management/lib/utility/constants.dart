@@ -83,5 +83,5 @@ class Constants {
   //2. Driver Relations
   static const String TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL = 'contractorrelations@forwardair.com';
   static const String TEXT_DRIVER_RELATIONS_PHONENUMBER =  '855-585-8574';
-
+  static const String TEXT_CONTENT_TYPE = 'application/json';
 }
