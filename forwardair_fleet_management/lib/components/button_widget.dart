@@ -36,7 +36,6 @@ class ButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Padding(
         padding: padding != null
             ? padding

@@ -129,15 +129,21 @@ class DrivingState extends State<DrivingPage> {
   Widget _bottomWidget() {
     return Column(
       children: <Widget>[
-        ButtonWidget(
-          text: Constants.TEXT_NOT_DRIVING,
-          onPressed: () => _conformationBloc.dispatch(NotDrivingEvent()),
-          padding:
-              EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
+        Padding(
+          padding: const  EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
+          child: Container(
+            height: 50,
+            color: Colors.green,
+            child: ButtonWidget(
+              text: Constants.TEXT_NOT_DRIVING,
+              onPressed: () => _conformationBloc.dispatch(NotDrivingEvent()),
+
+            ),
+          ),
         ),
         InkWell(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(12.0),
             child: Text(
               Constants.TEXT_CLOSE_APP,
               style: TextStyle(

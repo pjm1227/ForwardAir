@@ -53,14 +53,17 @@ class TermsConditions extends StatelessWidget {
                   (Route<dynamic> route) => false);
             }
           }
+
+          if (state is DeclineState) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => DrivingConfirmation()),
+                (Route<dynamic> route) => false);
+          }
         },
         child: BlocBuilder<TermsBloc, TermsStates>(
             bloc: _termsBloc,
             builder: (context, state) {
               print('Terms Page $state');
-              if (state is DeclineState) {
-                return DrivingConfirmation();
-              }
               return _initialWidget(context);
             }),
       ),
@@ -76,7 +79,7 @@ class TermsConditions extends StatelessWidget {
         children: <Widget>[
           //Container for showing image
           Padding(
-            padding: const EdgeInsets.only(top:16.0),
+            padding: const EdgeInsets.only(top: 16.0),
             child: Container(
               width: MediaQuery.of(context).size.width,
               child: Image.asset(
