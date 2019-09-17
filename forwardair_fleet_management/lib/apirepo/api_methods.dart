@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:forwardair_fleet_management/models/error_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,7 +37,13 @@ class ApiMethods {
           .post(url, body: body == null ? null : body, headers: headers)
           .timeout(Duration(seconds: 20));
       responseJson = _returnResponse(response);
+    } on SocketException catch (_) {
+      var map = '{"errorMessage": "Timeout"}';
+      responseJson = ErrorModel.fromJson(json.decode(map));
     } on TimeoutException catch (_) {
+      var map = '{"errorMessage": "Timeout"}';
+      responseJson = ErrorModel.fromJson(json.decode(map));
+    } catch (_) {
       var map = '{"errorMessage": "Timeout"}';
       responseJson = ErrorModel.fromJson(json.decode(map));
     }

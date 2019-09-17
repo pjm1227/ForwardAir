@@ -55,7 +55,7 @@ class LoginState extends State<LoginPage> {
     ));
     //Returns a Scaffold
     return Scaffold(
-     // resizeToAvoidBottomPadding: false,
+      // resizeToAvoidBottomPadding: false,
       //Bloc Listener
       body: BlocListener<LoginBloc, LoginStates>(
         bloc: _loginBloc,
@@ -74,13 +74,13 @@ class LoginState extends State<LoginPage> {
           bloc: _loginBloc,
           builder: (context, state) {
             print('Login State $state');
-            if (state is LoginLoadingState) {
+            /* if (state is LoginLoadingState) {
               return Center(child: CircularProgressIndicator());
-            }
+            }*/
             if (state is LoginSuccessState) {
               return HomePage();
             }
-            return _initialWidget();
+            return _initialWidget(state);
           },
         ),
       ),
@@ -88,7 +88,7 @@ class LoginState extends State<LoginPage> {
   }
 
   //Initial Widget for Login
-  Widget _initialWidget() {
+  Widget _initialWidget(LoginStates state) {
     return Stack(
       children: <Widget>[
         Container(
@@ -167,10 +167,12 @@ class LoginState extends State<LoginPage> {
                         child: Container(
                           height: 50,
                           child: ButtonWidget(
-                            onPressed: () => _loginBloc.dispatch(
-                                LoginPressedEvent(
-                                    userName: _textControllerEmail.text,
-                                    userPassword: _textControllerPassword.text)),
+                            onPressed: () {
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                              _loginBloc.dispatch(LoginPressedEvent(
+                                  userName: _textControllerEmail.text,
+                                  userPassword: _textControllerPassword.text));
+                            },
                             text: 'LOGIN',
                           ),
                         ),
@@ -183,7 +185,20 @@ class LoginState extends State<LoginPage> {
             /*   ],
             ),*/
           ),
-        )
+        ),
+        Container(
+          child: state is LoginLoadingState
+              ? Opacity(
+                  opacity: 0.4,
+                  child: const ModalBarrier(
+                      dismissible: false, color: Colors.grey),
+                )
+              : null,
+        ),
+        Center(
+          child:
+              state is LoginLoadingState ? CircularProgressIndicator() : null,
+        ),
       ],
     );
   }

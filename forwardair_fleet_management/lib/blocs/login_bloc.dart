@@ -67,10 +67,10 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
     print(body.toString());
     final _repository = Repository();
     var result = await _repository.makeLoginRequest(body.toString());
-    print('Result is $result');
     //Check if result is an instance of LoginModel or ErrorModel
     //If it's LoginModel then insert data into DB else show error message
     if (result is ErrorModel) {
+      yield LoginInitialState();
       yield FormErrorState(errorMessage: result.errorMessage);
     } else {
       try {
@@ -78,6 +78,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
         await _insertIntoDB(loginModel);
         yield LoginSuccessState();
       } catch (_) {
+        yield LoginInitialState();
         yield FormErrorState(errorMessage: Constants.SOMETHING_WRONG);
         print("db Exception");
       }

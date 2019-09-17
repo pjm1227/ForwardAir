@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:forwardair_fleet_management/blocs/events/terms_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/terms_state.dart';
 import 'package:forwardair_fleet_management/blocs/terms_condition_bloc.dart';
@@ -10,7 +9,6 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:bloc/bloc.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
-import 'package:forwardair_fleet_management/screens/drawermenu.dart';
 
 import '../main.dart';
 import 'login_screen.dart';
