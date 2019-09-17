@@ -494,7 +494,7 @@ class DashboardState extends State<DashboardPage> {
                               Constants.TEXT_TOTAL_GALLONS,
                               style: TextStyle(
                                   fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                                  fontSize: 10,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.normal,
                                   color: AppColors.colorTotalGallons),
                             ),
@@ -536,7 +536,7 @@ class DashboardState extends State<DashboardPage> {
                               Constants.TEXT_TOTAL_FUEL_AMOUNT,
                               style: TextStyle(
                                   fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                                  fontSize: 10,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.normal,
                                   color: AppColors.colorTotalGallons),
                             ),
