@@ -13,6 +13,10 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+/*
+  DashboardPage to display dashboard details.
+*/
+
 class DashboardPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -39,14 +43,18 @@ class DashboardState extends State<DashboardPage> {
     super.dispose();
   }
 
+  //Child Widgets of the Refresh Controller
   Widget _childWidgetToRefresh(
       dynamic state, Dashboard_DB_Model _dashboardDataModel) {
     _refreshController.refreshCompleted();
     if (state is InitialState) {
+      //Initial State
       return Center(child: CircularProgressIndicator());
     } else if (state is DashboardError) {
+      //If any error occurs, while fetching teh data
       return Center(child: Text('Failed to fetch details'));
     } else if (state is DashboardLoaded) {
+      //To update the ListView, once data comes
       if (state.dashboardData != null) {
         //To populate This Month data initially
         for (var i = 0; i < state.dashboardData.length; i++) {
@@ -61,9 +69,11 @@ class DashboardState extends State<DashboardPage> {
         physics: AlwaysScrollableScrollPhysics(),
         itemCount: 4,
         itemBuilder: (BuildContext context, int index) {
+          //To display This Week filter widget
           if (index == 0) {
             return _buildThisWeekWidget();
           }
+          //To display Total loads and Total Miles widget
           if (index == 1) {
             return _buildWidgetTotalLoadsAndMiles(
                 _dashboardDataModel.totalLoads != null
@@ -72,7 +82,9 @@ class DashboardState extends State<DashboardPage> {
                 _dashboardDataModel.totalMiles != null
                     ? '${_dashboardDataModel.totalMiles}'
                     : 'NA');
-          } else if (index == 2) {
+          }
+          //To display Fuel widget
+          else if (index == 2) {
             return _buildFuelWidget(
                 _dashboardDataModel.totalTractorGallons != null
                     ? '${_dashboardDataModel.totalTractorGallons}'
@@ -80,7 +92,9 @@ class DashboardState extends State<DashboardPage> {
                 _dashboardDataModel.totalFuelCost != null
                     ? '${_dashboardDataModel.totalFuelCost}'
                     : 'NA');
-          } else {
+          }
+          //To Display NetCompensation and Deductions Widget
+          else {
             return _buildNetCompensationWidget(
                 Constants.TEXT_NET_CONPENSATION,
                 _dashboardDataModel.netAmt != null
@@ -98,26 +112,31 @@ class DashboardState extends State<DashboardPage> {
     }
   }
 
+  //This returns the Widget of Dashboard Page
   @override
   Widget build(BuildContext context) {
+    //To fetch the data Initially
     _dashboardBloc.dispatch(FetchDashboardEvent());
-
-    return  Scaffold(
-        backgroundColor: AppColors.colorDashboard_Bg,
-        body: BlocBuilder<DashboardBloc, dynamic>(
-          bloc: _dashboardBloc,
-          builder: (context, state) {
-            return SmartRefresher(
-                controller: _refreshController,
-                enablePullDown: true,
-                header: MaterialClassicHeader(),
-                onRefresh: () {
-                  _dashboardBloc.dispatch(PullToRefreshDashboardEvent());
-                },
-                child: _childWidgetToRefresh(state, _dashboardDataModel));
-          },
-        ),
-        bottomNavigationBar: _bottomNavigationBarWidget(),
+    //This returns the Dashboard Widget
+    return Scaffold(
+      backgroundColor: AppColors.colorDashboard_Bg,
+      //BlocBuilder
+      body: BlocBuilder<DashboardBloc, dynamic>(
+        bloc: _dashboardBloc,
+        builder: (context, state) {
+          //Pull Refresh Option
+          return SmartRefresher(
+              controller: _refreshController,
+              enablePullDown: true,
+              header: MaterialClassicHeader(),
+              onRefresh: () {
+                _dashboardBloc.dispatch(PullToRefreshDashboardEvent());
+              },
+              child: _childWidgetToRefresh(state, _dashboardDataModel));
+        },
+      ),
+      //Quick Contacts
+      bottomNavigationBar: _bottomNavigationBarWidget(),
     );
   }
 
@@ -203,6 +222,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //This return the This week Filter widget
   _buildThisWeekWidget() {
     return Container(
       height: 50,
@@ -244,6 +264,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //This return the Text of the This week Filter
   Widget _weekFilterWidget(String title) {
     final _textStyle = TextStyle(
       fontWeight: FontWeight.normal,
@@ -258,8 +279,11 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //This return the Bottom sheet when user taps on This week Filter
   Widget _weekModalBottomSheet(context) {
+    //To Align a Text
     final centerTextAlign = TextAlign.center;
+    //List of options in filter bootom sheet
     final weekFilterOptions = [
       Constants.TEXT_THISWEEK,
       Constants.TEXT_LASTWEEK,
@@ -267,6 +291,7 @@ class DashboardState extends State<DashboardPage> {
       Constants.TEXT_THISMONTH,
       Constants.TEXT_CANCEL
     ];
+    //Text Style of the Cancel Text
     final _cancelText = Text(
       Constants.TEXT_CANCEL,
       style: TextStyle(
@@ -277,6 +302,7 @@ class DashboardState extends State<DashboardPage> {
       ),
       textAlign: centerTextAlign,
     );
+    //This Returns bottom sheet
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -307,6 +333,7 @@ class DashboardState extends State<DashboardPage> {
         });
   }
 
+  //This returns Holder of TotalLoadsAndMiles Widget
   _buildWidgetTotalLoadsAndMiles(String totalLoads, String totalMiles) {
     return Container(
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -318,6 +345,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //This returns TotalLoadsAndMiles Widget
   _totalLoadsAndMilesWidget(String aTitle, String aSubTitle) {
     final _titleStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
@@ -407,6 +435,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //This returns Fuel Widget
   _buildFuelWidget(String totalGallons, String totalFuelAmount) {
     final _titleStyle = TextStyle(
       fontFamily: Constants.FONT_FAMILY_ROBOTO,
@@ -537,6 +566,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //This returns NetCompensationWidget Widget
   _buildNetCompensationWidget(String aTitle, String aSubTitle,
       String grossCompensation, String deductions) {
     final _titleStyle = TextStyle(
@@ -612,6 +642,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //This returns Gross Compensation And Deductions Wiget
   Widget grossCompensationAndDeductionsWiget(
       String title, String sTitle, bool isForGrossComp) {
     return new Container(
@@ -803,6 +834,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //To navigate to FeatureComingSoonPage
   void navigateToFeatureComingSoonPage() {
     Navigator.push(
         context,

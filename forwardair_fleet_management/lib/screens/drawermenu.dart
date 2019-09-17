@@ -14,6 +14,10 @@ import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.da
 import 'package:forwardair_fleet_management/models/login_model.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 
+/*
+  HomePage is the Holder of the DrawerMenu and Dashboard details.
+*/
+
 class HomePage extends StatefulWidget {
   HomePage();
   @override
@@ -21,6 +25,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //Text Items in drawer Menu
   List _drawerMenuItems = [
     Constants.TEXT_SAFETY_INCIDENTS,
     Constants.TEXT_DASHBOARD,
@@ -35,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     Constants.TEXT_SETTINGS,
     Constants.TEXT_LOGOUT
   ];
+  //Image Items in drawer Menu
   List _imageNames = [
     'images/ic_safety&incident.png',
     'images/ic_dashboard.png',
@@ -49,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     'images/ic_settings.png',
     'images/ic_logout.png'
   ];
-
+  //Selected Image Items in drawer Menu
   List _selectedItemImages = [
     'images/ic_safety&incident_active.png',
     'images/ic_dashboard_active.png',
@@ -64,18 +70,24 @@ class _HomePageState extends State<HomePage> {
     'images/ic_settings_active.png',
     'images/ic_logout_active.png'
   ];
-
+  //Selected index
   int _selectedIndex = 0;
+  //Expand Flag
   bool expandFlag = false;
+  //Expanded List index
   int _expandedListIndex = 0;
+  //Version
   String versionNumer = '';
+  //User Details
   UserDetails _userDetails = UserDetails();
 
   //Initial State
   @override
   initState() {
     super.initState();
+    //Fetch User Data from DB
     _fetchUserDetails();
+    //Fetch Version Number of the app
     _getVersionNumberOfTheApp();
   }
 
@@ -245,6 +257,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //To Display the items inside ListView
   Widget _buildRow(int index) {
     final _titleStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
@@ -256,10 +269,12 @@ class _HomePageState extends State<HomePage> {
         fontSize: 14,
         fontWeight: FontWeight.normal,
         color: AppColors.colorGrey);
-
+    //For Safety and Incidents
     if (index == 0) {
       return _safetyAndAccidentsExpandableWidget(index);
-    } else if (index == 3) {
+    }
+    //For Modules
+    else if (index == 3) {
       return Column(
         children: <Widget>[
           Container(
@@ -275,7 +290,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       );
-    } else if (index == 2 || index == 8) {
+    }
+    //For Notification and Company News
+    else if (index == 2 || index == 8) {
       return Column(
         children: <Widget>[
           Container(
@@ -328,7 +345,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       );
-    } else {
+    }
+    //For the other items
+    else {
       return Container(
         height: 45,
         child: Container(
@@ -400,12 +419,14 @@ class _HomePageState extends State<HomePage> {
   //Log out
   Future logoutAction() async {
     final userManager = UserManager();
+    //Deleting all data in User Table
     return await userManager.deleteAll();
   }
 
+  //This return UI of Drawer Menu and Dasboard
   @override
   Widget build(BuildContext context) {
-
+    //To provide text style to the appBarText
     final _appBarStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
         fontSize: 18,
@@ -422,6 +443,7 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: AppColors.colorAppBar,
         actions: <Widget>[
+          //To display the notification Icon
           InkWell(
             child: SizedBox(
                 width: 30,
@@ -431,6 +453,7 @@ class _HomePageState extends State<HomePage> {
               navigateToFeatureComingSoonPage();
             },
           ),
+          //To display the more Icon
           InkWell(
             child: SizedBox(
                 width: 30,
@@ -442,7 +465,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      //To Display the Dashboard
       body: DashboardPage(),
+      //To Display the DrawerMenu
       drawer: new Drawer(
           child: Container(
         height: MediaQuery.of(context).size.height,
@@ -451,6 +476,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             Stack(
               children: <Widget>[
+                //Background Image of the Top Widget
                 Container(
                   height: 150,
                   decoration: BoxDecoration(
@@ -460,17 +486,21 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                //Version Number
                 Positioned(
                     bottom: 0, right: 10, child: _versionNumberWidgte()),
+
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: ListTile(
+                    //Profile Image
                     leading: SizedBox(
                       height: 50,
                       width: 50,
                       child: new CircleAvatar(
                           child: Image.asset('images/ic_profile_pic.png')),
                     ),
+                    //User Name Text
                     title: Container(
                         padding: EdgeInsets.only(top: 15),
                         height: 40,
@@ -484,6 +514,7 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 16,
                               color: Colors.white),
                         )),
+                    //User Role Text
                     subtitle: Container(
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
@@ -498,6 +529,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
+            //Holder of the DrawerMenu
             ListView.builder(
               padding: EdgeInsets.only(top: 10),
               shrinkWrap: true,

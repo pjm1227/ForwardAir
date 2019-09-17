@@ -46,15 +46,4 @@ class Utils {
     }
     return false;
   }
-
-  //To check the internet connectivity
-  static Future<bool> checkTheInternetConnection()async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-      if (connectivityResult == ConnectivityResult.mobile) {
-        return true;
-      } else if (connectivityResult == ConnectivityResult.wifi) {
-        return true;
-      }
-      return false;
-    }
 }

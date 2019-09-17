@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/endpoints.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
-import 'package:forwardair_fleet_management/models/error_model.dart';
 
 class DashboardRequest {
 
@@ -18,9 +17,11 @@ class DashboardRequest {
       'Authorization': authrizationToken
     }).timeout(Duration(seconds: 20));
     if (response.statusCode == 200) {
+      //Success
       var jsonResponse = Dashboard_DB_Model().dashboardDBModelFromJson(response.body);
       return jsonResponse;
     } else {
+      //Failure
       throw Exception(Constants.SOMETHING_WRONG);
     }
   }

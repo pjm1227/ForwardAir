@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/*
+  Feature coming soon page to display statics data fro Future screens.
+*/
 class FeaturesComingSoonPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
