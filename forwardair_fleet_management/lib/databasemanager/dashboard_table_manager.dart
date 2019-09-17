@@ -55,7 +55,6 @@ class DashboardManager {
 
   //To fetch each model and convert map
   Future<Dashboard_DB_Model> fetchAnItemAndconvertMapToDashboard() async {
-
     //Fetch all data from DB for each model
     var mapList = await getAllObjectsFromDB();
     var dashboard = Dashboard_DB_Model();
