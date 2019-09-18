@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:forwardair_fleet_management/blocs/barrels/login.dart';
-import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
-import 'package:forwardair_fleet_management/main.dart';
-import 'package:forwardair_fleet_management/screens/login_screen.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:package_info/package_info.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
+import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
+import 'package:forwardair_fleet_management/main.dart';
 import 'package:forwardair_fleet_management/screens/dashboard_page.dart';
 import 'package:forwardair_fleet_management/screens/featurecomingsoon.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.dart';
-import 'package:forwardair_fleet_management/models/login_model.dart';
-import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
+import 'package:forwardair_fleet_management/blocs/sidemenu_bloc.dart';
 
 /*
   HomePage is the Holder of the DrawerMenu and Dashboard details.
@@ -25,6 +23,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //SideMenu Bloc
+  SideMenuBloc _sideMenuBloc = SideMenuBloc();
   //Text Items in drawer Menu
   List _drawerMenuItems = [
     Constants.TEXT_SAFETY_INCIDENTS,
@@ -76,56 +76,25 @@ class _HomePageState extends State<HomePage> {
   bool expandFlag = false;
   //Expanded List index
   int _expandedListIndex = 0;
-  //Version
-  String versionNumer = '';
-  //User Details
-  UserDetails _userDetails = UserDetails();
 
   //Initial State
   @override
   initState() {
     super.initState();
-    //Fetch User Data from DB
-    _fetchUserDetails();
-    //Fetch Version Number of the app
-    _getVersionNumberOfTheApp();
+    _sideMenuBloc.dispatch(DisplayInitiallyEvent());
   }
 
-  //Fetch Loggin User Data
-  Future<UserDetails> _fetchUserDetails() async {
-    var userManager = UserManager();
-    _userDetails = await userManager.getData();
-    setState(() {});
-    return _userDetails;
-  }
-
-  //Fetch Version of the app
-  Future<String> _getVersionNumberOfTheApp() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      versionNumer = packageInfo.version;
-    });
-    return versionNumer;
-  }
-
-  //To update the index
-  _onSelected(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  //Index of Expanded List
-  _onExpandedListViewIndex(int index) {
-    setState(() {
-      _expandedListIndex = index;
-    });
+  //To Dispose the SideMenu Bloc
+  @override
+  void dispose() {
+    _sideMenuBloc.dispose();
+    super.dispose();
   }
 
   //To display versionNumber
-  Text _versionNumberWidgte() {
+  Text _versionNumberWidget() {
     return Text(
-      Constants.TEXT_VERSION_NUMBER + versionNumer,
+      Constants.TEXT_VERSION_NUMBER + _sideMenuBloc.versionNumer,
       style: TextStyle(
           fontWeight: FontWeight.normal,
           fontFamily: Constants.FONT_FAMILY_ROBOTO,
@@ -138,9 +107,6 @@ class _HomePageState extends State<HomePage> {
   _buildRowExpandedRows(int index) {
     String title = '';
     switch (index) {
-//      case 0:
-//        title = Constants.TEXT_REPORT_ACCIDENT;
-//        break;
       case 0:
         title = Constants.TEXT_REPORT_BREAKDOWN;
         break;
@@ -169,8 +135,7 @@ class _HomePageState extends State<HomePage> {
                 )),
           ),
           onTap: () {
-            _onExpandedListViewIndex(index);
-            // navigateToFeatureComingSoonPage();
+            _sideMenuBloc.dispatch(SafetyIncidentsEvent(selectedIndex: index));
           },
         ),
       ),
@@ -192,13 +157,7 @@ class _HomePageState extends State<HomePage> {
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
-                _onSelected(index);
-                if (expandFlag == false) {
-                  _expandedListIndex = 0;
-                }
-                setState(() {
-                  expandFlag = !expandFlag;
-                });
+                _sideMenuBloc.dispatch(ExpandEvent(expandFlag: expandFlag));
               },
               child: Container(
                 height: 45,
@@ -335,9 +294,8 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       expandFlag = false;
                       _expandedListIndex = 0;
-                      _onSelected(index);
-
-                      navigateToFeatureComingSoonPage();
+                      _sideMenuBloc.dispatch(NavigationEvent(
+                          selectedIndex: index, expandFlag: false));
                     }),
                 color: Colors.transparent,
               ),
@@ -383,44 +341,14 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   expandFlag = false;
                   _expandedListIndex = 0;
-                  _onSelected(index);
-                  switch (index) {
-                    case 1:
-                      {
-                        Navigator.pop(context);
-                      }
-                      break;
-                    case 11:
-                      {
-                        logoutAction();
-
-                        //Logout
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                type: PageTransitionType.fade,
-                                child: DrivingConfirmation()));
-                      }
-                      break;
-                    default:
-                      {
-                        navigateToFeatureComingSoonPage();
-                      }
-                      break;
-                  }
+                  _sideMenuBloc.dispatch(
+                      NavigationEvent(selectedIndex: index, expandFlag: false));
                 }),
             color: Colors.transparent,
           ),
         ),
       );
     }
-  }
-
-  //Log out
-  Future logoutAction() async {
-    final userManager = UserManager();
-    //Deleting all data in User Table
-    return await userManager.deleteAll();
   }
 
   //This return UI of Drawer Menu and Dasboard
@@ -470,79 +398,160 @@ class _HomePageState extends State<HomePage> {
       //To Display the DrawerMenu
       drawer: new Drawer(
           child: Container(
-        height: MediaQuery.of(context).size.height,
-        color: Colors.white,
-        child: ListView(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                //Background Image of the Top Widget
-                Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("images/img_bg_top_login.png"),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-                //Version Number
-                Positioned(
-                    bottom: 0, right: 10, child: _versionNumberWidgte()),
+              height: MediaQuery.of(context).size.height,
+              color: Colors.white,
+              child:
+                  //BlocListener to check condition according to state
+                  //Basically it used to navigate to page
+                  BlocListener<SideMenuBloc, SideMenuStates>(
+                bloc: _sideMenuBloc,
+                condition: (previousState, currentState) {
+                  return true;
+                },
+                listener: (context, state) {
+                  //LoggedOut state
+                  if (state is LoggedOutState) {
+                    navigateToDrivingConfirmationPage();
+                  }
+                  //Navigation option
+                  else if (state is NavigationState) {
+                    final index =
+                        state.selectedIndex == null ? 0 : state.selectedIndex;
+                    switch (index) {
+                      case 0:
+                        break;
+                      case 1:
+                        {
+                          Navigator.pop(context);
+                        }
+                        break;
+                      case 11:
+                        {
+                          //Log out
+                          _sideMenuBloc.dispatch(LogoutEvent());
+                        }
+                        break;
+                      default:
+                        {
+                          navigateToFeatureComingSoonPage();
+                        }
+                        break;
+                    }
+                  }
+                },
+                //BlocBuilder - Used to return a widget
+                child: BlocBuilder<SideMenuBloc, SideMenuStates>(
+                  bloc: _sideMenuBloc,
+                  condition: (previousState, currentState) {
+                    return true;
+                  },
+                  builder: (context, state) {
+                    //Expanded Items inside Safety Incidents
+                    if (state is ExpandState) {
+                      _selectedIndex =
+                          state.selectedIndex == null ? 0 : state.selectedIndex;
+                      expandFlag =
+                          state.expandFlag == null ? false : state.expandFlag;
+                    }
+                    //Navigateion State
+                    if (state is NavigationState) {
+                      _selectedIndex =
+                          state.selectedIndex == null ? 0 : state.selectedIndex;
+                    }
+                    //To Expand Safety Incidents Items
+                    if (state is SafetyIncidentState) {
+                      _expandedListIndex =
+                          state.selectedIndex == null ? 0 : state.selectedIndex;
+                    }
+                    //Returns Side Menu Options
+                    return ListView(
+                      children: <Widget>[
+                        Stack(
+                          children: <Widget>[
+                            //Background Image of the Top Widget
+                            Container(
+                              height: 150,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage("images/img_bg_top_login.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                            //Version Number
+                            Positioned(
+                                bottom: 0,
+                                right: 10,
+                                child: _versionNumberWidget()),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: ListTile(
-                    //Profile Image
-                    leading: SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: new CircleAvatar(
-                          child: Image.asset('images/ic_profile_pic.png')),
-                    ),
-                    //User Name Text
-                    title: Container(
-                        padding: EdgeInsets.only(top: 15),
-                        height: 40,
-                        child: Text(
-                          _userDetails.fullName == null
-                              ? 'User Name'
-                              : _userDetails.fullName,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto',
-                              fontSize: 16,
-                              color: Colors.white),
-                        )),
-                    //User Role Text
-                    subtitle: Container(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Text(
-                          Constants.TEXT_FLEET_OWNER,
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                              fontSize: 16,
-                              color: Colors.white),
-                        )),
-                  ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: ListTile(
+                                //Profile Image
+                                leading: SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: new CircleAvatar(
+                                      child: Image.asset(
+                                          'images/ic_profile_pic.png')),
+                                ),
+                                //User Name Text
+                                title: Container(
+                                    padding: EdgeInsets.only(top: 15),
+                                    height: 40,
+                                    child: Text(
+                                      _sideMenuBloc.userDetails.fullName == null
+                                          ? 'User Name'
+                                          : _sideMenuBloc.userDetails.fullName,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto',
+                                          fontSize: 16,
+                                          color: Colors.white),
+                                    )),
+                                //User Role Text
+                                subtitle: Container(
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      Constants.TEXT_FLEET_OWNER,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontFamily:
+                                              Constants.FONT_FAMILY_ROBOTO,
+                                          fontSize: 16,
+                                          color: Colors.white),
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                        //Holder of the DrawerMenu
+                        ListView.builder(
+                          padding: EdgeInsets.only(top: 10),
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => _buildRow(index),
+                          itemCount: _drawerMenuItems.length,
+                        ),
+                      ],
+                    );
+                  },
                 ),
-              ],
-            ),
-            //Holder of the DrawerMenu
-            ListView.builder(
-              padding: EdgeInsets.only(top: 10),
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) => _buildRow(index),
-              itemCount: _drawerMenuItems.length,
-            ),
-          ],
-        ),
-      )),
+              ))),
     );
   }
 
+  // To navigate to the Driving Confirmation screen
+  void navigateToDrivingConfirmationPage() {
+    //Logout
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade, child: DrivingConfirmation()));
+  }
+
+  // To navigate to the Feature Coming soon screen
   void navigateToFeatureComingSoonPage() {
     Navigator.push(
         context,
