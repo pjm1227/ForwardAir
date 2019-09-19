@@ -85,8 +85,8 @@ class DatabaseHelper {
     await db.execute(
         '''CREATE TABLE user_table ($id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, $token TEXT, $emailAddress TEXT, $fullName TEXT,
          $userId TEXT, $stationCd TEXT, $participantId TEXT, $phone TEXT, $companyCd TEXT,
-         $contractorcd TEXT, $driverid TEXT, $driveroid TEXT, $faauthuseroid INTEGER NOT NULL, $xrefoid INTEGER NOT NULL,
-         $faauthuserid TEXT, $usertype TEXT, $activetractors INTEGER NOT NULL,
+         $contractorcd TEXT, $driverid TEXT, $driveroid INTEGER, $faauthuseroid INTEGER, $xrefoid INTEGER,
+         $faauthuserid TEXT, $usertype TEXT, $activetractors INTEGER,
          $isUserLoggedIn INTEGER NOT NULL)''');
     await db.execute(
         """CREATE TABLE $tableName($colId INTEGER PRIMARY KEY AUTOINCREMENT, $companyCd TEXT, 

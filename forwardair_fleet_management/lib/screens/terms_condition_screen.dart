@@ -165,7 +165,6 @@ class TermsConditions extends StatelessWidget {
               child: ButtonWidget(
                 onPressed: () => _termsBloc.dispatch(DeclineEvent()),
                 text: Constants.TEXT_DECLINE,
-                fontSize: 16,
                 colorText: AppColors.colorRed,
                 colorButton: AppColors.colorWhite,
               ),
@@ -178,7 +177,6 @@ class TermsConditions extends StatelessWidget {
                 onPressed: () =>
                     _termsBloc.dispatch(AcceptEvent(isChecked: isChecked)),
                 text: Constants.TEXT_ACCEPT,
-                fontSize: 16,
               ),
             )
           ],

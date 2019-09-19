@@ -49,8 +49,7 @@ class ButtonWidget extends StatelessWidget {
                 text,
                 style: TextStyle(
                     color: colorText != null ? colorText : AppColors.colorWhite,
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSize != null ? fontSize : 20,
+                    fontSize: fontSize != null ? fontSize : 16,
                     fontFamily: Constants.FONT_FAMILY_ROBOTO),
               ),
             )),

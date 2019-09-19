@@ -24,12 +24,7 @@ class Utils {
     final snackBar = SnackBar(
       content: Text(text),
       backgroundColor: AppColors.colorRed,
-      /* action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {
-          // Some code to undo the change.
-        },
-      ),*/
+      duration: Duration(seconds: 1),
     );
 
     // Find the Scaffold in the widget tree and use
