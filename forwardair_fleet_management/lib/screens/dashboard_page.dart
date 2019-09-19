@@ -87,10 +87,10 @@ class DashboardState extends State<DashboardPage> {
           else if (index == 2) {
             return _buildFuelWidget(
                 _dashboardDataModel.totalTractorGallons != null
-                    ? '${_dashboardDataModel.totalTractorGallons}'
+                    ? '${_dashboardBloc.roundOfDecimals(_dashboardDataModel.totalTractorGallons)}'
                     : 'NA',
                 _dashboardDataModel.totalFuelCost != null
-                    ? '${_dashboardDataModel.totalFuelCost}'
+                    ? '${_dashboardBloc.roundOfDecimals(_dashboardDataModel.totalFuelCost)}'
                     : 'NA');
           }
           //To Display NetCompensation and Deductions Widget

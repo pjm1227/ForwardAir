@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
-import 'package:forwardair_fleet_management/main.dart';
+import 'package:forwardair_fleet_management/screens/login_screen.dart';
 import 'package:forwardair_fleet_management/screens/dashboard_page.dart';
 import 'package:forwardair_fleet_management/screens/featurecomingsoon.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
@@ -29,11 +29,11 @@ class _HomePageState extends State<HomePage> {
   List _drawerMenuItems = [
     Constants.TEXT_SAFETY_INCIDENTS,
     Constants.TEXT_DASHBOARD,
-    Constants.TEXT_NOTIFICATION,
+    // Constants.TEXT_NOTIFICATION,
     Constants.TEXT_MODULES,
     Constants.TEXT_FLEET_TRACKER,
     Constants.TEXT_SETTLEMENTS,
-    Constants.TEXT_REFERRAL_PROGRAM,
+    //  Constants.TEXT_REFERRAL_PROGRAM,
     Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY,
     Constants.TEXT_COMPANY_NEWS,
     Constants.TEXT_PROFILE,
@@ -44,11 +44,11 @@ class _HomePageState extends State<HomePage> {
   List _imageNames = [
     'images/ic_safety&incident.png',
     'images/ic_dashboard.png',
-    'images/ic_notification.png',
+    //'images/ic_notification.png',
     'images/ic_notification.png',
     'images/ic_fleet_tracker.png',
     'images/ic_settlement.png',
-    'images/ic_referral_program.png',
+    //'images/ic_referral_program.png',
     'images/ic_notification_unavailability.png',
     'images/ic_company_news.png',
     'images/ic_profile.png',
@@ -60,10 +60,10 @@ class _HomePageState extends State<HomePage> {
     'images/ic_safety&incident_active.png',
     'images/ic_dashboard_active.png',
     'images/ic_notification.png',
-    'images/ic_notification_active.png',
+    //'images/ic_notification_active.png',
     'images/ic_fleet_tracker_active.png',
     'images/ic_settings_active.png',
-    'images/ic_referral_program_active.png',
+    //'images/ic_referral_program_active.png',
     'images/ic_notification_unavailability_active.png',
     'images/ic_company_news_active.png',
     'images/ic_profile_active.png',
@@ -108,10 +108,10 @@ class _HomePageState extends State<HomePage> {
     String title = '';
     switch (index) {
       case 0:
-        title = Constants.TEXT_REPORT_BREAKDOWN;
+        title = Constants.TEXT_REPORT_ACCIDENT;
         break;
       case 1:
-        title = Constants.TEXT_REPORT_INCIDENTOROTHER;
+        title = Constants.TEXT_REPORT_BREAKDOWN;
         break;
       case 2:
         title = Constants.TEXT_VIEW_HISTORY;
@@ -233,7 +233,8 @@ class _HomePageState extends State<HomePage> {
       return _safetyAndAccidentsExpandableWidget(index);
     }
     //For Modules
-    else if (index == 3) {
+    else if (index == 2) {
+      //3) {
       return Column(
         children: <Widget>[
           Container(
@@ -250,8 +251,10 @@ class _HomePageState extends State<HomePage> {
         ],
       );
     }
-    //For Notification and Company News
-    else if (index == 2 || index == 8) {
+    //Release 1: For Notification and Company News
+    //Recent: For Dashboard and Company News
+    else if (index == 1 || index == 6) {
+      //(index == 2 || index == 8) {
       return Column(
         children: <Widget>[
           Container(
@@ -373,24 +376,27 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           //To display the notification Icon
           InkWell(
-            child: SizedBox(
-                width: 30,
-                height: 30,
-                child: Image.asset('images/ic_notfication_white.png')),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Image.asset('images/ic_notfication_white.png')),
+            ),
             onTap: () {
               navigateToFeatureComingSoonPage();
             },
           ),
-          //To display the more Icon
-          InkWell(
-            child: SizedBox(
-                width: 30,
-                height: 30,
-                child: Image.asset('images/ic_more.png')),
-            onTap: () {
-              navigateToFeatureComingSoonPage();
-            },
-          ),
+//          //To display the more Icon
+//          InkWell(
+//            child: SizedBox(
+//                width: 30,
+//                height: 30,
+//                child: Image.asset('images/ic_more.png')),
+//            onTap: () {
+//              navigateToFeatureComingSoonPage();
+//            },
+//          ),
         ],
       ),
       //To Display the Dashboard
@@ -411,7 +417,7 @@ class _HomePageState extends State<HomePage> {
                 listener: (context, state) {
                   //LoggedOut state
                   if (state is LoggedOutState) {
-                    navigateToDrivingConfirmationPage();
+                    navigateToLginPage();
                   }
                   //Navigation option
                   else if (state is NavigationState) {
@@ -425,7 +431,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.pop(context);
                         }
                         break;
-                      case 11:
+                      case 9: //11:
                         {
                           //Log out
                           _sideMenuBloc.dispatch(LogoutEvent());
@@ -542,13 +548,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // To navigate to the Driving Confirmation screen
-  void navigateToDrivingConfirmationPage() {
-    //Logout
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade, child: DrivingConfirmation()));
+  // To navigate to the Login screen
+  void navigateToLginPage() {
+    Navigator.pop(context, true);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+
+//    Navigator.push(
+//        context,
+//        PageTransition(
+//            type: PageTransitionType.fade, child: LoginPage()));
   }
 
   // To navigate to the Feature Coming soon screen

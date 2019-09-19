@@ -122,4 +122,10 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       return dashboardItemsFromDB;
     }
   }
+
+  //Round Of the Decimals
+  int roundOfDecimals(double decimalNumber) {
+    final wholeNumber = decimalNumber.round();
+    return wholeNumber;
+  }
 }
