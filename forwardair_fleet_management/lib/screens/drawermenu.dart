@@ -157,7 +157,8 @@ class _HomePageState extends State<HomePage> {
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
-                _sideMenuBloc.dispatch(ExpandEvent(expandFlag: expandFlag));
+                _sideMenuBloc.dispatch(
+                    ExpandEvent(expandFlag: expandFlag, selectedIndex: index));
               },
               child: Container(
                 height: 45,
@@ -357,6 +358,7 @@ class _HomePageState extends State<HomePage> {
   //This return UI of Drawer Menu and Dasboard
   @override
   Widget build(BuildContext context) {
+
     //To provide text style to the appBarText
     final _appBarStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -77,20 +78,20 @@ class DashboardState extends State<DashboardPage> {
           if (index == 1) {
             return _buildWidgetTotalLoadsAndMiles(
                 _dashboardDataModel.totalLoads != null
-                    ? '${_dashboardDataModel.totalLoads}'
+                    ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalLoads)}'
                     : 'NA',
                 _dashboardDataModel.totalMiles != null
-                    ? '${_dashboardDataModel.totalMiles}'
+                    ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalMiles)}'
                     : 'NA');
           }
           //To display Fuel widget
           else if (index == 2) {
             return _buildFuelWidget(
                 _dashboardDataModel.totalTractorGallons != null
-                    ? '${_dashboardBloc.roundOfDecimals(_dashboardDataModel.totalTractorGallons)}'
+                    ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalTractorGallons)}'
                     : 'NA',
                 _dashboardDataModel.totalFuelCost != null
-                    ? '${_dashboardBloc.roundOfDecimals(_dashboardDataModel.totalFuelCost)}'
+                    ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalFuelCost)}'
                     : 'NA');
           }
           //To Display NetCompensation and Deductions Widget
@@ -98,13 +99,13 @@ class DashboardState extends State<DashboardPage> {
             return _buildNetCompensationWidget(
                 Constants.TEXT_NET_CONPENSATION,
                 _dashboardDataModel.netAmt != null
-                    ? '${_dashboardDataModel.netAmt}'
+                    ? '${Utils().formatDecimalsNumber(_dashboardDataModel.netAmt)}'
                     : 'NA',
                 _dashboardDataModel.grossAmt != null
-                    ? '${_dashboardDataModel.grossAmt}'
+                    ? '${Utils().formatDecimalsNumber(_dashboardDataModel.grossAmt)}'
                     : 'NA',
                 _dashboardDataModel.deductions != null
-                    ? '${_dashboardDataModel.deductions}'
+                    ? '${Utils().formatDecimalsNumber(_dashboardDataModel.deductions)}'
                     : 'NA');
           }
         },

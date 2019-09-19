@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:intl/intl.dart';
 import 'dart:async';
 
 import 'colors.dart';
@@ -40,5 +40,20 @@ class Utils {
       return true;
     }
     return false;
+  }
+
+
+  //Number formatting
+  String formatDecimalsNumber(double decimalNumber) {
+    final formatter = new NumberFormat("#,###.00");
+    String formattedNumber = formatter.format(decimalNumber);
+    return formattedNumber;
+  }
+
+  //Decimals to whole number
+  String formatDecimalToWholeNumber(dynamic decimalNumber) {
+    final formatter = new NumberFormat("#,###");
+    String formattedNumber = formatter.format(decimalNumber);
+    return formattedNumber;
   }
 }
