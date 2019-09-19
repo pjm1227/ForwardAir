@@ -70,53 +70,51 @@ class TermsConditions extends StatelessWidget {
 
   //Initial widget to show user
   Widget _initialWidget(BuildContext context) {
-    return  SafeArea(
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            //Container for showing image
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Container(
-                child: Image.asset(
-                  'images/ic_fa_logo.png',
-                ),
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        //Container for showing image
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: Container(
+            height: MediaQuery.of(context).size.height * .15,
+            width: MediaQuery.of(context).size.width,
+            child: Image.asset(
+              'images/ic_fa_logo.png',
             ),
-            //Text widget for Text of terms of service
-            Padding(
-              padding: EdgeInsets.only(top: 15.0, bottom: 10.0),
+          ),
+        ),
+        //Text widget for Text of terms of service
+
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Constants.TERMS_SERVICE,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+          ),
+        ),
+        //Text widget for text of terms and conditions
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Text(
-                Constants.TERMS_SERVICE,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                Constants.TERMS_AND_CONDITIONS,
               ),
             ),
-            //Text widget for text of terms and conditions
+          ),
+        ),
+        //Divider
+        //Checkbox Widget
 
-            Container(
-              height: MediaQuery.of(context).size.height*0.6 ,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Text(
-                    Constants.TERMS_AND_CONDITIONS,
-                  ),
-                ),
-              ),
-            ),
-            //Divider
-            Divider(
-              color: Colors.grey,
-              height: 1.0,
-            ),
-            //Checkbox Widget
-            _checkBoxWidget(),
-            _buttonsWidget(context),
-          ],
-
-      ),
+        Divider(
+          color: Colors.grey,
+          height: 1.0,
+        ),
+        _checkBoxWidget(),
+        _buttonsWidget(context),
+      ],
     );
   }
 
@@ -163,6 +161,7 @@ class TermsConditions extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.only(top: 20),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             Container(
               height: 50,
@@ -172,6 +171,7 @@ class TermsConditions extends StatelessWidget {
               child: ButtonWidget(
                 onPressed: () => _termsBloc.dispatch(DeclineEvent()),
                 text: Constants.TEXT_DECLINE,
+                fontSize: 16,
                 colorText: AppColors.colorRed,
                 colorButton: AppColors.colorWhite,
               ),
@@ -184,6 +184,7 @@ class TermsConditions extends StatelessWidget {
                 onPressed: () =>
                     _termsBloc.dispatch(AcceptEvent(isChecked: isChecked)),
                 text: Constants.TEXT_ACCEPT,
+                fontSize: 16,
               ),
             )
           ],
