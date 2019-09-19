@@ -62,7 +62,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
   // And save user data into DB
   Stream<LoginStates> makeAPiCall(String userName, String userPassword) async* {
     yield LoginLoadingState();
-    var request = LoginRequest(userName, userPassword);
+    var request = LoginRequest(userName.trim(), userPassword.trim());
     var body = request.toJson();
     print(body.toString());
     final _repository = Repository();

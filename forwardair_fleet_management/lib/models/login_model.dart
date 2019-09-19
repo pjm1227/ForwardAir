@@ -43,7 +43,7 @@ class UserDetails {
   String companyCd;
   String contractorcd;
   String driverid;
-  String driveroid;
+  int driveroid;
   int faauthuseroid;
   int xrefoid;
   String faauthuserid;
@@ -86,13 +86,13 @@ class UserDetails {
     map['phone'] = phone;
     map['companyCd'] = companyCd;
     map['contractorcd'] = contractorcd;
-    map['driverid'] = driverid;
+    map['driverid'] = driverid == null ? 0 : driverid;
     map['driveroid'] = driveroid;
-    map['faauthuseroid'] = faauthuseroid;
-    map['xrefoid'] = xrefoid;
+    map['faauthuseroid'] = faauthuseroid == null ? 0 : faauthuseroid;
+    map['xrefoid'] = xrefoid == null ? 0 : xrefoid;
     map['faauthuserid'] = faauthuserid;
     map['usertype'] = usertype;
-    map['activetractors'] = activetractors;
+    map['activetractors'] = activetractors == null ? 0 : activetractors;
     map['isUserLoggedIn'] = isUserLoggedIn ? 1 : 0;
     return map;
   }

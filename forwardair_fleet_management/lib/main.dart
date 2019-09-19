@@ -179,7 +179,7 @@ class DrivingState extends State<DrivingPage> {
                   style: TextStyle(
                       color: Colors.black87,
                       fontWeight: FontWeight.w700,
-                      fontSize: 30,
+                      fontSize: 26,
                       fontFamily: Constants.FONT_FAMILY_ROBOTO)),
             ),
           ),

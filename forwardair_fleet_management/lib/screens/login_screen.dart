@@ -123,7 +123,7 @@ class LoginState extends State<LoginPage> {
                         child: TextField(
                           controller: _textControllerEmail,
                           decoration: new InputDecoration(
-                            labelText: "User Name",
+                            labelText: "User Email",
                             fillColor: Colors.white,
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(0.0),
