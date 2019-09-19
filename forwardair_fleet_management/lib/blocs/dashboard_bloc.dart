@@ -8,6 +8,7 @@ import 'package:forwardair_fleet_management/models/webservice/dashboard_request.
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/databasemanager/dashboard_table_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
+import 'package:forwardair_fleet_management/apirepo/repository.dart';
 
 class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   //DB provider
@@ -63,15 +64,17 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   Future<List<Dashboard_DB_Model>> _fetchDashboardDetails() async {
     var userManager = UserManager();
     var userModel = await userManager.getData();
-    //Handle Internet connection
+    //Check for internet connection
     var isConnection = await Utils.isConnectionAvailable();
     if (isConnection) {
       // If device is in online
       try {
         //Making API Call
-        final dashboardItems = await apiManager.loadDashboardDataFromServer(
-            userModel.token != null ? userModel.token : '');
-        //If data exist in response
+        final _repository = Repository();
+        final responseBody = await _repository.makeDashboardRequest(userModel.token != null ? userModel.token : '');
+        final dashboardItems = Dashboard_DB_Model().dashboardDBModelFromJson(responseBody);
+        //final dashboardItems = await apiManager.loadDashboardDataFromServer(userModel.token != null ? userModel.token : '');
+        //For success
         if (dashboardItems.length > 0) {
           // await _dashboard_dbProvider.deleteAll();
           for (var index = 0; index < dashboardItems.length; index++) {
@@ -91,7 +94,9 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
           dashboardItemsFromDB.addAll(dashboardItems);
           return dashboardItemsFromDB;
         }
-      } catch (_) {
+      }
+      //To handle the exceptions
+      catch (_) {
         //If any Exception Occurs in API Call
         dashboardItemsFromDB = await fetchDataFromDB();
         return dashboardItemsFromDB;
@@ -101,41 +106,11 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       dashboardItemsFromDB = await fetchDataFromDB();
       return dashboardItemsFromDB;
     }
-
-//    await Utils.checkTheInternetConnection().then((intenet) async {
-//      if (intenet != null && intenet) {
-//        // Internet Present Case
-//        //Load API Data
-//        final dashboardItems = await apiManager.loadDashboardDataFromServer(userModel.token != null ? userModel.token : '');
-//        if (dashboardItems.length > 0) {
-//          // await _dashboard_dbProvider.deleteAll();
-//          for (var index = 0; index < dashboardItems.length; index++) {
-//            Dashboard_DB_Model _apimodel = dashboardItems[index];
-//            final isExist = await _dashboard_dbProvider.isDashboardPeriodeExist(_apimodel);
-//            if (isExist) {
-//              print('update $index)');
-//              _dashboard_dbProvider.updateDashboardDB(_apimodel);
-//            } else {
-//              _dashboard_dbProvider.insertIntoDashboardDB(_apimodel);
-//            }
-//          }
-//          dashboardItemsFromDB.addAll(dashboardItems);
-//        }
-//        return dashboardItemsFromDB;
-//      } else {
-//        // No-Internet Case
-//        //Fetch From DB
-//        dashboardItemsFromDB = await fetchDataFromDB();
-//        return dashboardItemsFromDB;
-//      }
-//     // return  dashboardItemsFromDB;
-//    });
-    // return dashboardItemsFromDB;
   }
 
   //This method to fetch from Dashboard DB
   Future<List<Dashboard_DB_Model>> fetchDataFromDB() async {
-    //Fetching all data from DB
+    //Fetching all from DB
     List<Dashboard_DB_Model> list =
         await _dashboard_dbProvider.fetchAllAndConvertMaplistToDashboardList();
     if (list.length > 0) {

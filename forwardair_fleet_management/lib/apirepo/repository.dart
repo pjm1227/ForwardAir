@@ -12,4 +12,10 @@ class Repository {
    */
   Future<dynamic> makeLoginRequest(String body) =>
       apiProvider.requestInPost(EndPoints.LOGIN_URL, null, body);
+
+  /*
+  This method is called when user request for dashboard
+   */
+  Future<dynamic> makeDashboardRequest(String token) =>
+      apiProvider.requestInPost(EndPoints.DASHBOARD_URL, token, null);
 }
