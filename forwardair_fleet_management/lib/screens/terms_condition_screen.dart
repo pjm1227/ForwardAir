@@ -70,45 +70,52 @@ class TermsConditions extends StatelessWidget {
 
   //Initial widget to show user
   Widget _initialWidget(BuildContext context) {
-    return SingleChildScrollView(
+    return  SafeArea(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          //Container for showing image
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Image.asset(
-                'images/ic_fa_logo.png',
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            //Container for showing image
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Container(
+                child: Image.asset(
+                  'images/ic_fa_logo.png',
+                ),
               ),
             ),
-          ),
-          //Text widget for Text of terms of service
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              Constants.TERMS_SERVICE,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+            //Text widget for Text of terms of service
+            Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 10.0),
+              child: Text(
+                Constants.TERMS_SERVICE,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+              ),
             ),
-          ),
-          //Text widget for text of terms and conditions
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              Constants.TERMS_AND_CONDITIONS,
+            //Text widget for text of terms and conditions
+
+            Container(
+              height: MediaQuery.of(context).size.height*0.6 ,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text(
+                    Constants.TERMS_AND_CONDITIONS,
+                  ),
+                ),
+              ),
             ),
-          ),
-          //Divider
-          Divider(
-            color: Colors.grey,
-            height: 1.0,
-          ),
-          //Checkbox Widget
-          _checkBoxWidget(),
-          _buttonsWidget(context),
-        ],
+            //Divider
+            Divider(
+              color: Colors.grey,
+              height: 1.0,
+            ),
+            //Checkbox Widget
+            _checkBoxWidget(),
+            _buttonsWidget(context),
+          ],
+
       ),
     );
   }
