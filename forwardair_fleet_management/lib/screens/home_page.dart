@@ -95,9 +95,12 @@ class _HomePageState extends State<HomePage> {
 
   //To display versionNumber
   Text _versionNumberWidget() {
-    return Text(
+    return
+      Text(
       Constants.TEXT_VERSION_NUMBER + _sideMenuBloc.versionNumer,
-      style: TextStyle(
+      style:
+
+      TextStyle(
           fontWeight: FontWeight.normal,
           fontFamily: Constants.FONT_FAMILY_ROBOTO,
           fontSize: 10,
@@ -298,8 +301,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 15.0),
-                          child:
-                              Text(_drawerMenuItems[index], style: _titleStyle),
+                          child:   Text(_drawerMenuItems[index], style: _titleStyle),
                         ),
                       ],
                     ),
@@ -530,15 +532,17 @@ class _HomePageState extends State<HomePage> {
                                 //User Role Text
                                 subtitle: Container(
                                     padding: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      Constants.TEXT_FLEET_OWNER,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                          fontFamily:
-                                              Constants.FONT_FAMILY_ROBOTO,
-                                          fontSize: 16,
-                                          color: Colors.white),
-                                    )),
+                                    child: TextWidget(text:Constants.TEXT_FLEET_OWNER,colorText: AppColors.colorWhite,fontWeight: FontWeight.normal,),
+//                                    Text(
+//                                      Constants.TEXT_FLEET_OWNER,
+//                                      style: TextStyle(
+//                                          fontWeight: FontWeight.normal,
+//                                          fontFamily:
+//                                              Constants.FONT_FAMILY_ROBOTO,
+//                                          fontSize: 16,
+//                                          color: Colors.white),
+//                                    )
+                                ),
                               ),
                             ),
                           ],
