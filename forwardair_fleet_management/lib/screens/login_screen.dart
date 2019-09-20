@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/login.dart';
 import 'package:forwardair_fleet_management/components/button_widget.dart';
+import 'package:forwardair_fleet_management/screens/terms_condition_screen.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
-import 'package:forwardair_fleet_management/screens/home_page.dart';
+
+import 'home_page.dart';
 
 /*class LoginPage extends StatelessWidget {
   // This widget is the root of your application.
@@ -50,6 +54,16 @@ class LoginState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     //Returns a Scaffold
+    if (Platform.isAndroid) {
+      return SafeArea(
+        child: _scaffoldWidget(),
+      );
+    } else {
+      return _scaffoldWidget();
+    }
+  }
+
+  Widget _scaffoldWidget() {
     return Scaffold(
       // resizeToAvoidBottomPadding: false,
       //Bloc Listener
@@ -74,7 +88,7 @@ class LoginState extends State<LoginPage> {
               return Center(child: CircularProgressIndicator());
             }*/
             if (state is LoginSuccessState) {
-              return HomePage();
+              return TermsConditions();
             }
             return _initialWidget(state);
           },
@@ -160,18 +174,15 @@ class LoginState extends State<LoginPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
-                        child: Container(
-                          height: 50,
-                          child: ButtonWidget(
-                            onPressed: () {
-                              FocusScope.of(context)
-                                  .requestFocus(new FocusNode());
-                              _loginBloc.dispatch(LoginPressedEvent(
-                                  userName: _textControllerEmail.text,
-                                  userPassword: _textControllerPassword.text));
-                            },
-                            text: 'LOGIN',
-                          ),
+                        child: ButtonWidget(
+                          onPressed: () {
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+                            _loginBloc.dispatch(LoginPressedEvent(
+                                userName: _textControllerEmail.text,
+                                userPassword: _textControllerPassword.text));
+                          },
+                          text: 'LOGIN',
                         ),
                       ),
                     ],

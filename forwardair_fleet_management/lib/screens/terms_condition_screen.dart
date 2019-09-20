@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,9 +32,9 @@ class TermsConditions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //For status bar color
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.black, // status bar color
-    ));
+    ));*/
     //It returns BlocBuilder, That means it will refresh itself and which we're passing
     //TermsBloc and Terms State, State is using to manage or replace widgets.
     return Scaffold(
@@ -47,15 +49,16 @@ class TermsConditions extends StatelessWidget {
               Utils.showSnackBar(Constants.ACCEPT_TERMS_CONDITION, context);
             } else {
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => DrivingPage()),
                   (Route<dynamic> route) => false);
             }
           }
 
           if (state is DeclineState) {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => DrivingConfirmation()),
-                (Route<dynamic> route) => false);
+            /*  Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => DrivingPage()),
+                (Route<dynamic> route) => false);*/
+            exit(0);
           }
         },
         child: BlocBuilder<TermsBloc, TermsStates>(
@@ -171,7 +174,6 @@ class TermsConditions extends StatelessWidget {
               child: ButtonWidget(
                 onPressed: () => _termsBloc.dispatch(DeclineEvent()),
                 text: Constants.TEXT_DECLINE,
-                fontSize: 16,
                 colorText: AppColors.colorRed,
                 colorButton: AppColors.colorWhite,
               ),
@@ -184,7 +186,6 @@ class TermsConditions extends StatelessWidget {
                 onPressed: () =>
                     _termsBloc.dispatch(AcceptEvent(isChecked: isChecked)),
                 text: Constants.TEXT_ACCEPT,
-                fontSize: 16,
               ),
             )
           ],

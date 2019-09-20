@@ -9,6 +9,7 @@ abstract class DrivingConfirmationState extends Equatable {
 class InitialState extends DrivingConfirmationState {}
 
 class CloseState extends DrivingConfirmationState {}
+class NotDrive extends DrivingConfirmationState {}
 
 class NotDrivingState extends DrivingConfirmationState {
   final bool isTermsAccepted, isUserLoggedIn;

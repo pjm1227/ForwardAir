@@ -10,21 +10,49 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/theme.dart' as Theme;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'databasemanager/terms_manager.dart';
+import 'databasemanager/user_manager.dart';
 import 'screens/home_page.dart';
 import 'screens/login_screen.dart';
 
 //Main function of an app
 //App must start from here
 main() async {
-  //Setup the status bar color
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.black, // status bar color
-  ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(DrivingConfirmation());
+
+  Widget _defaultHome = new LoginPage();
+  // Get result of the login function.
+  var userManager = UserManager();
+  var termManager = TermsManager();
+  var termModel = await termManager.getData();
+  //Get Data from User Table
+  var userModel = await userManager.getData();
+  //Check if user Logged in or not
+  if(userModel == null)
+    {
+      _defaultHome = new LoginPage();
+    }
+  else if ((userModel != null && userModel.isUserLoggedIn) &&
+      (termModel != null && termModel.isTermsAccepted)) {
+    _defaultHome = new DrivingPage();
+  } else if (termModel == null) {
+    _defaultHome = new TermsConditions();
+  }
+
+  runApp(MaterialApp(
+    title: 'Fleet Owner',
+    debugShowCheckedModeBanner: false,
+    theme: Theme.customThemeData,
+    routes: <String, WidgetBuilder>{
+      '/dnd': (context) => DrivingPage(),
+      '/login': (context) => LoginPage(),
+      '/t&c': (context) => TermsConditions(),
+    },
+    home: _defaultHome,
+  ));
 }
 
-//Root widget of an App
+/*//Root widget of an App
 //Here we can set the app theme
 class DrivingConfirmation extends StatelessWidget {
   // This widget is the root of your application.
@@ -34,10 +62,14 @@ class DrivingConfirmation extends StatelessWidget {
       title: 'Fleet Owner',
       debugShowCheckedModeBanner: false,
       theme: Theme.customThemeData,
+      routes: <String, WidgetBuilder>{
+        '/dnd': (context) => DrivingConfirmation(),
+        '/login': (context) => LoginPage(),
+      },
       home: DrivingPage(),
     );
   }
-}
+}*/
 
 class DrivingPage extends StatefulWidget {
   @override
@@ -64,60 +96,55 @@ class DrivingState extends State<DrivingPage> {
 
   Widget scaffoldWidget() {
     return Scaffold(
-      //BlocListener to check condition according to state
-      //Basically it used to show snackbar, toast or navigate to page
+        //BlocListener to check condition according to state
+        //Basically it used to show snackbar, toast or navigate to page
         body: BlocListener<DrivingConformationBloc, DrivingConfirmationState>(
+      condition: (previousState, currentState) {
+        return true;
+      },
+      bloc: _conformationBloc,
+      listener: (context, state) {
+        //Close state then exit from app
+        if (state is CloseState) {
+          exit(0);
+        } else if (state is NotDrive) {
+          //Move to Terms page according to condition
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => HomePage()),
+              (Route<dynamic> route) => false);
+        }
+      },
+      //BlocBuilder - Used to return a widget
+      child: BlocBuilder<DrivingConformationBloc, DrivingConfirmationState>(
           condition: (previousState, currentState) {
             return true;
           },
           bloc: _conformationBloc,
-          listener: (context, state) {
-            //Close state then exit from app
-            if (state is CloseState) {
-              exit(0);
-            } else if (state is NotDrivingState) {
-              //Move to Terms page according to condition
-              if (!state.isTermsAccepted && !state.isUserLoggedIn) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TermsConditions()),
-                );
+          builder: (context, state) {
+            print('Driving Conformation $state');
+            if (state is NotDrivingState) {
+              print(state.isTermsAccepted);
+              print(state.isUserLoggedIn);
+              if (state.isTermsAccepted && !state.isUserLoggedIn) {
+                return LoginPage();
+              } else if (state.isTermsAccepted && state.isUserLoggedIn) {
+                return HomePage();
               }
             }
-          },
-          //BlocBuilder - Used to return a widget
-          child: BlocBuilder<DrivingConformationBloc, DrivingConfirmationState>(
-              condition: (previousState, currentState) {
-                return true;
-              },
-              bloc: _conformationBloc,
-              builder: (context, state) {
-                print('Driving Conformation $state');
-                if (state is NotDrivingState) {
-                  print(state.isTermsAccepted);
-                  print(state.isUserLoggedIn);
-                  if (state.isTermsAccepted && !state.isUserLoggedIn) {
-                    return LoginPage();
-                  } else if (state.isTermsAccepted && state.isUserLoggedIn) {
-                    return HomePage();
-                  }
-                }
-                return _mainWidget();
-              }),
-        ));
+            return _mainWidget();
+          }),
+    ));
   }
 
   //Build Function
   @override
   Widget build(BuildContext context) {
-
-    if (Platform.isIOS) {
-      return scaffoldWidget();
-    }
     if (Platform.isAndroid) {
       return SafeArea(
         child: scaffoldWidget(),
       );
+    } else {
+      return scaffoldWidget();
     }
   }
 
@@ -142,14 +169,12 @@ class DrivingState extends State<DrivingPage> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: const  EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
+          padding: const EdgeInsets.only(
+              left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
           child: Container(
-            height: 50,
-            color: Colors.green,
             child: ButtonWidget(
               text: Constants.TEXT_NOT_DRIVING,
               onPressed: () => _conformationBloc.dispatch(NotDrivingEvent()),
-
             ),
           ),
         ),
@@ -189,9 +214,8 @@ class DrivingState extends State<DrivingPage> {
               child: new Text(Constants.DONT_USE,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 26,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
                       fontFamily: Constants.FONT_FAMILY_ROBOTO)),
             ),
           ),
@@ -203,9 +227,7 @@ class DrivingState extends State<DrivingPage> {
             child: new Text(Constants.TERMS_CONDITIONS,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
+                    fontSize: 18,
                     fontFamily: Constants.FONT_FAMILY_ROBOTO_BOLD)),
           ),
         ),
@@ -217,8 +239,6 @@ class DrivingState extends State<DrivingPage> {
               child: new Text(Constants.APP_CAN_DETECT,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w500,
                       fontSize: 16,
                       fontFamily: Constants.FONT_FAMILY_ROBOTO)),
             ),

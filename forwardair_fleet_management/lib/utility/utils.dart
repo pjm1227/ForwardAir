@@ -24,7 +24,7 @@ class Utils {
     final snackBar = SnackBar(
       content: Text(text),
       backgroundColor: AppColors.colorRed,
-      duration: Duration(seconds: 1),
+      duration: Duration(seconds: 2),
     );
 
     // Find the Scaffold in the widget tree and use

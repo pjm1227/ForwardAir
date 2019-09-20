@@ -15,8 +15,8 @@ class DrivingConformationBloc
     DrivingConformationEvents event,
   ) async* {
     if (event is NotDrivingEvent) {
-      yield InitialState();
-      yield* checkForPaageNavigation();
+      yield NotDrive();
+      //yield* checkForPaageNavigation();
     }
     if (event is CloseEvent) yield CloseState();
   }

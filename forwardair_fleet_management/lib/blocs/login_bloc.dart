@@ -107,6 +107,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
       activetractors: loginModel.userDetails.activetractors,
       isUserLoggedIn: true,
     );
+    print("User Table inserted");
     return await userManager.insertTermsData(userModel.toMap());
   }
 }

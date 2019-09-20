@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
+import 'package:forwardair_fleet_management/databasemanager/terms_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 import 'package:forwardair_fleet_management/models/login_model.dart';
 
@@ -11,7 +12,6 @@ import 'package:package_info/package_info.dart';
 
 //SideMenu Bloc,All business logic for drawer menu
 class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
-
   //User Details
   UserDetails userDetails = UserDetails();
   String versionNumer = '';
@@ -30,19 +30,20 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
       yield InitialState();
     }
     //To expand SafetyIncidents sub-items
-    if (event is SafetyIncidentsEvent){
+    if (event is SafetyIncidentsEvent) {
       yield SafetyIncidentState(selectedIndex: event.selectedIndex);
     }
     //To expanded items event
     if (event is ExpandEvent) {
       expandFlag = !event.expandFlag;
-      yield ExpandState(expandFlag: expandFlag, selectedIndex: event.selectedIndex);
+      yield ExpandState(
+          expandFlag: expandFlag, selectedIndex: event.selectedIndex);
     }
-   //To navigate to other screens
+    //To navigate to other screens
     if (event is NavigationEvent) {
       yield NavigationState(selectedIndex: event.selectedIndex);
     }
-   //Logout Event
+    //Logout Event
     if (event is LogoutEvent) {
       await _logoutAction();
       yield LoggedOutState();
@@ -66,8 +67,9 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
   //Log out
   Future _logoutAction() async {
     final userManager = UserManager();
+    final termsManager = TermsManager();
+    await termsManager.deleteAll();
     //Deleting all data in User Table
     return await userManager.deleteAll();
   }
-
 }

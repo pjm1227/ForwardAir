@@ -41,19 +41,18 @@ class ButtonWidget extends StatelessWidget {
             ? padding
             : EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
         child: MaterialButton(
-          child: Container(
-            child: Center(
-                child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                text,
-                style: TextStyle(
-                    color: colorText != null ? colorText : AppColors.colorWhite,
-                    fontSize: fontSize != null ? fontSize : 16,
-                    fontFamily: Constants.FONT_FAMILY_ROBOTO),
-              ),
-            )),
-          ),
+          child: Center(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Text(text,
+                  style: TextStyle(
+                      color: colorText != null ? colorText : AppColors.colorWhite,
+                      // fontSize: fontSize != null ? fontSize : 16,
+                      fontFamily: Constants.FONT_FAMILY_ROBOTO)),
+            ),
+          )),
           onPressed: onPressed,
           color: colorButton != null ? colorButton : AppColors.colorRed,
         ));
