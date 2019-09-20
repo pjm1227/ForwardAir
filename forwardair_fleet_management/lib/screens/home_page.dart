@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:io';
 
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
@@ -11,6 +12,7 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.dart';
 import 'package:forwardair_fleet_management/blocs/sidemenu_bloc.dart';
+import 'package:forwardair_fleet_management/components/text_widget.dart';
 
 /*
   HomePage is the Holder of the DrawerMenu and Dashboard details.
@@ -224,11 +226,12 @@ class _HomePageState extends State<HomePage> {
         fontSize: 16,
         fontWeight: FontWeight.normal,
         color: AppColors.colorBlack);
-    final _moduleTitleStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 14,
-        fontWeight: FontWeight.normal,
-        color: AppColors.colorGrey);
+//    final _moduleTitleStyle = TextStyle(
+//        fontFamily: Constants.FONT_FAMILY_ROBOTO,
+//        fontSize: 14,
+//        fontWeight: FontWeight.normal,
+//        color: AppColors.colorGrey);
+
     //For Safety and Incidents
     if (index == 0) {
       return _safetyAndAccidentsExpandableWidget(index);
@@ -243,10 +246,15 @@ class _HomePageState extends State<HomePage> {
             height: 45,
             color: Colors.white,
             child: ListTile(
-              title: Text(
-                _drawerMenuItems[index],
-                style: _moduleTitleStyle,
+              title: TextWidget(
+                text: _drawerMenuItems[index],
+                fontWeight: FontWeight.normal,
+                colorText: AppColors.colorGrey,
               ),
+//              Text(
+//                _drawerMenuItems[index],
+//                style: _moduleTitleStyle,
+//              ),
             ),
           ),
         ],
@@ -355,26 +363,25 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  //This return UI of Drawer Menu and Dasboard
-  @override
-  Widget build(BuildContext context) {
-
-    //To provide text style to the appBarText
-    final _appBarStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        color: Colors.white);
-
-    return new Scaffold(
+  Widget scaffoldWidget() {
+//    final _appBarStyle = TextStyle(
+//        fontFamily: Constants.FONT_FAMILY_ROBOTO,
+//        fontSize: 18,
+//        fontWeight: FontWeight.w600,
+//        color: Colors.white);
+    return Scaffold(
       appBar: new AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
         centerTitle: false,
-        title: new Text(
-          Constants.TEXT_DASHBOARD,
-          style: _appBarStyle,
-        ),
-        backgroundColor: AppColors.colorAppBar,
+        title: TextWidget(
+            text: Constants.TEXT_DASHBOARD,
+            fontWeight: FontWeight.w500,
+            colorText: AppColors.colorWhite),
+
+//        new Text(
+//          Constants.TEXT_DASHBOARD,
+//          style: _appBarStyle,
+//        ),
         actions: <Widget>[
           //To display the notification Icon
           InkWell(
@@ -389,16 +396,6 @@ class _HomePageState extends State<HomePage> {
               navigateToFeatureComingSoonPage();
             },
           ),
-//          //To display the more Icon
-//          InkWell(
-//            child: SizedBox(
-//                width: 30,
-//                height: 30,
-//                child: Image.asset('images/ic_more.png')),
-//            onTap: () {
-//              navigateToFeatureComingSoonPage();
-//            },
-//          ),
         ],
       ),
       //To Display the Dashboard
@@ -508,16 +505,28 @@ class _HomePageState extends State<HomePage> {
                                 title: Container(
                                     padding: EdgeInsets.only(top: 15),
                                     height: 40,
-                                    child: Text(
-                                      _sideMenuBloc.userDetails.fullName == null
-                                          ? 'User Name'
-                                          : _sideMenuBloc.userDetails.fullName,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Roboto',
-                                          fontSize: 16,
-                                          color: Colors.white),
-                                    )),
+                                    child: TextWidget(
+                                        text: _sideMenuBloc.userDetails != null
+                                            ? _sideMenuBloc
+                                                        .userDetails.fullName ==
+                                                    null
+                                                ? 'User Name'
+                                                : _sideMenuBloc
+                                                    .userDetails.fullName
+                                            : 'User Name',
+                                        fontWeight: FontWeight.bold,
+                                        colorText: AppColors.colorWhite)
+//                                    Text(
+//                                      _sideMenuBloc.userDetails.fullName == null
+//                                          ? 'User Name'
+//                                          : _sideMenuBloc.userDetails.fullName,
+//                                      style: TextStyle(
+//                                          fontWeight: FontWeight.bold,
+//                                          fontFamily: 'Roboto',
+//                                          fontSize: 16,
+//                                          color: Colors.white),
+//                                    )
+                                    ),
                                 //User Role Text
                                 subtitle: Container(
                                     padding: EdgeInsets.only(top: 10),
@@ -550,6 +559,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //This return UI of Drawer Menu and Dasboard
+  @override
+  Widget build(BuildContext context) {
+    //To provide text style to the appBarText
+
+    if (Platform.isIOS) {
+      return scaffoldWidget();
+    }
+    if (Platform.isAndroid) {
+      return SafeArea(
+        child: scaffoldWidget(),
+      );
+    }
+  }
+
   // To navigate to the Login screen
   void navigateToLginPage() {
     Navigator.pop(context, true);
@@ -557,11 +581,6 @@ class _HomePageState extends State<HomePage> {
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
     );
-
-//    Navigator.push(
-//        context,
-//        PageTransition(
-//            type: PageTransitionType.fade, child: LoginPage()));
   }
 
   // To navigate to the Feature Coming soon screen

@@ -10,7 +10,7 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/theme.dart' as Theme;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'screens/drawermenu.dart';
+import 'screens/home_page.dart';
 import 'screens/login_screen.dart';
 
 //Main function of an app
@@ -62,51 +62,63 @@ class DrivingState extends State<DrivingPage> {
     super.dispose();
   }
 
-  //Build Function
-  @override
-  Widget build(BuildContext context) {
+  Widget scaffoldWidget() {
     return Scaffold(
-        //BlocListener to check condition according to state
-        //Basically it used to show snackbar, toast or navigate to page
+      //BlocListener to check condition according to state
+      //Basically it used to show snackbar, toast or navigate to page
         body: BlocListener<DrivingConformationBloc, DrivingConfirmationState>(
-      condition: (previousState, currentState) {
-        return true;
-      },
-      bloc: _conformationBloc,
-      listener: (context, state) {
-        //Close state then exit from app
-        if (state is CloseState) {
-          exit(0);
-        } else if (state is NotDrivingState) {
-          //Move to Terms page according to condition
-          if (!state.isTermsAccepted && !state.isUserLoggedIn) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TermsConditions()),
-            );
-          }
-        }
-      },
-      //BlocBuilder - Used to return a widget
-      child: BlocBuilder<DrivingConformationBloc, DrivingConfirmationState>(
           condition: (previousState, currentState) {
             return true;
           },
           bloc: _conformationBloc,
-          builder: (context, state) {
-            print('Driving Conformation $state');
-            if (state is NotDrivingState) {
-              print(state.isTermsAccepted);
-              print(state.isUserLoggedIn);
-              if (state.isTermsAccepted && !state.isUserLoggedIn) {
-                return LoginPage();
-              } else if (state.isTermsAccepted && state.isUserLoggedIn) {
-                return HomePage();
+          listener: (context, state) {
+            //Close state then exit from app
+            if (state is CloseState) {
+              exit(0);
+            } else if (state is NotDrivingState) {
+              //Move to Terms page according to condition
+              if (!state.isTermsAccepted && !state.isUserLoggedIn) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TermsConditions()),
+                );
               }
             }
-            return _mainWidget();
-          }),
-    ));
+          },
+          //BlocBuilder - Used to return a widget
+          child: BlocBuilder<DrivingConformationBloc, DrivingConfirmationState>(
+              condition: (previousState, currentState) {
+                return true;
+              },
+              bloc: _conformationBloc,
+              builder: (context, state) {
+                print('Driving Conformation $state');
+                if (state is NotDrivingState) {
+                  print(state.isTermsAccepted);
+                  print(state.isUserLoggedIn);
+                  if (state.isTermsAccepted && !state.isUserLoggedIn) {
+                    return LoginPage();
+                  } else if (state.isTermsAccepted && state.isUserLoggedIn) {
+                    return HomePage();
+                  }
+                }
+                return _mainWidget();
+              }),
+        ));
+  }
+
+  //Build Function
+  @override
+  Widget build(BuildContext context) {
+
+    if (Platform.isIOS) {
+      return scaffoldWidget();
+    }
+    if (Platform.isAndroid) {
+      return SafeArea(
+        child: scaffoldWidget(),
+      );
+    }
   }
 
 //Main Widget
