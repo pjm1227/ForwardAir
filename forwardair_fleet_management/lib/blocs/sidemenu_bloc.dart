@@ -41,6 +41,7 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
     }
     //To navigate to other screens
     if (event is NavigationEvent) {
+      yield InitialState();
       yield NavigationState(selectedIndex: event.selectedIndex);
     }
     //Logout Event
