@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
-import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
@@ -367,7 +365,6 @@ class _HomePageState extends State<HomePage> {
 
   //Scaffold Widget
   Widget _scaffoldWidget() {
-    FlutterStatusbarcolor.setStatusBarColor(Colors.white);
     return Scaffold(
       appBar: new AppBar(
         iconTheme: new IconThemeData(color: Colors.white),

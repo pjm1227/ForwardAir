@@ -27,7 +27,6 @@ dependencies:
   sqflite:
   path_provider:
   intl:
-  flutter_statusbarcolor:
 
 dev_dependencies:
   flutter_test:
