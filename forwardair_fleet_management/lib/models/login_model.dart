@@ -199,10 +199,21 @@ class UserGroup {
 
 class UserRole {
   String roleNm;
+  int id;
 
-  UserRole({
-    this.roleNm,
-  });
+  UserRole({this.id, this.roleNm});
+
+  UserRole.fromMapObject(Map<String, dynamic> map) {
+    id = map['id'];
+    roleNm = map['roleNm'];
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+    map['id'] = id;
+    map['roleNm'] = roleNm;
+    return map;
+  }
 
   factory UserRole.fromJson(Map<String, dynamic> json) => UserRole(
         roleNm: json["roleNm"] == null ? null : json["roleNm"],

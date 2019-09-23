@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/driving_conformation.dart';
@@ -9,7 +8,6 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/theme.dart' as Theme;
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'components/text_widget.dart';
 import 'databasemanager/terms_manager.dart';
 import 'databasemanager/user_manager.dart';
