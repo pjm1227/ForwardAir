@@ -24,25 +24,24 @@ class LoadsPage extends StatefulWidget {
 
 class _LoadsPageState extends State<LoadsPage> {
 
-   String screenName;
-   Dashboard_DB_Model dashboardData;
+   String screenName;   //carried out from dashboard to check the screen which is to be shown
+   Dashboard_DB_Model dashboardData;  //dashboard data carried out from dashboard for passing the specific period to the url
    _LoadsPageState(this.screenName,this.dashboardData);
 
-  Map<String, double> dataMap = new Map();
-  DrillDownBloc _drillDowndBloc = DrillDownBloc();
-  DrillDownModel drillData;
-  String emptyPercentage;
-  String loadPercent;
-  double otherCon;
-  String filterText='';
-  bool milePage=true;
-  List<Tractors> othersData;
-  List<Tractors> topContributor;
-   List<Tractors> others;
-   List<Tractors> top;
-  final RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+  Map<String, double> dataMap = new Map();  //this variable for mapping the data to the chart
+  DrillDownBloc _drillDowndBloc = DrillDownBloc();  //this is for bloc where we are doing logical operation
+  DrillDownModel drillData;  //this variable will be intialized for the first time which is being constant
+  String emptyPercentage; // this is for showing the empty percentage in top bar
+  String loadPercent;  // this is for showing the load percentage in top bar
+  double otherCon;   // this variable assigned for the sum of the other contributor other than top contributors
+  String filterText='';  //this will be the text in place of sort by after selecting the filter option
+  bool isMilePage=true; //this will return true or false ,if true the miles data will be displayed otherwise loads data will be displayed
+  List<Tractors> othersData;  // this is constant for other contributors
+  List<Tractors> topContributor; // this is constant for top contributors
+   List<Tractors> others; // this will be changed based on sorting  for other contributors
+   List<Tractors> top;  // this will be changed based on sorting  for top contributors
 
+  //color list which is used in pie chart
   List<Color> colorList = [
     Color.fromRGBO(227, 26, 28, 1),
     Color.fromRGBO(51, 160, 44, 1),
@@ -57,12 +56,11 @@ class _LoadsPageState extends State<LoadsPage> {
   @override
   Widget build(BuildContext context) {
     if(this.screenName=="Miles"){
-      milePage=true;
+      isMilePage=true;
     }
     else{
-      milePage=false;
+      isMilePage=false;
     }
-    Color listTitleColor = Color.fromRGBO(23, 87, 99, 1);
     TextStyle _boldStyle = TextStyle(
         fontFamily: 'Roboto',
         fontSize: 16,
@@ -111,7 +109,7 @@ class _LoadsPageState extends State<LoadsPage> {
 
             }
 
-
+        //by default view with data sorted based on contribution
             return Scaffold(
                 appBar: AppBar(
                   backgroundColor: topWidgetColor,
@@ -122,7 +120,7 @@ class _LoadsPageState extends State<LoadsPage> {
                       Navigator.pop(context);
                     },
                   ),
-                  title: Text(milePage ?'Miles':'Loads',style: _appBarboldStyle,),
+                  title: Text(isMilePage ?'Miles':'Loads',style: _appBarboldStyle,),
                 ),
                 backgroundColor: pageBgColor,
                 body: SingleChildScrollView(
@@ -195,7 +193,7 @@ class _LoadsPageState extends State<LoadsPage> {
                 getLoadedEmptyPercent();
 
               }
-
+           //view after sorting data keeping chart data constant
               return Scaffold(
                   appBar: AppBar(
                     backgroundColor: topWidgetColor,
@@ -206,7 +204,7 @@ class _LoadsPageState extends State<LoadsPage> {
                         Navigator.pop(context);
                       },
                     ),
-                    title: Text(milePage ?'Miles':'Loads',style: _appBarboldStyle,),
+                    title: Text(isMilePage ?'Miles':'Loads',style: _appBarboldStyle,),
                   ),
                   backgroundColor: pageBgColor,
                   body: SingleChildScrollView(
@@ -283,6 +281,7 @@ class _LoadsPageState extends State<LoadsPage> {
 
   }
 
+  //creating widget for filter
   Widget filterWidget(){
     return Container(
       margin: EdgeInsets.only(top: 5),
@@ -318,7 +317,7 @@ class _LoadsPageState extends State<LoadsPage> {
       );
   }
 
-  //Top Widget
+  //Top Widget to show total,empty and loaded
   Widget _rectangleWidget() {
     TextStyle _boldStyle = TextStyle(
         fontFamily: 'Roboto',
@@ -376,7 +375,7 @@ class _LoadsPageState extends State<LoadsPage> {
                                   left: 6.0,
                                 ),
                                 child: Text(
-                                  milePage ? '${dashboardData.totalMiles}' : '${dashboardData.totalLoads}',
+                                  isMilePage ? '${dashboardData.totalMiles}' : '${dashboardData.totalLoads}',
                                   style: _boldStyle,
                                   textAlign: TextAlign.center,
                                 ),
@@ -498,24 +497,15 @@ class _LoadsPageState extends State<LoadsPage> {
 
   //widget which handles the pue_chart as well as data
   Widget _pieChartWidget() {
+
+    //this iteration for top 10 contributor
     for(int i=0;i<topContributor.length;i++){
-      if(milePage)
+      if(isMilePage)
       dataMap.putIfAbsent("${topContributor[i].tractorId}", () => topContributor[i].totalMilesPercent);
       else
         dataMap.putIfAbsent("${topContributor[i].tractorId}", () => topContributor[i].totalLoadsPercent);
     }
-
-    dataMap.putIfAbsent("Others", () => otherCon);
-//    dataMap.putIfAbsent("A", () => 18);
-//    dataMap.putIfAbsent("B", () => 10);
-//    dataMap.putIfAbsent("C", () => 5);
-//    dataMap.putIfAbsent("D", () => 17);
-//    dataMap.putIfAbsent("E", () => 15);
-//    dataMap.putIfAbsent("F", () => 8);
-//    dataMap.putIfAbsent("G", () => 2);
-//    dataMap.putIfAbsent("H", () => 14);
-//    dataMap.putIfAbsent("I", () => 4);
-//    dataMap.putIfAbsent("J", () => 7);
+    dataMap.putIfAbsent("Others", () => otherCon);   //this is the sum of other contributor
     return PieChart(
       dataMap: dataMap,
       chartValuesColor: Colors.transparent,
@@ -555,31 +545,9 @@ class _LoadsPageState extends State<LoadsPage> {
       }).toList(),
     );
 
-//    return  Container(
-//      child: Material(
-//        color: Colors.transparent,
-//        child:ListTile(
-//
-//      trailing: Flexible(
-//
-//          child: Icon(Icons.arrow_drop_down)),
-//      leading: Text(
-//        Constants.TEXT_THISMONTH,
-//        style: TextStyle(
-//            fontFamily: Constants.FONT_FAMILY_ROBOTO,
-//            fontSize: 16,
-//            fontWeight: FontWeight.w400,
-//            color: Colors.white),
-//      ),
-//      onTap: () {
-//        _weekModalBottomSheet(context);
-//      },
-//    ),
-//    ),
-//    );
   }
 
-  //ListView
+  //ListView widget
   Widget _bottomListViewWidget(List<Tractors> modelData) {
 
 
@@ -647,7 +615,7 @@ class _LoadsPageState extends State<LoadsPage> {
                                 style: _fontStyle,
                               ),
                               Text(
-                                milePage? '${modelData[index].totalMilesPercent}' : '${modelData[index].totalLoadsPercent}',
+                                isMilePage? '${modelData[index].totalMilesPercent}' : '${modelData[index].totalLoadsPercent}',
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 18),
                               ),
@@ -662,7 +630,7 @@ class _LoadsPageState extends State<LoadsPage> {
                         color: Color.fromRGBO(45, 135, 151, 1),
                         child: Center(
                             child: Text(
-                                milePage? '${modelData[index].totalMiles}' : '${modelData[index].totalLoads}',
+                              isMilePage? '${modelData[index].totalMiles}' : '${modelData[index].totalLoads}',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 22,
@@ -676,7 +644,7 @@ class _LoadsPageState extends State<LoadsPage> {
     );
   }
 
-  Widget _weekFilterWidget(String title) {
+  Widget _sortFilterWidget(String title) {
     final _textStyle = TextStyle(
       fontWeight: FontWeight.normal,
       fontFamily: Constants.FONT_FAMILY_ROBOTO,
@@ -727,7 +695,7 @@ class _LoadsPageState extends State<LoadsPage> {
                     height: 44,
                     child: ListTile(
                       title: index != 4
-                          ? _weekFilterWidget(weekFilterOptions[index])
+                          ? _sortFilterWidget(weekFilterOptions[index])
                           : _cancelText,
                       onTap: () {
                         if (index == 4) {
@@ -747,6 +715,10 @@ class _LoadsPageState extends State<LoadsPage> {
         });
   }
 
+
+
+ /*dividing the data in two parts based on contribution i.e top 10 and others for chart
+    it is constant which does not change */
   getTopContributor(){
     othersData=new List();
     topContributor=new List();
@@ -756,7 +728,7 @@ class _LoadsPageState extends State<LoadsPage> {
         topContributor.add(drillData.tractors[i]);
       else{
         othersData.add(drillData.tractors[i]);
-        if (milePage)
+        if (isMilePage)
           otherCon= otherCon + drillData.tractors[i].totalMilesPercent;
         else
           otherCon = otherCon + drillData.tractors[i].totalLoadsPercent;
@@ -766,6 +738,7 @@ class _LoadsPageState extends State<LoadsPage> {
 
   }
 
+  //diving the data in two categories top 10 and others for listView
   getTopTen(DrillDownModel data){
     double otherCon=0.0;
     others=new List();
@@ -780,10 +753,11 @@ class _LoadsPageState extends State<LoadsPage> {
     return otherCon;
   }
 
+  //empty and load percentage for top rows
    getLoadedEmptyPercent(){
     emptyPercentage="";
     loadPercent="";
-     if(milePage) {
+     if(isMilePage) {
        emptyPercentage = ((dashboardData.emptyMiles * 100) / dashboardData.totalMiles).toStringAsFixed(2);
        loadPercent = ((dashboardData.loadedMiles * 100) / dashboardData.totalMiles).toStringAsFixed(2);
      }
