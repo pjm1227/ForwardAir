@@ -71,8 +71,11 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       try {
         //Making API Call
         final _repository = Repository();
-        final responseBody = await _repository.makeDashboardRequest(userModel.token != null ? userModel.token : '');
-        final dashboardItems = Dashboard_DB_Model().dashboardDBModelFromJson(responseBody);
+        print('API Calling for Dashboard...');
+        final responseBody = await _repository.makeDashboardRequest(
+            userModel.token != null ? userModel.token : '');
+        final dashboardItems =
+            Dashboard_DB_Model().dashboardDBModelFromJson(responseBody);
         //final dashboardItems = await apiManager.loadDashboardDataFromServer(userModel.token != null ? userModel.token : '');
         //For success
         if (dashboardItems.length > 0) {
@@ -122,5 +125,4 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       return dashboardItemsFromDB;
     }
   }
-
 }
