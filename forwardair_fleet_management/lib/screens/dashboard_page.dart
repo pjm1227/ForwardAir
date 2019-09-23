@@ -13,7 +13,9 @@ import 'package:forwardair_fleet_management/utility/callandmailservice.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
+import 'package:flutter/services.dart';
 
+import 'drill_down_screen.dart';
 /*
   DashboardPage to display dashboard details.
 */
@@ -35,6 +37,7 @@ class DashboardState extends State<DashboardPage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   Dashboard_DB_Model _dashboardDataModel = Dashboard_DB_Model();
+  Dashboard_DB_Model _dashboardData = Dashboard_DB_Model();
 
   //To Dispose the DashboardBloc
   @override
@@ -46,6 +49,7 @@ class DashboardState extends State<DashboardPage> {
 
   //Child Widgets of the Refresh Controller
   Widget _childWidgetToRefresh(
+
       dynamic state, Dashboard_DB_Model _dashboardDataModel) {
     _refreshController.refreshCompleted();
     if (state is InitialState) {
@@ -62,6 +66,7 @@ class DashboardState extends State<DashboardPage> {
           if (state.dashboardData[i].dashboardPeriod ==
               Constants.TEXT_DASHBOARD_PERIOD) {
             _dashboardDataModel = state.dashboardData[i];
+            _dashboardData=state.dashboardData[i];
           }
         } //End
       }
@@ -360,7 +365,8 @@ class DashboardState extends State<DashboardPage> {
         color: AppColors.darkColorBlue);
 
     return Expanded(
-      child: Container(
+      child: new InkWell(
+          child:Container(
         margin: aTitle == Constants.TEXT_TOTAL_LOADS
             ? EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 0)
             : EdgeInsets.only(top: 5, bottom: 5, right: 0, left: 5),
@@ -432,6 +438,13 @@ class DashboardState extends State<DashboardPage> {
             )
           ],
         ),
+      ),
+        onTap: () {
+          navigateToDrillDownPage(aTitle == Constants.TEXT_TOTAL_LOADS
+              ?'Loads':'Miles');
+          print(aTitle == Constants.TEXT_TOTAL_LOADS
+              ?'Loads':'Miles');
+        },
       ),
     );
   }
@@ -841,5 +854,14 @@ class DashboardState extends State<DashboardPage> {
         context,
         PageTransition(
             type: PageTransitionType.fade, child: FeaturesComingSoonPage()));
+  }
+
+
+
+  void navigateToDrillDownPage(String pageName) {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade, child: LoadsPage(pageName,_dashboardData)));
   }
 }
