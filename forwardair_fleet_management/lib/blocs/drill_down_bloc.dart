@@ -13,9 +13,10 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
 
 class DrillDownBloc extends Bloc<DrillDownEvents,DrillDownState> {
 
-
+  @override
+  get initialState => InitialState();
   //Fetched Array From DB
-  Stream<DrillDownState> FetchDrillDownData(String weekStart, String weekEnd,int month,String year,String args) async* {
+  Stream<DrillDownState> FetchDrillDownData(String weekStart, String weekEnd,int month,String year,bool isMilePage) async* {
 
     yield DataLoadingState();
 
@@ -34,7 +35,7 @@ class DrillDownBloc extends Bloc<DrillDownEvents,DrillDownState> {
       yield DrillDataError(errorMessage: result.errorMessage);
     } else {
       try {
-        var drillDownData= sortbyContribution('High',drillDownModelFromJson(result),args);
+        var drillDownData= sortbyContribution('High',drillDownModelFromJson(result),isMilePage);
         yield DrillDataLoaded(drillDownData: drillDownData);
       } catch (_) {
         yield DrillDataError(errorMessage: Constants.SOMETHING_WRONG);
@@ -44,14 +45,11 @@ class DrillDownBloc extends Bloc<DrillDownEvents,DrillDownState> {
   }
 
 
-  @override
-  // TODO: implement initialState
-  DrillDownState get initialState => InitialState();
 
   @override
   Stream<DrillDownState> mapEventToState(DrillDownEvents event,)async* {
     if(event is FetchDrillDownEvent){
-      yield* FetchDrillDownData(event.weekStart, event.weekEnd,event.month,event.year,event.args);
+      yield* FetchDrillDownData(event.weekStart, event.weekEnd,event.month,event.year,event.isMilePage);
     }
     else if (event is PeriodEvent) {
       yield PeriodChangeState(weekText: event.weekText);
@@ -69,12 +67,12 @@ class DrillDownBloc extends Bloc<DrillDownEvents,DrillDownState> {
         yield SortedState(sortedData: drillDownData);
       }
       else if(event.filterOption==Constants.TEXT_HIGHTOLOW){
-        var drillDownData=sortbyContribution('High',event.drillData,event.arg);
+        var drillDownData=sortbyContribution('High',event.drillData,event.isMilePage);
         yield InitialState();
         yield SortedState(sortedData: drillDownData);
       }
       else if(event.filterOption==Constants.TEXT_LOWTOHIGH){
-        var drillDownData=sortbyContribution('Low',event.drillData,event.arg);
+        var drillDownData=sortbyContribution('Low',event.drillData,event.isMilePage);
         yield InitialState();
         yield SortedState(sortedData: drillDownData);
       }
@@ -95,21 +93,21 @@ class DrillDownBloc extends Bloc<DrillDownEvents,DrillDownState> {
     return data;
   }
 
-  DrillDownModel sortbyContribution(String text,DrillDownModel data,String arg){
-    if(text=='High' && arg=='Miles'){
+  DrillDownModel sortbyContribution(String text,DrillDownModel data,bool isMilePage){
+    if(text=='High' && isMilePage){
       data.tractors.sort((a, b) =>
           b.totalMilesPercent.compareTo(a.totalMilesPercent));
     }
-    if(text=='High' && arg=='Loads'){
+    if(text=='High' && !isMilePage){
       data.tractors.sort((a, b) =>
           b.totalLoadsPercent.compareTo(a.totalLoadsPercent));
       return data;
     }
-    else if(text=='Low' && arg=='Miles'){
+    else if(text=='Low' && isMilePage){
       data.tractors.sort((a, b) =>
           a.totalMilesPercent.compareTo(b.totalMilesPercent));
     }
-    else if(text=='Low' && arg=='Loads'){
+    else if(text=='Low' && !isMilePage){
       data.tractors.sort((a, b) =>
           a.totalLoadsPercent.compareTo(b.totalLoadsPercent));
     }

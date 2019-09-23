@@ -5,6 +5,8 @@ import 'package:forwardair_fleet_management/blocs/events/drill_down_event.dart';
 import 'package:forwardair_fleet_management/blocs/states/drill_down_state.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/drillDown/drill_down_model.dart';
+import 'package:forwardair_fleet_management/models/loadDetails/load_detail_model.dart';
+import 'package:forwardair_fleet_management/screens/load_detail.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -14,19 +16,19 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
 class LoadsPage extends StatefulWidget {
-  String screenName;
+  bool isMilePage;
   Dashboard_DB_Model dashboardData;
 
-  LoadsPage( this.screenName,this.dashboardData);
+  LoadsPage( this.isMilePage,this.dashboardData);
   @override
-  _LoadsPageState createState() => _LoadsPageState(this.screenName,this.dashboardData);
+  _LoadsPageState createState() => _LoadsPageState(this.isMilePage,this.dashboardData);
 }
 
 class _LoadsPageState extends State<LoadsPage> {
 
-   String screenName;   //carried out from dashboard to check the screen which is to be shown
+    bool isMilePage;  //carried out from dashboard to check whether it is drilldown of load/mile
    Dashboard_DB_Model dashboardData;  //dashboard data carried out from dashboard for passing the specific period to the url
-   _LoadsPageState(this.screenName,this.dashboardData);
+   _LoadsPageState(this.isMilePage,this.dashboardData);
 
   Map<String, double> dataMap = new Map();  //this variable for mapping the data to the chart
   DrillDownBloc _drillDowndBloc = DrillDownBloc();  //this is for bloc where we are doing logical operation
@@ -35,7 +37,7 @@ class _LoadsPageState extends State<LoadsPage> {
   String loadPercent;  // this is for showing the load percentage in top bar
   double otherCon;   // this variable assigned for the sum of the other contributor other than top contributors
   String filterText='';  //this will be the text in place of sort by after selecting the filter option
-  bool isMilePage=true; //this will return true or false ,if true the miles data will be displayed otherwise loads data will be displayed
+   //this will return true or false ,if true the miles data will be displayed otherwise loads data will be displayed
   List<Tractors> othersData;  // this is constant for other contributors
   List<Tractors> topContributor; // this is constant for top contributors
    List<Tractors> others; // this will be changed based on sorting  for other contributors
@@ -55,12 +57,7 @@ class _LoadsPageState extends State<LoadsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(this.screenName=="Miles"){
-      isMilePage=true;
-    }
-    else{
-      isMilePage=false;
-    }
+
     TextStyle _boldStyle = TextStyle(
         fontFamily: 'Roboto',
         fontSize: 16,
@@ -77,12 +74,12 @@ class _LoadsPageState extends State<LoadsPage> {
     if(dashboardData.weekStart!=null) {
       _drillDowndBloc.dispatch(
           FetchDrillDownEvent(weekStart: dashboardData.weekStart,
-              weekEnd: dashboardData.weekEnd, month: 0, year: "",args: screenName));
+              weekEnd: dashboardData.weekEnd, month: 0, year: "",isMilePage: this.isMilePage));
     }
     else{
       _drillDowndBloc.dispatch(
           FetchDrillDownEvent(weekStart: dashboardData.weekStart,
-              weekEnd: dashboardData.weekEnd, month: dashboardData.month, year: dashboardData.year,args: screenName));
+              weekEnd: dashboardData.weekEnd, month: dashboardData.month, year: dashboardData.year,isMilePage: this.isMilePage));
     }
 
 
@@ -561,85 +558,92 @@ class _LoadsPageState extends State<LoadsPage> {
       physics: NeverScrollableScrollPhysics(),
       itemCount: modelData.length,
       itemBuilder: (context, index) {
-        return Padding(
-            padding: EdgeInsets.only(left: 8, right: 8),
-            child: Card(
-              child: Container(
-                height: 70,
-                child: Row(mainAxisSize: MainAxisSize.max, children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 10, top: 15),
-                        child: ClipOval(
-                          child: Container(
-                            color: Color.fromRGBO(140, 234, 255, 1),
-                            height: 12.0,
-                            width: 12.0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
+        var post = modelData[index];
+
+        return InkWell(
+          onTap: () =>
+            navigateToLoadDetailPage(post),
+          child: Padding(
+              padding: EdgeInsets.only(left: 8, right: 8),
+              child: Card(
+                child: Container(
+                  height: 70,
+                  child: Row(mainAxisSize: MainAxisSize.max, children: [
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(left: 10.0, top: 8),
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                "Tractor ID:",
-                                style: _fontStyle,
-                              ),
-                              Text(
-                                '${modelData[index].tractorId}',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10.0, bottom: 5, top: 5),
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                'Contribution(%):',
-                                style: _fontStyle,
-                              ),
-                              Text(
-                                isMilePage? '${modelData[index].totalMilesPercent}' : '${modelData[index].totalLoadsPercent}',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
+                          padding: EdgeInsets.only(left: 10, top: 15),
+                          child: ClipOval(
+                            child: Container(
+                              color: Color.fromRGBO(140, 234, 255, 1),
+                              height: 12.0,
+                              width: 12.0,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  Expanded(
-                      child: Container(
-                        color: Color.fromRGBO(45, 135, 151, 1),
-                        child: Center(
-                            child: Text(
-                              isMilePage? '${modelData[index].totalMiles}' : '${modelData[index].totalLoads}',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700),
-                            )),
-                      )),
-                ]),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0, top: 8),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  "Tractor ID:",
+                                  style: _fontStyle,
+                                ),
+                                Text(
+                                  '${modelData[index].tractorId}',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10.0, bottom: 5, top: 5),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  'Contribution(%):',
+                                  style: _fontStyle,
+                                ),
+                                Text(
+                                  isMilePage? '${modelData[index].totalMilesPercent}' : '${modelData[index].totalLoadsPercent}',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                        child: Container(
+                          color: Color.fromRGBO(45, 135, 151, 1),
+                          child: Center(
+                              child: Text(
+                                isMilePage? '${modelData[index].totalMiles}' : '${modelData[index].totalLoads}',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700),
+                              )),
+                        )),
+                  ]),
+                )),
               ),
-            ));
+
+        );
       },
     );
   }
@@ -703,7 +707,7 @@ class _LoadsPageState extends State<LoadsPage> {
                         } else {
 
                   _drillDowndBloc.dispatch(
-                      FilterEvent(filterOption: weekFilterOptions[index],drillData: drillData,arg: screenName));
+                      FilterEvent(filterOption: weekFilterOptions[index],drillData: drillData,isMilePage: this.isMilePage));
                         Navigator.of(context).pop();
 
                         }
@@ -738,6 +742,12 @@ class _LoadsPageState extends State<LoadsPage> {
 
   }
 
+   @override
+   void dispose() {
+     _drillDowndBloc.dispose();
+     super.dispose();
+   }
+
   //diving the data in two categories top 10 and others for listView
   getTopTen(DrillDownModel data){
     double otherCon=0.0;
@@ -765,5 +775,13 @@ class _LoadsPageState extends State<LoadsPage> {
        emptyPercentage = ((dashboardData.emptyLoads* 100) / dashboardData.totalLoads).toStringAsFixed(2);
        loadPercent = ((dashboardData.loadedLoads* 100) / dashboardData.totalLoads).toStringAsFixed(2);
      }
+   }
+
+   void navigateToLoadDetailPage(Tractors tractorData) {
+     _drillDowndBloc.dispose();
+     Navigator.push(
+         context,
+         PageTransition(
+             type: PageTransitionType.fade, child: LoadDetailsPage(this.isMilePage,tractorData,this.dashboardData)));
    }
 }

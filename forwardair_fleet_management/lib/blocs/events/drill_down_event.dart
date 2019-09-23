@@ -7,11 +7,12 @@ abstract class DrillDownEvents extends Equatable {
 }
 
 class FetchDrillDownEvent extends DrillDownEvents {
-  final String weekStart, weekEnd,year,args;
+  final String weekStart, weekEnd,year;
+  bool isMilePage;
   final int month;
 
 
-  FetchDrillDownEvent({@required this.weekStart, @required this.weekEnd,@required this.month,@required this.year,@required this.args})
+  FetchDrillDownEvent({@required this.weekStart, @required this.weekEnd,@required this.month,@required this.year,@required this.isMilePage})
       : super([]);
 
 }
@@ -19,9 +20,11 @@ class FetchDrillDownEvent extends DrillDownEvents {
 class FilterEvent extends DrillDownEvents {
   DrillDownModel drillData;
   String filterOption;
-  String arg;
-  FilterEvent({@required this.filterOption,@required this.drillData,@required this.arg}) : super([]);
+  bool isMilePage;
+  FilterEvent({@required this.filterOption,@required this.drillData,@required this.isMilePage}) : super([]);
 }
+
+
 
 
 class PullToRefreshDrillDownEvent extends DrillDownEvents {

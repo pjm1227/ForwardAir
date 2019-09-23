@@ -441,7 +441,7 @@ class DashboardState extends State<DashboardPage> {
       ),
         onTap: () {
           navigateToDrillDownPage(aTitle == Constants.TEXT_TOTAL_LOADS
-              ?'Loads':'Miles');
+              ?false:true);
           print(aTitle == Constants.TEXT_TOTAL_LOADS
               ?'Loads':'Miles');
         },
@@ -858,10 +858,10 @@ class DashboardState extends State<DashboardPage> {
 
 
 
-  void navigateToDrillDownPage(String pageName) {
+  void navigateToDrillDownPage(bool isMiles) {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.fade, child: LoadsPage(pageName,_dashboardData)));
+            type: PageTransitionType.fade, child: LoadsPage(isMiles,_dashboardData)));
   }
 }
