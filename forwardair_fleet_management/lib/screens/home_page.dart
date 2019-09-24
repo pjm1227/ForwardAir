@@ -25,6 +25,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  GlobalKey _scaffold = GlobalKey();
   //SideMenu Bloc
   SideMenuBloc _sideMenuBloc = SideMenuBloc();
   //Text Items in drawer Menu
@@ -356,6 +357,7 @@ class _HomePageState extends State<HomePage> {
   //Scaffold Widget
   Widget _scaffoldWidget() {
     return Scaffold(
+        key: _scaffold,
       appBar: new AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
         centerTitle: false,
@@ -363,7 +365,7 @@ class _HomePageState extends State<HomePage> {
         title: TextWidget(
           text: Constants.TEXT_DASHBOARD,
           colorText: AppColors.colorWhite,
-          textType: TextType.TEXT_XLARGE,
+          textType: TextType.TEXT_LARGE,
         ),
         actions: <Widget>[
           //To display the notification Icon
@@ -398,8 +400,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 listener: (context, state) {
                   if (state is LoggedOutState) {
-                    Navigator.pop(context);
-                    showAlertDialog(context);
+                    showAlertDialog(_scaffold.currentContext);
                   }
 
                   //Navigation option
@@ -436,7 +437,9 @@ class _HomePageState extends State<HomePage> {
                   },
                   builder: (context, state) {
                     //Expanded Items inside Safety Incidents
-
+                    if (state is LoggedOutState) {
+                      _selectedIndex = 1;
+                    }
                     if (state is ExpandState) {
                       _selectedIndex =
                           state.selectedIndex == null ? 0 : state.selectedIndex;
@@ -544,11 +547,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   showAlertDialog(BuildContext context) {
+    Navigator.of(context).pop();
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("No"),
       onPressed: () {
-        Navigator.pop(context);
+        Navigator.of(context).pop();
       },
     );
     Widget continueButton = FlatButton(
