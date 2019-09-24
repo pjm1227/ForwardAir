@@ -28,6 +28,17 @@ class DrillDownModel{
           : List<Tractors>.from(
           json["tractors"].map((x) => Tractors.fromJson(x)))
   );
+
+
+  Map<String, dynamic> toJson() => {
+    "companyCd": companyCd == null ? null : companyCd,
+    "contractorCd": contractorCd == null ? null : contractorCd,
+    "weekStart": weekStart == null ? null : weekStart,
+    "weekEnd": weekEnd == null ? null : weekEnd,
+    "tractors": tractors == null
+        ? null
+        : List<dynamic>.from(tractors.map((x) => x.toJson())),
+  };
 }
 
 class Tractors{
@@ -82,6 +93,24 @@ class Tractors{
     totalGallonsPercent: json["totalGallonsPercent"] == null ? null : json["totalGallonsPercent"],
     totalFuelCostPercent: json["totalFuelCostPercent"] == null ? null : json["totalFuelCostPercent"],
   );
+
+  Map<String, dynamic> toJson() => {
+    "tractorId": tractorId == null ? null : tractorId,
+    "totalMiles": totalMiles == null ? null : totalMiles,
+    "loadedMiles": loadedMiles == null ? null : loadedMiles,
+    "emptyMiles": emptyMiles == null ? null : emptyMiles,
+    "totalLoads": totalLoads == null ? null : totalLoads,
+    "loadedLoads": loadedLoads == null ? null : loadedLoads,
+    "emptyLoads": emptyLoads == null ? null : emptyLoads,
+    "totalTractorGallons": totalTractorGallons == null ? null : totalTractorGallons,
+    "totalFuelCost": totalFuelCost == null ? null : totalFuelCost,
+    "totalNet": totalNet == null ? null : totalNet,
+    "totalMilesPercent": totalMilesPercent == null ? null : totalMilesPercent,
+    "totalLoadsPercent": totalLoadsPercent == null ? null : totalLoadsPercent,
+    "totalNetPercent": totalNetPercent == null ? null : totalNetPercent,
+    "totalGallonsPercent": totalGallonsPercent == null ? null : totalGallonsPercent,
+    "totalFuelCostPercent": totalFuelCostPercent == null ? null : totalFuelCostPercent,
+  };
 
 
 }

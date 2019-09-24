@@ -306,11 +306,13 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
-                child: Text("${loadData.driver1FirstName} ${loadData.driver1LastName} from ${loadData.driverOriginCity},${loadData.driverOriginSt}",
+                child: Text(loadData.driver2Id==null?
+                '${loadData.driver1FirstName} ${loadData.driver1LastName} from ${loadData.driverOriginCity},${loadData.driverOriginSt}':
+                "${loadData.driver1FirstName} ${loadData.driver1LastName},${loadData.driver2FirstName} ${loadData.driver2LastName}  from ${loadData.driverOriginCity},${loadData.driverOriginSt}",
                     textAlign: TextAlign.start,
                     style: TextStyle(
                         color: Color.fromRGBO(0, 0, 0, 1),
-                        fontSize: 13,
+                        fontSize: 10,
                         fontFamily: 'Roboto')),
               ),
             ],

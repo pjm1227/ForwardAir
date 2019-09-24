@@ -92,6 +92,7 @@ class DashboardState extends State<DashboardPage> {
       _dashboardDataModel = state.aModel;
       return _listViewWidget();
     }
+
   }
 
   Widget _listViewWidget() {
@@ -195,6 +196,9 @@ class DashboardState extends State<DashboardPage> {
                 }
                 break;
             }
+          }
+          else if(state is drillDownPageState){
+            navigateToDrillDownPage(state.isMilePage);
           }
         },
         child: BlocBuilder<DashboardBloc, dynamic>(
@@ -533,9 +537,10 @@ class DashboardState extends State<DashboardPage> {
           ),
         ),
         onTap: () {
-          navigateToDrillDownPage(
-              aTitle == Constants.TEXT_TOTAL_LOADS ? false : true);
-          print(aTitle == Constants.TEXT_TOTAL_LOADS ? 'Loads' : 'Miles');
+          _dashboardBloc.dispatch(drillDownPageEvent(isMilePage:  aTitle == Constants.TEXT_TOTAL_LOADS ? false : true));
+//          navigateToDrillDownPage(
+//              aTitle == Constants.TEXT_TOTAL_LOADS ? false : true);
+//          print(aTitle == Constants.TEXT_TOTAL_LOADS ? 'Loads' : 'Miles');
         },
       ),
     );

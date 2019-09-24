@@ -54,6 +54,9 @@ class Loads{
   String driver1Id;
   String driver1FirstName;
   String driver1LastName;
+  String driver2Id;
+  String driver2FirstName,driver2LastName;
+
 
   Loads({
     this.tractorId,
@@ -72,7 +75,10 @@ class Loads{
     this.emptyMiles,
     this.driver1Id,
     this.driver1FirstName,
-    this.driver1LastName
+    this.driver1LastName,
+    this.driver2LastName,
+    this.driver2Id,
+    this.driver2FirstName
 
   });
 
@@ -94,6 +100,9 @@ class Loads{
     driver1Id: json["driver1Id"] == null ? null : json["driver1Id"],
     driver1FirstName: json["driver1FirstName"] == null ? null : json["driver1FirstName"],
     driver1LastName: json["driver1LastName"] == null ? null : json["driver1LastName"],
+    driver2Id: json["driver2Id"] == null ? null : json["driver2Id"],
+    driver2FirstName: json["driver2FirstName"] == null ? null : json["driver2FirstName"],
+    driver2LastName: json["driver2LastName"] == null ? null : json["driver2LastName"],
   );
 
 

@@ -26,7 +26,8 @@ class QuickContactTapsOnCallEvent extends DashboardEvents {
   QuickContactTapsOnCallEvent({@required this.selectedIndex}) : super([]);
 }
 
-class ApplyFilterEvent extends DashboardEvents {
-    final String selectedDashboardPeriod;
-    ApplyFilterEvent({@required this.selectedDashboardPeriod}) : super([]);
+class drillDownPageEvent extends DashboardEvents {
+  final bool isMilePage;
+
+  drillDownPageEvent({@required this.isMilePage}) : super([]);
 }
