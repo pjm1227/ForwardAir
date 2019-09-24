@@ -290,9 +290,7 @@ class DashboardState extends State<DashboardPage> {
                 ),
                 onTap: () {
                   //To show the Quick Contact Details
-                  _dashboardBloc.dispatch(OpenQuickContactsEvent());
-
-                  // _buildBottomSheet(context);
+                  //_dashboardBloc.dispatch(OpenQuickContactsEvent());
                 },
               ),
             ),
