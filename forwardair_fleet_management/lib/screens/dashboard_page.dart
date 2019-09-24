@@ -854,7 +854,7 @@ class DashboardState extends State<DashboardPage> {
                             child: Container(
                               height: 90,
                               child: new ListTile(
-                                leading: _userIconWidget(),
+                                leading: _userIconWidget(index),
                                 title: TextWidget(
                                   text: quickContactList[index],
                                   textType: TextType.TEXT_MEDIUM,
@@ -902,7 +902,20 @@ class DashboardState extends State<DashboardPage> {
         });
   }
 
-  _userIconWidget() {
+  _userIconWidget(int index) {
+    String imageName = '';
+    switch (index) {
+      case 0:
+        imageName = 'images/ic_dispatch.png';
+        break;
+      case 1:
+        imageName = 'images/ic_safety.png';
+        break;
+      case 2:
+        imageName = 'images/ic_driver_relations.png';
+        break;
+    }
+
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
@@ -911,7 +924,7 @@ class DashboardState extends State<DashboardPage> {
       height: 40,
       width: 40,
       child: Image.asset(
-        'images/ic_avatar_1.png',
+        imageName,
       ),
     );
   }
