@@ -304,6 +304,7 @@ class DashboardState extends State<DashboardPage> {
 
   //This return the This week Filter widget
   _buildThisWeekWidget(String aFilterTitle) {
+
     aFilterTitle = Constants.TEXT_THISMONTH;
     return Container(
       height: 50,
@@ -426,7 +427,21 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //This method will return the text size
+  //This method will return the Filter Title
+  String _selectedTitle(DashboardPeriodType periodType) {
+    if (periodType == DashboardPeriodType.TEXT_THISWEEK) {
+      return Constants.TEXT_THISWEEK;
+    } else if (periodType == DashboardPeriodType.TEXT_LASTWEEK) {
+      return Constants.TEXT_LASTWEEK;
+    } else if (periodType == DashboardPeriodType.TEXT_PREV_SETTLEMENT_PERIOD) {
+      return Constants.TEXT_PREV_SETTLEMENT_PERIOD;
+    } else {
+      return Constants.TEXT_THISMONTH;
+      ;
+    }
+  }
+
+  //This method will return Filter Type
   String _selectedType(DashboardPeriodType periodType) {
     if (periodType == DashboardPeriodType.TEXT_THISWEEK) {
       return Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH;
@@ -504,7 +519,12 @@ class DashboardState extends State<DashboardPage> {
                     aTitle == Constants.TEXT_TOTAL_LOADS
                         ? SizedBox(
                             height: 37,
-                            child: TextWidget(text: aSubTitle, textType: TextType.TEXT_XLARGE,colorText: AppColors.darkColorBlue,isBold: true,),
+                            child: TextWidget(
+                              text: aSubTitle,
+                              textType: TextType.TEXT_XLARGE,
+                              colorText: AppColors.darkColorBlue,
+                              isBold: true,
+                            ),
                           )
                         : ConstrainedBox(
                             constraints: BoxConstraints(
@@ -839,7 +859,7 @@ class DashboardState extends State<DashboardPage> {
                             child: Container(
                               height: 90,
                               child: new ListTile(
-                                leading: _userIconWidget(),
+                                leading: _userIconWidget(index),
                                 title: TextWidget(
                                   text: quickContactList[index],
                                   textType: TextType.TEXT_MEDIUM,
@@ -887,7 +907,20 @@ class DashboardState extends State<DashboardPage> {
         });
   }
 
-  _userIconWidget() {
+  _userIconWidget(int index) {
+    String imageName = '';
+    switch (index) {
+      case 0:
+        imageName = 'images/ic_dispatch.png';
+        break;
+      case 1:
+        imageName = 'images/ic_safety.png';
+        break;
+      case 2:
+        imageName = 'images/ic_driver_relations.png';
+        break;
+    }
+
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
@@ -896,7 +929,7 @@ class DashboardState extends State<DashboardPage> {
       height: 40,
       width: 40,
       child: Image.asset(
-        'images/ic_avatar_1.png',
+        imageName,
       ),
     );
   }

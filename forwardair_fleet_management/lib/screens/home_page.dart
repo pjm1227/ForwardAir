@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
-import 'package:flutter/services.dart';
 
-import 'package:forwardair_fleet_management/utility/theme.dart';
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
 import 'package:forwardair_fleet_management/screens/login_screen.dart';
@@ -27,6 +25,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  GlobalKey _scaffold = GlobalKey();
   //SideMenu Bloc
   SideMenuBloc _sideMenuBloc = SideMenuBloc();
   //Text Items in drawer Menu
@@ -228,11 +227,6 @@ class _HomePageState extends State<HomePage> {
         fontSize: 16,
         fontWeight: FontWeight.normal,
         color: AppColors.colorBlack);
-//    final _moduleTitleStyle = TextStyle(
-//        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-//        fontSize: 14,
-//        fontWeight: FontWeight.normal,
-//        color: AppColors.colorGrey);
 
     //For Safety and Incidents
     if (index == 0) {
@@ -252,10 +246,6 @@ class _HomePageState extends State<HomePage> {
                 text: _drawerMenuItems[index],
                 colorText: AppColors.colorGrey,
               ),
-//              Text(
-//                _drawerMenuItems[index],
-//                style: _moduleTitleStyle,
-//              ),
             ),
           ),
         ],
@@ -367,6 +357,7 @@ class _HomePageState extends State<HomePage> {
   //Scaffold Widget
   Widget _scaffoldWidget() {
     return Scaffold(
+        key: _scaffold,
       appBar: new AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
         centerTitle: false,
@@ -374,7 +365,7 @@ class _HomePageState extends State<HomePage> {
         title: TextWidget(
           text: Constants.TEXT_DASHBOARD,
           colorText: AppColors.colorWhite,
-          textType: TextType.TEXT_XLARGE,
+          textType: TextType.TEXT_LARGE,
         ),
         actions: <Widget>[
           //To display the notification Icon
@@ -409,11 +400,11 @@ class _HomePageState extends State<HomePage> {
                 },
                 listener: (context, state) {
                   if (state is LoggedOutState) {
-                    Navigator.pop(context);
-                    showAlertDialog(context);
+                    showAlertDialog(_scaffold.currentContext);
                   }
+
                   //Navigation option
-                  else if (state is NavigationState) {
+                  if (state is NavigationState) {
                     final index =
                         state.selectedIndex == null ? 0 : state.selectedIndex;
                     switch (index) {
@@ -446,6 +437,9 @@ class _HomePageState extends State<HomePage> {
                   },
                   builder: (context, state) {
                     //Expanded Items inside Safety Incidents
+                    if (state is LoggedOutState) {
+                      _selectedIndex = 1;
+                    }
                     if (state is ExpandState) {
                       _selectedIndex =
                           state.selectedIndex == null ? 0 : state.selectedIndex;
@@ -553,11 +547,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   showAlertDialog(BuildContext context) {
+    Navigator.of(context).pop();
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("No"),
       onPressed: () {
-        Navigator.pop(context);
+        Navigator.of(context).pop();
       },
     );
     Widget continueButton = FlatButton(
