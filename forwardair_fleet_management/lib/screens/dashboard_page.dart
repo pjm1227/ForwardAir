@@ -45,6 +45,7 @@ class DashboardState extends State<DashboardPage> {
     Constants.TEXT_SAFETY_PHONENUMBER,
     Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER
   ];
+  Dashboard_DB_Model _dashboardData = Dashboard_DB_Model();
 
   //To Dispose the DashboardBloc
   @override
@@ -74,6 +75,7 @@ class DashboardState extends State<DashboardPage> {
           if (state.dashboardData[i].dashboardPeriod ==
               Constants.TEXT_DASHBOARD_PERIOD) {
             _dashboardDataModel = state.dashboardData[i];
+            _dashboardData = state.dashboardData[i];
           }
         } //End
         if (_dashboardDataModel.dashboardPeriod != null) {
@@ -429,7 +431,8 @@ class DashboardState extends State<DashboardPage> {
         color: AppColors.darkColorBlue);
 
     return Expanded(
-      child: Container(
+      child: new InkWell(
+          child:Container(
         margin: aTitle == Constants.TEXT_TOTAL_LOADS
             ? EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 0)
             : EdgeInsets.only(top: 5, bottom: 5, right: 0, left: 5),
@@ -501,6 +504,13 @@ class DashboardState extends State<DashboardPage> {
             )
           ],
         ),
+      ),
+        onTap: () {
+          navigateToDrillDownPage(aTitle == Constants.TEXT_TOTAL_LOADS
+              ?false:true);
+          print(aTitle == Constants.TEXT_TOTAL_LOADS
+              ?'Loads':'Miles');
+        },
       ),
     );
   }
@@ -955,5 +965,14 @@ class DashboardState extends State<DashboardPage> {
         context,
         PageTransition(
             type: PageTransitionType.fade, child: FeaturesComingSoonPage()));
+  }
+
+
+
+  void navigateToDrillDownPage(bool isMiles) {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade, child: LoadsPage(isMiles,_dashboardData)));
   }
 }

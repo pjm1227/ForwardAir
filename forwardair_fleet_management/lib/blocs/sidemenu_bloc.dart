@@ -71,6 +71,6 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
     final termsManager = TermsManager();
     await termsManager.deleteAll();
     //Deleting all data in User Table
-    return await userManager.deleteAll();
+    return await userManager.deleteUserData();
   }
 }

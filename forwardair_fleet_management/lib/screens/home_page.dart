@@ -250,7 +250,6 @@ class _HomePageState extends State<HomePage> {
             child: ListTile(
               title: TextWidget(
                 text: _drawerMenuItems[index],
-                fontWeight: FontWeight.normal,
                 colorText: AppColors.colorGrey,
               ),
 //              Text(
@@ -375,7 +374,6 @@ class _HomePageState extends State<HomePage> {
         //AppBar Title
         title: TextWidget(
             text: Constants.TEXT_DASHBOARD,
-            fontWeight: FontWeight.w500,
             colorText: AppColors.colorWhite),
         actions: <Widget>[
           //To display the notification Icon
@@ -508,7 +506,7 @@ class _HomePageState extends State<HomePage> {
                                                 : _sideMenuBloc
                                                     .userDetails.fullName
                                             : 'User Name',
-                                        fontWeight: FontWeight.bold,
+                                        isBold: true,
                                         colorText: AppColors.colorWhite)
 //                                    Text(
 //                                      _sideMenuBloc.userDetails.fullName == null
@@ -526,7 +524,6 @@ class _HomePageState extends State<HomePage> {
                                   child: TextWidget(
                                     text: Constants.TEXT_FLEET_OWNER,
                                     colorText: AppColors.colorWhite,
-                                    fontWeight: FontWeight.normal,
                                   ),
 //                                    Text(
 //                                      Constants.TEXT_FLEET_OWNER,

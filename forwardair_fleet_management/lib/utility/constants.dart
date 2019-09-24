@@ -84,4 +84,11 @@ class Constants {
   static const String TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL = 'contractorrelations@forwardair.com';
   static const String TEXT_DRIVER_RELATIONS_PHONENUMBER =  '855-585-8574';
   static const String TEXT_CONTENT_TYPE = 'application/json';
+
+  //DrillDown Filter Option
+  static const String Text_SORT='Sort By';
+  static const String TEXT_HIGHTOLOW = 'Contribution:High to Low';
+  static const String TEXT_ASCENDING = 'Ascending Tractor ID';
+  static const String TEXT_DESCENDING = 'Descending Tractor ID';
+  static const String TEXT_LOWTOHIGH = 'Contribution:Low to High';
 }

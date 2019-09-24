@@ -55,6 +55,10 @@ class DatabaseHelper {
   String netAmt = 'netAmt';
   String dashboardPeriod = 'dashboardPeriod';
 
+  //Columns for User Role
+  final userRoleTable = 'user_role';
+  final columnRoleName = 'roleNm';
+
   // make this a singleton class
   DatabaseHelper._privateConstructor();
 
@@ -80,6 +84,8 @@ class DatabaseHelper {
 
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
+    await db.execute(
+        'CREATE TABLE $userRoleTable ($columnId INTEGER PRIMARY KEY, $columnRoleName TEXT)');
     await db.execute(
         'CREATE TABLE $termsAcceptedTable ($columnId INTEGER PRIMARY KEY, $columnIsAccepted INTEGER NOT NULL)');
     await db.execute(

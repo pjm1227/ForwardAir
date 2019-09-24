@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/login.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
+import 'package:forwardair_fleet_management/databasemanager/user_role_manager.dart';
 import 'package:forwardair_fleet_management/models/error_model.dart';
 import 'package:forwardair_fleet_management/models/login_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/login_request.dart';
@@ -87,7 +88,9 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
 
   //This method is used to insert data in user table after user logged in successfully.
   Future<int> _insertIntoDB(LoginModel loginModel) async {
+    //Instance of user Table manager
     var userManager = UserManager();
+    //Mapping User model
     var userModel = UserDetails(
       token: loginModel.token,
       emailAddress: loginModel.userDetails.emailAddress,
@@ -107,7 +110,21 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
       activetractors: loginModel.userDetails.activetractors,
       isUserLoggedIn: true,
     );
+    //Inserting user Data into DB
+    await userManager.insertTermsData(userModel.toMap());
     print("User Table inserted");
-    return await userManager.insertTermsData(userModel.toMap());
+    //Check for user group and user role
+    if (loginModel.userDetails.userGroups.length > 0) {
+      //Here is the list of User Roles
+      var userRoles = loginModel.userDetails.userGroups[0].userRoles;
+      //Insert User Roles into Table now
+      var userRolesManager = UserRoleManager();
+      userRoles.forEach((k) async {
+        var userRoleModel = UserRole(roleNm: k.roleNm);
+        await userRolesManager.insertUserRole(userRoleModel.toMap());
+        print("User Role inserted.");
+      });
+    }
+    return 0;
   }
 }

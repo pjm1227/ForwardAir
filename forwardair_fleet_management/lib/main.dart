@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/driving_conformation.dart';
@@ -9,7 +8,7 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/theme.dart' as Theme;
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'components/text_widget.dart';
 import 'databasemanager/terms_manager.dart';
 import 'databasemanager/user_manager.dart';
 import 'screens/home_page.dart';
@@ -28,11 +27,9 @@ main() async {
   //Get Data from User Table
   var userModel = await userManager.getData();
   //Check if user Logged in or not
-  if(userModel == null)
-    {
-      _defaultHome = new LoginPage();
-    }
-  else if ((userModel != null && userModel.isUserLoggedIn) &&
+  if (userModel == null) {
+    _defaultHome = new LoginPage();
+  } else if ((userModel != null && userModel.isUserLoggedIn) &&
       (termModel != null && termModel.isTermsAccepted)) {
     _defaultHome = new DrivingPage();
   } else if (termModel == null) {
@@ -211,12 +208,12 @@ class DrivingState extends State<DrivingPage> {
           child: Center(
             child: Padding(
               padding: EdgeInsets.all(8.0),
-              child: new Text(Constants.DONT_USE,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: Constants.FONT_FAMILY_ROBOTO)),
+              child: new TextWidget(
+                text: Constants.DONT_USE,
+                textAlign: TextAlign.center,
+                textType: TextType.TEXT_XLARGE,
+                isBold: true,
+              ),
             ),
           ),
         ),
@@ -239,8 +236,7 @@ class DrivingState extends State<DrivingPage> {
               child: new Text(Constants.APP_CAN_DETECT,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: Constants.FONT_FAMILY_ROBOTO)),
+                      fontSize: 16, fontFamily: Constants.FONT_FAMILY_ROBOTO)),
             ),
           ),
         )

@@ -7,6 +7,7 @@ import 'package:forwardair_fleet_management/blocs/events/terms_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/terms_state.dart';
 import 'package:forwardair_fleet_management/blocs/terms_condition_bloc.dart';
 import 'package:forwardair_fleet_management/components/button_widget.dart';
+import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:bloc/bloc.dart';
@@ -92,9 +93,10 @@ class TermsConditions extends StatelessWidget {
 
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            Constants.TERMS_SERVICE,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+          child: TextWidget(
+            text: Constants.TERMS_SERVICE,
+            isBold: true,
+            textType: TextType.TEXT_MEDIUM,
           ),
         ),
         //Text widget for text of terms and conditions
@@ -102,8 +104,9 @@ class TermsConditions extends StatelessWidget {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                Constants.TERMS_AND_CONDITIONS,
+              child: TextWidget(
+                text: Constants.TERMS_AND_CONDITIONS,
+                textType: TextType.TEXT_SMALL,
               ),
             ),
           ),

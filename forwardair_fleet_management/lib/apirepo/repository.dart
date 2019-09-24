@@ -18,4 +18,15 @@ class Repository {
    */
   Future<dynamic> makeDashboardRequest(String token) =>
       apiProvider.requestInPost(EndPoints.DASHBOARD_URL, token, null);
+
+
+  Future<dynamic> makeDrillDataRequest(String body,String token) =>
+      apiProvider.requestInPost(EndPoints.DRILL_DATA_URL, token, body);
+
+  /*
+  This method is called when user request for load/mile details
+   */
+
+  Future<dynamic> makeLoadDetailRequest(String body,String token) =>
+      apiProvider.requestInPost(EndPoints.LOAD_DETAIL_URL, token, body);
 }
