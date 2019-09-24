@@ -35,6 +35,16 @@ class DashboardState extends State<DashboardPage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   Dashboard_DB_Model _dashboardDataModel = Dashboard_DB_Model();
+  final _quickContactEmails = [
+    Constants.TEXT_DISPATCH_QUCKCONTACT_EMAIL,
+    Constants.TEXT_SAFETY_QUCKCONTACT_EMAIL,
+    Constants.TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL
+  ];
+  final _quickContactPhoneNumbers = [
+    Constants.TEXT_DISPATCH_PHONENUMBER,
+    Constants.TEXT_SAFETY_PHONENUMBER,
+    Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER
+  ];
 
   //To Dispose the DashboardBloc
   @override
@@ -45,8 +55,7 @@ class DashboardState extends State<DashboardPage> {
   }
 
   //Child Widgets of the Refresh Controller
-  Widget _childWidgetToRefresh(
-      dynamic state, Dashboard_DB_Model _dashboardDataModel) {
+  Widget _childWidgetToRefresh(dynamic state) {
     _refreshController.refreshCompleted();
     if (state is InitialState) {
       //Initial State
@@ -54,7 +63,10 @@ class DashboardState extends State<DashboardPage> {
     } else if (state is DashboardError) {
       //If any error occurs, while fetching teh data
       return Center(child: Text('Failed to fetch details'));
-    } else if (state is DashboardLoaded) {
+    } else if (state is DashboardLoaded ||
+        state is OpenQuickContactsState ||
+        state is QuickContactsMailState ||
+        state is QuickContactsCallState) {
       //To update the ListView, once data comes
       if (state.dashboardData != null) {
         //To populate This Month data initially
@@ -64,52 +76,60 @@ class DashboardState extends State<DashboardPage> {
             _dashboardDataModel = state.dashboardData[i];
           }
         } //End
+        if (_dashboardDataModel.dashboardPeriod != null) {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            physics: AlwaysScrollableScrollPhysics(),
+            itemCount: 4,
+            itemBuilder: (BuildContext context, int index) {
+              //To display This Week filter widget
+              if (index == 0) {
+                return _buildThisWeekWidget();
+              }
+              //To display Total loads and Total Miles widget
+              if (index == 1) {
+                return _buildWidgetTotalLoadsAndMiles(
+                    _dashboardDataModel.totalLoads != null
+                        ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalLoads)}'
+                        : 'NA',
+                    _dashboardDataModel.totalMiles != null
+                        ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalMiles)}'
+                        : 'NA');
+              }
+              //To display Fuel widget
+              else if (index == 2) {
+                return _buildFuelWidget(
+                    _dashboardDataModel.totalTractorGallons != null
+                        ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalTractorGallons)}'
+                        : 'NA',
+                    _dashboardDataModel.totalFuelCost != null
+                        ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalFuelCost)}'
+                        : 'NA');
+              }
+              //To Display NetCompensation and Deductions Widget
+              else {
+                return _buildNetCompensationWidget(
+                    Constants.TEXT_NET_CONPENSATION,
+                    _dashboardDataModel.netAmt != null
+                        ? '${Utils().formatDecimalsNumber(_dashboardDataModel.netAmt)}'
+                        : 'NA',
+                    _dashboardDataModel.grossAmt != null
+                        ? '${Utils().formatDecimalsNumber(_dashboardDataModel.grossAmt)}'
+                        : 'NA',
+                    _dashboardDataModel.deductions != null
+                        ? '${Utils().formatDecimalsNumber(_dashboardDataModel.deductions)}'
+                        : 'NA');
+              }
+            },
+          );
+        } else {
+          //If any error occurs, while fetching teh data
+          return Center(child: Text('Failed to fetch details'));
+        }
+      } else {
+        //If any error occurs, while fetching teh data
+        return Center(child: Text('Failed to fetch details'));
       }
-      return ListView.builder(
-        scrollDirection: Axis.vertical,
-        physics: AlwaysScrollableScrollPhysics(),
-        itemCount: 4,
-        itemBuilder: (BuildContext context, int index) {
-          //To display This Week filter widget
-          if (index == 0) {
-            return _buildThisWeekWidget();
-          }
-          //To display Total loads and Total Miles widget
-          if (index == 1) {
-            return _buildWidgetTotalLoadsAndMiles(
-                _dashboardDataModel.totalLoads != null
-                    ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalLoads)}'
-                    : 'NA',
-                _dashboardDataModel.totalMiles != null
-                    ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalMiles)}'
-                    : 'NA');
-          }
-          //To display Fuel widget
-          else if (index == 2) {
-            return _buildFuelWidget(
-                _dashboardDataModel.totalTractorGallons != null
-                    ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalTractorGallons)}'
-                    : 'NA',
-                _dashboardDataModel.totalFuelCost != null
-                    ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalFuelCost)}'
-                    : 'NA');
-          }
-          //To Display NetCompensation and Deductions Widget
-          else {
-            return _buildNetCompensationWidget(
-                Constants.TEXT_NET_CONPENSATION,
-                _dashboardDataModel.netAmt != null
-                    ? '${Utils().formatDecimalsNumber(_dashboardDataModel.netAmt)}'
-                    : 'NA',
-                _dashboardDataModel.grossAmt != null
-                    ? '${Utils().formatDecimalsNumber(_dashboardDataModel.grossAmt)}'
-                    : 'NA',
-                _dashboardDataModel.deductions != null
-                    ? '${Utils().formatDecimalsNumber(_dashboardDataModel.deductions)}'
-                    : 'NA');
-          }
-        },
-      );
     }
   }
 
@@ -122,19 +142,66 @@ class DashboardState extends State<DashboardPage> {
     return Scaffold(
       backgroundColor: AppColors.colorDashboard_Bg,
       //BlocBuilder
-      body: BlocBuilder<DashboardBloc, dynamic>(
+      body: BlocListener<DashboardBloc, dynamic>(
         bloc: _dashboardBloc,
-        builder: (context, state) {
-          //Pull Refresh Option
-          return SmartRefresher(
-              controller: _refreshController,
-              enablePullDown: true,
-              header: MaterialClassicHeader(),
-              onRefresh: () {
-                _dashboardBloc.dispatch(PullToRefreshDashboardEvent());
-              },
-              child: _childWidgetToRefresh(state, _dashboardDataModel));
+        condition: (previousState, currentState) {
+          return true;
         },
+        listener: (context, state) {
+          if (state is OpenQuickContactsState) {
+            _buildBottomSheet(context);
+          } else if (state is QuickContactsMailState) {
+            switch (state.selectedIndex) {
+              case 0:
+                {
+                  _service.sendEmail(_quickContactEmails[0]);
+                }
+                break;
+              case 1:
+                {
+                  _service.sendEmail(_quickContactEmails[1]);
+                }
+                break;
+              case 2:
+                {
+                  _service.sendEmail(_quickContactEmails[2]);
+                }
+                break;
+            }
+          } else if (state is QuickContactsCallState) {
+            switch (state.selectedIndex) {
+              case 0:
+                {
+                  _service.call(_quickContactPhoneNumbers[0]);
+                }
+                break;
+              case 1:
+                {
+                  _service.call(_quickContactPhoneNumbers[1]);
+                }
+                break;
+              case 2:
+                {
+                  _service.call(_quickContactPhoneNumbers[2]);
+                }
+                break;
+            }
+          }
+        },
+        child: BlocBuilder<DashboardBloc, dynamic>(
+          bloc: _dashboardBloc,
+          builder: (context, state) {
+            //Pull Refresh Option
+            return SmartRefresher(
+                controller: _refreshController,
+                enablePullDown: true,
+                header: MaterialClassicHeader(),
+                onRefresh: () {
+                  _dashboardBloc.dispatch(PullToRefreshDashboardEvent());
+                },
+                child: _childWidgetToRefresh(state));
+          },
+        ),
       ),
       //Quick Contacts
       bottomNavigationBar: _bottomNavigationBarWidget(),
@@ -212,8 +279,10 @@ class DashboardState extends State<DashboardPage> {
                   ],
                 ),
                 onTap: () {
-                  //For Sprint 1, its not needed
-                  //_buildBottomSheet(context);
+                  //To show the Quick Contact Details
+                  _dashboardBloc.dispatch(OpenQuickContactsEvent());
+
+                  // _buildBottomSheet(context);
                 },
               ),
             ),
@@ -528,7 +597,7 @@ class DashboardState extends State<DashboardPage> {
                               minHeight: 27.0,
                               maxHeight: 27.0,
                             ),
-                            child: AutoSizeText('\$' + totalFuelAmount,
+                            child: AutoSizeText(totalFuelAmount + '\$',
                                 style: _subTitleStyle),
                           ),
                           Padding(
@@ -616,7 +685,7 @@ class DashboardState extends State<DashboardPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        '\$' + aSubTitle,
+                        aSubTitle + '\$',
                         style: _subTitleStyle,
                       ),
                     ),
@@ -631,10 +700,10 @@ class DashboardState extends State<DashboardPage> {
                 ),
                 grossCompensationAndDeductionsWiget(
                     Constants.TEXT_GROSS_COMPENSATION,
-                    '\$' + grossCompensation,
+                    grossCompensation + '\$',
                     true),
                 grossCompensationAndDeductionsWiget(
-                    Constants.TEXT_DEDUCTIONS, '\$' + deductions, false),
+                    Constants.TEXT_DEDUCTIONS, deductions + '\$', false),
               ],
             ),
           ),
@@ -690,69 +759,109 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-//  void _buildBottomSheet(context) {
-//    final _textStyle = TextStyle(
-//        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-//        fontSize: 16,
-//        fontWeight: FontWeight.normal,
-//        color: Color.fromRGBO(0, 0, 0, 0.87));
-//
-//    final quickContactList = [
-//      Constants.TEXT_DISPATCH,
-//      Constants.TEXT_SAFETY_OFFICER,
-//      Constants.TEXT_REFERRAL_AND_DRIVERRELATION
-//    ];
-//
-//    showModalBottomSheet(
-//        context: context,
-//        builder: (BuildContext bc) {
-//          return Container(
-//              height: 250,
-//              child: Column(
-//                children: <Widget>[
-//                  InkWell(
-//                    child: Padding(
-//                      padding: const EdgeInsets.only(top: 11.0),
-//                      child: Center(
-//                        child: Container(
-//                          width: 40,
-//                          height: 5,
-//                          decoration: BoxDecoration(
-//                              color: AppColors.colorGreyInBottomSheet,
-//                              borderRadius:
-//                                  BorderRadius.all(Radius.circular(12.0))),
-//                        ),
-//                      ),
-//                    ),
-//                    onTap: () {
-//                      Navigator.pop(context);
-//                    },
-//                  ),
-//                  Expanded(
-//                    child: ListView.builder(
-//                        itemCount: 3,
-//                        itemBuilder: (BuildContext context, int index) {
-//                          return Container(
-//                            decoration: new BoxDecoration(
-//                              border: Border(
-//                                bottom: BorderSide(
-//                                    width: 0.5,
-//                                    color: AppColors.colorGreyInBottomSheet),
-//                              ),
-//                            ),
-//                            child: new ListTile(
-//                              leading: _userIconWidget(),
-//                              title: new Text(quickContactList[index],
-//                                  style: _textStyle),
-//                              trailing: _roundedIconsRow(index),
-//                            ),
-//                          );
-//                        }),
-//                  )
-//                ],
-//              ));
-//        });
-//  }
+  void _buildBottomSheet(context) {
+    final _textStyle = TextStyle(
+        fontFamily: Constants.FONT_FAMILY_ROBOTO,
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        color: Color.fromRGBO(0, 0, 0, 0.87));
+
+    final _textSubStyle = TextStyle(
+        fontFamily: Constants.FONT_FAMILY_ROBOTO,
+        fontSize: 11,
+        fontWeight: FontWeight.normal,
+        color: Color.fromRGBO(0, 0, 0, 0.87));
+    final quickContactList = [
+      Constants.TEXT_DISPATCH,
+      Constants.TEXT_SAFETY_OFFICER,
+      Constants.TEXT_REFERRAL_AND_DRIVERRELATION
+    ];
+
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+              height: MediaQuery.of(context).size.height * .40,
+              child: Column(
+                children: <Widget>[
+                  InkWell(
+                    child: Container(
+                      height: 30,
+                      width: 50,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 15, bottom: 10),
+                        child: Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.colorGreyInBottomSheet,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0))),
+                          ),
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: 3,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            decoration: new BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                    width: 0.5,
+                                    color: AppColors.colorGreyInBottomSheet),
+                              ),
+                            ),
+                            child: Container(
+                              height: 90,
+                              child: new ListTile(
+                                leading: _userIconWidget(),
+                                title: new Text(quickContactList[index],
+                                    style: _textStyle),
+                                subtitle: Padding(
+                                  padding: EdgeInsets.only(top: 5),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: new Text(
+                                              _quickContactEmails[index],
+                                              style: _textSubStyle,
+                                              maxLines: 2,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                            padding: EdgeInsets.only(
+                                                top: 5, bottom: 5),
+                                            child: new Text(
+                                                _quickContactPhoneNumbers[index],
+                                                style: _textSubStyle),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                trailing: _roundedIconsRow(index),
+                              ),
+                            ),
+                          );
+                        }),
+                  )
+                ],
+              ));
+        });
+  }
 
   _userIconWidget() {
     return Container(
@@ -774,32 +883,34 @@ class DashboardState extends State<DashboardPage> {
       child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
         InkWell(
           child: Padding(
-            padding: const EdgeInsets.only(right: 12.0),
+            padding: const EdgeInsets.only(left: 5, right: 12.0),
             child: SizedBox(
-              height: 35,
-              width: 35,
+              height: 40,
+              width: 40,
               child: Image.asset('images/ic_mail_1.png'),
             ),
           ),
           onTap: () {
-            switch (index) {
-              case 0:
-                {
-                  _service.sendEmail(Constants.TEXT_DISPATCH_QUCKCONTACT_EMAIL);
-                }
-                break;
-              case 1:
-                {
-                  _service.sendEmail(Constants.TEXT_SAFETY_QUCKCONTACT_EMAIL);
-                }
-                break;
-              case 2:
-                {
-                  _service.sendEmail(
-                      Constants.TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL);
-                }
-                break;
-            }
+            _dashboardBloc
+                .dispatch(QuickContactTapsOnMailEvent(selectedIndex: index));
+//            switch (index) {
+//              case 0:
+//                {
+//                  _service.sendEmail(Constants.TEXT_DISPATCH_QUCKCONTACT_EMAIL);
+//                }
+//                break;
+//              case 1:
+//                {
+//                  _service.sendEmail(Constants.TEXT_SAFETY_QUCKCONTACT_EMAIL);
+//                }
+//                break;
+//              case 2:
+//                {
+//                  _service.sendEmail(
+//                      Constants.TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL);
+//                }
+//                break;
+//            }
           },
         ),
         InkWell(
@@ -812,23 +923,26 @@ class DashboardState extends State<DashboardPage> {
             ),
           ),
           onTap: () {
-            switch (index) {
-              case 0:
-                {
-                  _service.call(Constants.TEXT_DISPATCH_PHONENUMBER);
-                }
-                break;
-              case 1:
-                {
-                  _service.call(Constants.TEXT_SAFETY_PHONENUMBER);
-                }
-                break;
-              case 2:
-                {
-                  _service.call(Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER);
-                }
-                break;
-            }
+            _dashboardBloc
+                .dispatch(QuickContactTapsOnCallEvent(selectedIndex: index));
+
+//            switch (index) {
+//              case 0:
+//                {
+//                  _service.call(Constants.TEXT_DISPATCH_PHONENUMBER);
+//                }
+//                break;
+//              case 1:
+//                {
+//                  _service.call(Constants.TEXT_SAFETY_PHONENUMBER);
+//                }
+//                break;
+//              case 2:
+//                {
+//                  _service.call(Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER);
+//                }
+//                break;
+//            }
           },
         )
       ]),

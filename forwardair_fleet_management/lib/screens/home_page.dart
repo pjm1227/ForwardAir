@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
+import 'package:flutter/services.dart';
 
+import 'package:forwardair_fleet_management/utility/theme.dart';
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
 import 'package:forwardair_fleet_management/screens/login_screen.dart';
@@ -365,6 +367,7 @@ class _HomePageState extends State<HomePage> {
 
   //Scaffold Widget
   Widget _scaffoldWidget() {
+
     return Scaffold(
       appBar: new AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
@@ -391,7 +394,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       //To Display the Dashboard
-      body: DashboardPage(),
+      body:  DashboardPage(),
       //To Display the DrawerMenu
       drawer: new Drawer(
           child: Container(
@@ -400,7 +403,7 @@ class _HomePageState extends State<HomePage> {
               child:
                   //BlocListener to check condition according to state
                   //Basically it used to navigate to page
-                  BlocListener<SideMenuBloc, SideMenuStates>(
+                BlocListener<SideMenuBloc, SideMenuStates>(
                 bloc: _sideMenuBloc,
                 condition: (previousState, currentState) {
                   return true;
@@ -558,6 +561,7 @@ class _HomePageState extends State<HomePage> {
   //This return UI of Drawer Menu and Dasboard
   @override
   Widget build(BuildContext context) {
+
     if (Platform.isIOS) {
       return _scaffoldWidget();
     } else {

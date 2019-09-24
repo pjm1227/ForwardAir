@@ -7,10 +7,20 @@ abstract class DashboardEvents extends Equatable {
   DashboardEvents([List props = const []]) : super(props);
 }
 
-class FetchDashboardEvent extends DashboardEvents {
+class FetchDashboardEvent extends DashboardEvents {}
 
+class PullToRefreshDashboardEvent extends DashboardEvents {}
+
+class OpenQuickContactsEvent extends DashboardEvents {}
+
+class QuickContactTapsOnMailEvent extends DashboardEvents {
+  final int selectedIndex;
+
+  QuickContactTapsOnMailEvent({@required this.selectedIndex}) : super([]);
 }
 
-class PullToRefreshDashboardEvent extends DashboardEvents {
+class QuickContactTapsOnCallEvent extends DashboardEvents {
+  final int selectedIndex;
 
+  QuickContactTapsOnCallEvent({@required this.selectedIndex}) : super([]);
 }

@@ -58,8 +58,8 @@ class Constants {
   static const String TEXT_NET_CONPENSATION = 'Net Compensation';
   static const String TEXT_QUICK_CONTACT = 'QUICK CONTACT';
   static const String TEXT_DISPATCH = 'Dispatch';
-  static const String TEXT_SAFETY_OFFICER = 'Safety Officer';
-  static const String TEXT_REFERRAL_AND_DRIVERRELATION = 'Referral & Driver Relation';
+  static const String TEXT_SAFETY_OFFICER = 'Safety';
+  static const String TEXT_REFERRAL_AND_DRIVERRELATION = 'Driver Relations';
   static const String TEXT_THISWEEK = 'This Week';
   static const String TEXT_LASTWEEK = 'Last Week';
   static const String TEXT_PREV_SETTLEMENT_PERIOD = 'Previous Settlement Period';

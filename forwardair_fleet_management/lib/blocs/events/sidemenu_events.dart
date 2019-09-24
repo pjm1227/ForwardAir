@@ -28,12 +28,8 @@ class ExpandEvent extends SideMenuEvents {
 //This Event to expand the SafetyIncidents sub items
 class SafetyIncidentsEvent extends SideMenuEvents {
   final int selectedIndex;
-  SafetyIncidentsEvent({@required this.selectedIndex})
-      : super([]);
+  SafetyIncidentsEvent({@required this.selectedIndex}) : super([]);
 }
-
 
 //This event for logout
-class LogoutEvent extends SideMenuEvents {
-
-}
+class LogoutEvent extends SideMenuEvents {}

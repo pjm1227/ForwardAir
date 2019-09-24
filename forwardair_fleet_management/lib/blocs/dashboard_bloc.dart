@@ -58,6 +58,26 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
         yield DashboardLoaded(dashboardData: posts);
       }
     }
+    //Open Qucik Contact Sheet
+    else if (event is OpenQuickContactsEvent) {
+      final posts = await fetchDataFromDB();
+      yield DashboardLoaded(dashboardData: posts);
+      yield OpenQuickContactsState(dashboardData: posts);
+    }
+    //To send a mail from Quick Contact Sheet
+    else if (event is QuickContactTapsOnMailEvent) {
+      final posts = await fetchDataFromDB();
+      yield DashboardLoaded(dashboardData: posts);
+      yield QuickContactsMailState(
+          selectedIndex: event.selectedIndex, dashboardData: posts);
+    }
+    //To make a call from Quick Contact Sheet
+    else if (event is QuickContactTapsOnCallEvent) {
+      final posts = await fetchDataFromDB();
+      yield DashboardLoaded(dashboardData: posts);
+      yield QuickContactsCallState(
+          selectedIndex: event.selectedIndex, dashboardData: posts);
+    }
   }
 
   //To Fetch Data either from API Or DB
@@ -71,8 +91,10 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       try {
         //Making API Call
         final _repository = Repository();
-        final responseBody = await _repository.makeDashboardRequest(userModel.token != null ? userModel.token : '');
-        final dashboardItems = Dashboard_DB_Model().dashboardDBModelFromJson(responseBody);
+        final responseBody = await _repository.makeDashboardRequest(
+            userModel.token != null ? userModel.token : '');
+        final dashboardItems =
+            Dashboard_DB_Model().dashboardDBModelFromJson(responseBody);
         //final dashboardItems = await apiManager.loadDashboardDataFromServer(userModel.token != null ? userModel.token : '');
         //For success
         if (dashboardItems.length > 0) {
@@ -122,5 +144,4 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       return dashboardItemsFromDB;
     }
   }
-
 }
