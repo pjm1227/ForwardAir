@@ -32,13 +32,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
   Stream<LoginStates> _validation(String userName, String userPassword) async* {
     if (userName.isEmpty) {
       yield LoginInitialState();
-      yield FormErrorState(errorMessage: 'Please enter Email');
+      yield FormErrorState(errorMessage: Constants.ERROR_ENTER_EMAIL);
     } else if (!_isValidEmail(userName)) {
       yield LoginInitialState();
-      yield FormErrorState(errorMessage: 'Please enter a valid Email');
+      yield FormErrorState(errorMessage: Constants.ERROR_ENTER_VALID_EMAIL);
     } else if (userPassword.isEmpty) {
       yield LoginInitialState();
-      yield FormErrorState(errorMessage: 'Please enter a password');
+      yield FormErrorState(errorMessage: Constants.ERROR_ENTER_PASSWORD);
     } else {
       //Check for internet connection
       var isConnection = await Utils.isConnectionAvailable();

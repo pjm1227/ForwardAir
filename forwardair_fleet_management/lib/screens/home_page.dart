@@ -398,6 +398,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 listener: (context, state) {
                   if (state is LoggedOutState) {
+                    Navigator.pop(context);
                     showAlertDialog(context);
                   }
 
@@ -545,13 +546,13 @@ class _HomePageState extends State<HomePage> {
   showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = FlatButton(
-      child: Text("Cancel"),
+      child: Text("No"),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = FlatButton(
-      child: Text("Continue"),
+      child: Text("Yes"),
       onPressed: () {
         navigateToLginPage();
       },
@@ -559,8 +560,8 @@ class _HomePageState extends State<HomePage> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Forward Air"),
-      content: Text("Do you want to logout ?"),
+      title: Text("Logout ?"),
+      content: Text("Are you sure you want to Logout?"),
       actions: [
         cancelButton,
         continueButton,

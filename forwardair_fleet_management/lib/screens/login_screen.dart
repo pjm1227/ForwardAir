@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 //import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/login.dart';
 import 'package:forwardair_fleet_management/components/button_widget.dart';
 import 'package:forwardair_fleet_management/screens/terms_condition_screen.dart';
+import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
 import 'home_page.dart';
@@ -33,6 +35,8 @@ class LoginState extends State<LoginPage> {
   LoginBloc _loginBloc = LoginBloc();
   var _textControllerEmail;
   var _textControllerPassword;
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
 
 //Used for visible/invisible password
   var isPasswordVisible = true;
@@ -77,6 +81,12 @@ class LoginState extends State<LoginPage> {
           }
           if (state is FormErrorState) {
             Utils.showSnackBar(state.errorMessage, context);
+            if (_textControllerEmail.text.toString().isEmpty ||
+                state.errorMessage == Constants.ERROR_ENTER_VALID_EMAIL) {
+              _fieldFocusChange(context, _emailFocus, _emailFocus);
+            } else if (_textControllerPassword.text.toString().isEmpty) {
+              _fieldFocusChange(context, _emailFocus, _passwordFocus);
+            }
           }
         },
         //Bloc Builder
@@ -95,6 +105,13 @@ class LoginState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  //This method is used to change the focus for Text Field
+  _fieldFocusChange(
+      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
   }
 
   //Initial Widget for Login
@@ -130,7 +147,13 @@ class LoginState extends State<LoginPage> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 12, bottom: 12),
-                        child: TextField(
+                        child: TextFormField(
+                          textInputAction: TextInputAction.next,
+                          focusNode: _emailFocus,
+                          onFieldSubmitted: (term) {
+                            _fieldFocusChange(
+                                context, _emailFocus, _passwordFocus);
+                          },
                           controller: _textControllerEmail,
                           decoration: new InputDecoration(
                             labelText: "User Email",
@@ -145,7 +168,13 @@ class LoginState extends State<LoginPage> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 12, bottom: 12),
-                        child: TextField(
+                        child: TextFormField(
+                          textInputAction: TextInputAction.done,
+                          focusNode: _passwordFocus,
+                          onFieldSubmitted: (term) {
+                            // _fieldFocusChange(context, _passwordFocus, null);
+                            _makeAPICall();
+                          },
                           controller: _textControllerPassword,
                           obscureText: isPasswordVisible,
                           decoration: new InputDecoration(
@@ -175,13 +204,7 @@ class LoginState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
                         child: ButtonWidget(
-                          onPressed: () {
-                            FocusScope.of(context)
-                                .requestFocus(new FocusNode());
-                            _loginBloc.dispatch(LoginPressedEvent(
-                                userName: _textControllerEmail.text,
-                                userPassword: _textControllerPassword.text));
-                          },
+                          onPressed: () => _makeAPICall(),
                           text: 'LOGIN',
                         ),
                       ),
@@ -209,5 +232,12 @@ class LoginState extends State<LoginPage> {
         ),
       ],
     );
+  }
+
+  _makeAPICall() {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _loginBloc.dispatch(LoginPressedEvent(
+        userName: _textControllerEmail.text,
+        userPassword: _textControllerPassword.text));
   }
 }

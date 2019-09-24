@@ -34,6 +34,9 @@ class Constants {
   static const String FONT_FAMILY_ROBOTO = 'Roboto';
   static const String FONT_FAMILY_ROBOTO_MEDIUM = 'Roboto-Medium';
   static const String FONT_FAMILY_ROBOTO_BOLD = 'Roboto-Bold';
+  static const String ERROR_ENTER_EMAIL = 'Please enter Email';
+  static const String ERROR_ENTER_VALID_EMAIL = 'Please enter a valid Email';
+  static const String ERROR_ENTER_PASSWORD = 'Please enter a password';
 
   //Drawer Menu
   static const String TEXT_VERSION_NUMBER = 'Version ';
