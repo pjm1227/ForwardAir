@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
-import 'package:flutter/services.dart';
 
-import 'package:forwardair_fleet_management/utility/theme.dart';
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
 import 'package:forwardair_fleet_management/screens/login_screen.dart';
@@ -228,11 +226,6 @@ class _HomePageState extends State<HomePage> {
         fontSize: 16,
         fontWeight: FontWeight.normal,
         color: AppColors.colorBlack);
-//    final _moduleTitleStyle = TextStyle(
-//        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-//        fontSize: 14,
-//        fontWeight: FontWeight.normal,
-//        color: AppColors.colorGrey);
 
     //For Safety and Incidents
     if (index == 0) {
@@ -252,10 +245,6 @@ class _HomePageState extends State<HomePage> {
                 text: _drawerMenuItems[index],
                 colorText: AppColors.colorGrey,
               ),
-//              Text(
-//                _drawerMenuItems[index],
-//                style: _moduleTitleStyle,
-//              ),
             ),
           ),
         ],
@@ -411,8 +400,9 @@ class _HomePageState extends State<HomePage> {
                   if (state is LoggedOutState) {
                     showAlertDialog(context);
                   }
+
                   //Navigation option
-                  else if (state is NavigationState) {
+                  if (state is NavigationState) {
                     final index =
                         state.selectedIndex == null ? 0 : state.selectedIndex;
                     switch (index) {
@@ -445,6 +435,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   builder: (context, state) {
                     //Expanded Items inside Safety Incidents
+
                     if (state is ExpandState) {
                       _selectedIndex =
                           state.selectedIndex == null ? 0 : state.selectedIndex;
