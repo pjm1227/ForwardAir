@@ -25,6 +25,8 @@ class TextWidget extends StatelessWidget {
 
   final TextAlign textAlign;
 
+  final int maxLines;
+
   const TextWidget(
       {Key key,
       this.text,
@@ -32,7 +34,8 @@ class TextWidget extends StatelessWidget {
       this.colorText,
       this.isBold,
       this.textType,
-      this.textAlign})
+      this.textAlign,
+      this.maxLines})
       : super(key: key);
 
   @override
@@ -44,6 +47,7 @@ class TextWidget extends StatelessWidget {
         child: Text(
           text,
           textAlign: textAlign != null ? textAlign : null,
+          maxLines: this.maxLines != null ? this.maxLines : null,
           style: TextStyle(
             color: colorText != null ? colorText : AppColors.colorBlack,
             fontSize: textType != null ? _textSize(textType) : 12,

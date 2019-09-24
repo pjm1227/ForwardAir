@@ -21,4 +21,5 @@ class AppColors
   static const colorBlue = Color.fromRGBO(45, 135, 151, 1);
   static const darkColorBlue = Color.fromRGBO(23, 87, 99, 1);
   static const colorTotalGallons = Color.fromRGBO(118, 119, 120, 1);
+  static const lightBlack =  Color.fromRGBO(0, 0, 0, 0.87);
 }

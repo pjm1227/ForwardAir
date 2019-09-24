@@ -14,6 +14,7 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
 import 'package:forwardair_fleet_management/screens/drill_down_screen.dart';
+import 'package:forwardair_fleet_management/components/text_widget.dart';
 
 /*
   DashboardPage to display dashboard details.
@@ -243,13 +244,10 @@ class DashboardState extends State<DashboardPage> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 20.0),
-                          child: Text(
-                            Constants.TEXT_QUICK_CONTACT,
-                            style: TextStyle(
-                                fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white),
+                          child: TextWidget(
+                            text: Constants.TEXT_QUICK_CONTACT,
+                            colorText: AppColors.colorWhite,
+                            textType: TextType.TEXT_SMALL,
                           ),
                         ),
                       ],
@@ -318,14 +316,11 @@ class DashboardState extends State<DashboardPage> {
                 width: 28,
                 height: 30,
                 child: Image.asset('images/ic_calendar.png')),
-            leading: Text(
-              Constants.TEXT_THISMONTH,
-              style: TextStyle(
-                  fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white),
-            ),
+            leading: TextWidget(
+                text: Constants.TEXT_THISMONTH,
+                textType: TextType.TEXT_MEDIUM,
+                isBold: true,
+                colorText: AppColors.colorWhite),
             onTap: () {
               _weekModalBottomSheet(context);
             },
@@ -337,16 +332,14 @@ class DashboardState extends State<DashboardPage> {
 
   //This return the Text of the This week Filter
   Widget _weekFilterWidget(String title) {
-    final _textStyle = TextStyle(
-      fontWeight: FontWeight.normal,
-      fontFamily: Constants.FONT_FAMILY_ROBOTO,
-      fontSize: 16,
-      color: Colors.black,
-    );
     return Container(
       height: 40,
       alignment: Alignment.center,
-      child: new Text(title, style: _textStyle),
+      child: TextWidget(
+        text: title,
+        textType: TextType.TEXT_MEDIUM,
+        colorText: AppColors.colorBlack,
+      ),
     );
   }
 
@@ -363,14 +356,10 @@ class DashboardState extends State<DashboardPage> {
       Constants.TEXT_CANCEL
     ];
     //Text Style of the Cancel Text
-    final _cancelText = Text(
-      Constants.TEXT_CANCEL,
-      style: TextStyle(
-        fontWeight: FontWeight.normal,
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 16,
-        color: AppColors.colorRed,
-      ),
+    final _cancelText = TextWidget(
+      text: Constants.TEXT_CANCEL,
+      textType: TextType.TEXT_MEDIUM,
+      colorText: AppColors.colorRed,
       textAlign: centerTextAlign,
     );
     //This Returns bottom sheet
@@ -418,11 +407,6 @@ class DashboardState extends State<DashboardPage> {
 
   //This returns TotalLoadsAndMiles Widget
   _totalLoadsAndMilesWidget(String aTitle, String aSubTitle) {
-    final _titleStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        color: AppColors.colorBlue);
     final _subTitleStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
         fontSize: 30,
@@ -456,9 +440,10 @@ class DashboardState extends State<DashboardPage> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
-                      child: Text(
-                        aTitle,
-                        style: _titleStyle,
+                      child: TextWidget(
+                        text: aTitle,
+                        textType: TextType.TEXT_SMALL,
+                        colorText: AppColors.colorBlue,
                       ),
                     )
                   ],
@@ -515,12 +500,6 @@ class DashboardState extends State<DashboardPage> {
 
   //This returns Fuel Widget
   _buildFuelWidget(String totalGallons, String totalFuelAmount) {
-    final _titleStyle = TextStyle(
-      fontFamily: Constants.FONT_FAMILY_ROBOTO,
-      fontSize: 14,
-      fontWeight: FontWeight.w600,
-      color: AppColors.colorBlue,
-    );
     final _subTitleStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
         fontSize: 22,
@@ -552,7 +531,11 @@ class DashboardState extends State<DashboardPage> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
-                  child: Text(Constants.TEXT_FUEL, style: _titleStyle),
+                  child: TextWidget(
+                    text: Constants.TEXT_FUEL,
+                    textType: TextType.TEXT_SMALL,
+                    colorText: AppColors.colorBlue,
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -564,18 +547,18 @@ class DashboardState extends State<DashboardPage> {
                         children: <Widget>[
                           SizedBox(
                             height: 27.0,
-                            child: Text(totalGallons, style: _subTitleStyle),
+                            child: TextWidget(
+                              text: totalGallons,
+                              colorText: AppColors.darkColorBlue,
+                              textType: TextType.TEXT_XLARGE,
+                              isBold: true,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 3.0),
-                            child: Text(
-                              Constants.TEXT_TOTAL_GALLONS,
-                              style: TextStyle(
-                                  fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.normal,
-                                  color: AppColors.colorTotalGallons),
-                            ),
+                            child: TextWidget(
+                                text: Constants.TEXT_TOTAL_GALLONS,
+                                colorText: AppColors.colorTotalGallons),
                           ),
                         ],
                       ),
@@ -610,14 +593,9 @@ class DashboardState extends State<DashboardPage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 3.0),
-                            child: Text(
-                              Constants.TEXT_TOTAL_FUEL_AMOUNT,
-                              style: TextStyle(
-                                  fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.normal,
-                                  color: AppColors.colorTotalGallons),
-                            ),
+                            child: TextWidget(
+                                text: Constants.TEXT_TOTAL_FUEL_AMOUNT,
+                                colorText: AppColors.colorTotalGallons),
                           ),
                         ],
                       ),
@@ -647,17 +625,6 @@ class DashboardState extends State<DashboardPage> {
   //This returns NetCompensationWidget Widget
   _buildNetCompensationWidget(String aTitle, String aSubTitle,
       String grossCompensation, String deductions) {
-    final _titleStyle = TextStyle(
-      fontFamily: Constants.FONT_FAMILY_ROBOTO,
-      fontSize: 14,
-      fontWeight: FontWeight.w600,
-      color: AppColors.colorBlue,
-    );
-    final _subTitleStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 30,
-        fontWeight: FontWeight.bold,
-        color: AppColors.darkColorBlue);
     return Container(
       margin: new EdgeInsets.only(left: 10.0, right: 10, top: 5.0, bottom: 5.0),
       decoration: new BoxDecoration(
@@ -684,7 +651,11 @@ class DashboardState extends State<DashboardPage> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Text(aTitle, style: _titleStyle),
+                    TextWidget(
+                      text: aTitle,
+                      textType: TextType.TEXT_SMALL,
+                      colorText: AppColors.colorBlue,
+                    ),
                   ],
                 ),
                 Row(
@@ -692,9 +663,11 @@ class DashboardState extends State<DashboardPage> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        aSubTitle + '\$',
-                        style: _subTitleStyle,
+                      child: TextWidget(
+                        text: aSubTitle + '\$',
+                        colorText: AppColors.darkColorBlue,
+                        textType: TextType.TEXT_XLARGE,
+                        isBold: true,
                       ),
                     ),
                     Container(
@@ -737,20 +710,16 @@ class DashboardState extends State<DashboardPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    title,
-                    style: new TextStyle(
-                        fontSize: 13.0,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.colorBlue,
-                        fontFamily: Constants.FONT_FAMILY_ROBOTO),
+                  TextWidget(
+                    text: title,
+                    isBold: true,
+                    colorText: AppColors.colorBlue,
                   ),
-                  Text(sTitle,
-                      style: TextStyle(
-                          fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.darkColorBlue)),
+                  TextWidget(
+                      text: sTitle,
+                      isBold: true,
+                      textType: TextType.TEXT_LARGE,
+                      colorText: AppColors.darkColorBlue),
                 ],
               ),
             ),
@@ -768,17 +737,12 @@ class DashboardState extends State<DashboardPage> {
   }
 
   void _buildBottomSheet(context) {
-    final _textStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
-        color: Color.fromRGBO(0, 0, 0, 0.87));
-
     final _textSubStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
         fontSize: 11,
         fontWeight: FontWeight.normal,
-        color: Color.fromRGBO(0, 0, 0, 0.87));
+        color: AppColors.lightBlack);
+
     final quickContactList = [
       Constants.TEXT_DISPATCH,
       Constants.TEXT_SAFETY_OFFICER,
@@ -828,8 +792,11 @@ class DashboardState extends State<DashboardPage> {
                               height: 90,
                               child: new ListTile(
                                 leading: _userIconWidget(),
-                                title: new Text(quickContactList[index],
-                                    style: _textStyle),
+                                title: TextWidget(
+                                  text: quickContactList[index],
+                                  textType: TextType.TEXT_MEDIUM,
+                                  colorText: AppColors.lightBlack,
+                                ),
                                 subtitle: Padding(
                                   padding: EdgeInsets.only(top: 5),
                                   child: Column(

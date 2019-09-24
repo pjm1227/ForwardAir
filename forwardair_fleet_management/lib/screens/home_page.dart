@@ -366,15 +366,16 @@ class _HomePageState extends State<HomePage> {
 
   //Scaffold Widget
   Widget _scaffoldWidget() {
-
     return Scaffold(
       appBar: new AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
         centerTitle: false,
         //AppBar Title
         title: TextWidget(
-            text: Constants.TEXT_DASHBOARD,
-            colorText: AppColors.colorWhite),
+          text: Constants.TEXT_DASHBOARD,
+          colorText: AppColors.colorWhite,
+          textType: TextType.TEXT_XLARGE,
+        ),
         actions: <Widget>[
           //To display the notification Icon
           InkWell(
@@ -392,7 +393,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       //To Display the Dashboard
-      body:  DashboardPage(),
+      body: DashboardPage(),
       //To Display the DrawerMenu
       drawer: new Drawer(
           child: Container(
@@ -401,7 +402,7 @@ class _HomePageState extends State<HomePage> {
               child:
                   //BlocListener to check condition according to state
                   //Basically it used to navigate to page
-                BlocListener<SideMenuBloc, SideMenuStates>(
+                  BlocListener<SideMenuBloc, SideMenuStates>(
                 bloc: _sideMenuBloc,
                 condition: (previousState, currentState) {
                   return true;
@@ -461,6 +462,11 @@ class _HomePageState extends State<HomePage> {
                       _expandedListIndex =
                           state.selectedIndex == null ? 0 : state.selectedIndex;
                     }
+
+                    if (state is LoggedOutState) {
+                      showAlertDialog(context);
+                    }
+
                     //Returns Side Menu Options
                     return ListView(
                       children: <Widget>[
@@ -498,42 +504,25 @@ class _HomePageState extends State<HomePage> {
                                 title: Container(
                                     padding: EdgeInsets.only(bottom: 10),
                                     child: TextWidget(
-                                        text: _sideMenuBloc.userDetails != null
-                                            ? _sideMenuBloc
-                                                        .userDetails.fullName ==
-                                                    null
-                                                ? 'User Name'
-                                                : _sideMenuBloc
-                                                    .userDetails.fullName
-                                            : 'User Name',
-                                        isBold: true,
-                                        colorText: AppColors.colorWhite)
-//                                    Text(
-//                                      _sideMenuBloc.userDetails.fullName == null
-//                                          ? 'User Name'
-//                                          : _sideMenuBloc.userDetails.fullName,
-//                                      style: TextStyle(
-//                                          fontWeight: FontWeight.bold,
-//                                          fontFamily: 'Roboto',
-//                                          fontSize: 16,
-//                                          color: Colors.white),
-//                                    )
-                                    ),
+                                      text: _sideMenuBloc.userDetails != null
+                                          ? _sideMenuBloc
+                                                      .userDetails.fullName ==
+                                                  null
+                                              ? 'User Name'
+                                              : _sideMenuBloc
+                                                  .userDetails.fullName
+                                          : 'User Name',
+                                      isBold: true,
+                                      colorText: AppColors.colorWhite,
+                                      textType: TextType.TEXT_MEDIUM,
+                                    )),
                                 //User Role Text
                                 subtitle: Container(
                                   child: TextWidget(
                                     text: Constants.TEXT_FLEET_OWNER,
                                     colorText: AppColors.colorWhite,
+                                    textType: TextType.TEXT_MEDIUM,
                                   ),
-//                                    Text(
-//                                      Constants.TEXT_FLEET_OWNER,
-//                                      style: TextStyle(
-//                                          fontWeight: FontWeight.normal,
-//                                          fontFamily:
-//                                              Constants.FONT_FAMILY_ROBOTO,
-//                                          fontSize: 16,
-//                                          color: Colors.white),
-//                                    )
                                 ),
                               ),
                             ),
@@ -558,7 +547,6 @@ class _HomePageState extends State<HomePage> {
   //This return UI of Drawer Menu and Dasboard
   @override
   Widget build(BuildContext context) {
-
     if (Platform.isIOS) {
       return _scaffoldWidget();
     } else {
@@ -566,6 +554,36 @@ class _HomePageState extends State<HomePage> {
         child: _scaffoldWidget(),
       );
     }
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {},
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed: () {},
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      content: Text("Do you want to logout ?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   // To navigate to the Login screen
