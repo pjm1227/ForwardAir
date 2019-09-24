@@ -46,7 +46,6 @@ class DashboardState extends State<DashboardPage> {
     Constants.TEXT_SAFETY_PHONENUMBER,
     Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER
   ];
-  Dashboard_DB_Model _dashboardData = Dashboard_DB_Model();
 
   //To Dispose the DashboardBloc
   @override
@@ -76,7 +75,6 @@ class DashboardState extends State<DashboardPage> {
           if (state.dashboardData[i].dashboardPeriod ==
               Constants.TEXT_DASHBOARD_PERIOD) {
             _dashboardDataModel = state.dashboardData[i];
-            _dashboardData = state.dashboardData[i];
           }
         } //End
         if (_dashboardDataModel.dashboardPeriod != null) {
@@ -433,84 +431,83 @@ class DashboardState extends State<DashboardPage> {
 
     return Expanded(
       child: new InkWell(
-          child:Container(
-        margin: aTitle == Constants.TEXT_TOTAL_LOADS
-            ? EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 0)
-            : EdgeInsets.only(top: 5, bottom: 5, right: 0, left: 5),
-        height: 80,
-        decoration: new BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: new BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            new BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.16),
-              blurRadius: 10.0,
-              offset: new Offset(0.0, 10.0),
-            ),
-          ],
-        ),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0, left: 10.0),
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Text(
-                      aTitle,
-                      style: _titleStyle,
-                    ),
-                  )
-                ],
+        child: Container(
+          margin: aTitle == Constants.TEXT_TOTAL_LOADS
+              ? EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 0)
+              : EdgeInsets.only(top: 5, bottom: 5, right: 0, left: 5),
+          height: 80,
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: new BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              new BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.16),
+                blurRadius: 10.0,
+                offset: new Offset(0.0, 10.0),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 5, top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  aTitle == Constants.TEXT_TOTAL_LOADS
-                      ? SizedBox(
-                          height: 37,
-                          child: Text(aSubTitle, style: _subTitleStyle),
-                        )
-                      : ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minWidth: 75.0,
-                            maxWidth: 90.0,
-                            minHeight: 37.0,
-                            maxHeight: 37.0,
-                          ),
-                          child: AutoSizeText(
-                            aSubTitle,
-                            style: _subTitleStyle,
-                          ),
-                        ),
-                  Container(
-                    padding: EdgeInsets.only(top: 5.0),
-                    height: 35,
-                    width: 35,
-                    child: aTitle == Constants.TEXT_TOTAL_LOADS
-                        ? Image.asset(
-                            'images/img_total_loads.png',
+            ],
+          ),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0, left: 10.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Text(
+                        aTitle,
+                        style: _titleStyle,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 5, top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    aTitle == Constants.TEXT_TOTAL_LOADS
+                        ? SizedBox(
+                            height: 37,
+                            child: Text(aSubTitle, style: _subTitleStyle),
                           )
-                        : Image.asset(
-                            'images/img_total_miles.png',
+                        : ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: 75.0,
+                              maxWidth: 90.0,
+                              minHeight: 37.0,
+                              maxHeight: 37.0,
+                            ),
+                            child: AutoSizeText(
+                              aSubTitle,
+                              style: _subTitleStyle,
+                            ),
                           ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                    Container(
+                      padding: EdgeInsets.only(top: 5.0),
+                      height: 35,
+                      width: 35,
+                      child: aTitle == Constants.TEXT_TOTAL_LOADS
+                          ? Image.asset(
+                              'images/img_total_loads.png',
+                            )
+                          : Image.asset(
+                              'images/img_total_miles.png',
+                            ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
-      ),
         onTap: () {
-          navigateToDrillDownPage(aTitle == Constants.TEXT_TOTAL_LOADS
-              ?false:true);
-          print(aTitle == Constants.TEXT_TOTAL_LOADS
-              ?'Loads':'Miles');
+          navigateToDrillDownPage(
+              aTitle == Constants.TEXT_TOTAL_LOADS ? false : true);
+          print(aTitle == Constants.TEXT_TOTAL_LOADS ? 'Loads' : 'Miles');
         },
       ),
     );
@@ -855,7 +852,8 @@ class DashboardState extends State<DashboardPage> {
                                             padding: EdgeInsets.only(
                                                 top: 5, bottom: 5),
                                             child: new Text(
-                                                _quickContactPhoneNumbers[index],
+                                                _quickContactPhoneNumbers[
+                                                    index],
                                                 style: _textSubStyle),
                                           ),
                                         ],
@@ -968,12 +966,11 @@ class DashboardState extends State<DashboardPage> {
             type: PageTransitionType.fade, child: FeaturesComingSoonPage()));
   }
 
-
-
   void navigateToDrillDownPage(bool isMiles) {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.fade, child: LoadsPage(isMiles,_dashboardData)));
+            type: PageTransitionType.fade,
+            child: LoadsPage(isMiles, _dashboardDataModel)));
   }
 }
