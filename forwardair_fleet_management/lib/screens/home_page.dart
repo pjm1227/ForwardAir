@@ -408,9 +408,8 @@ class _HomePageState extends State<HomePage> {
                   return true;
                 },
                 listener: (context, state) {
-                  //LoggedOut state
                   if (state is LoggedOutState) {
-                    navigateToLginPage();
+                    showAlertDialog(context);
                   }
                   //Navigation option
                   else if (state is NavigationState) {
@@ -461,10 +460,6 @@ class _HomePageState extends State<HomePage> {
                     if (state is SafetyIncidentState) {
                       _expandedListIndex =
                           state.selectedIndex == null ? 0 : state.selectedIndex;
-                    }
-
-                    if (state is LoggedOutState) {
-                      showAlertDialog(context);
                     }
 
                     //Returns Side Menu Options
@@ -560,16 +555,20 @@ class _HomePageState extends State<HomePage> {
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pop(context);
+      },
     );
     Widget continueButton = FlatButton(
       child: Text("Continue"),
-      onPressed: () {},
+      onPressed: () {
+        navigateToLginPage();
+      },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
+      title: Text("Forward Air"),
       content: Text("Do you want to logout ?"),
       actions: [
         cancelButton,

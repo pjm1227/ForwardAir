@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:meta/meta.dart';
 
 //This class handle an events for Dashboard Page
@@ -23,4 +24,9 @@ class QuickContactTapsOnCallEvent extends DashboardEvents {
   final int selectedIndex;
 
   QuickContactTapsOnCallEvent({@required this.selectedIndex}) : super([]);
+}
+
+class ApplyFilterEvent extends DashboardEvents {
+    final String selectedDashboardPeriod;
+    ApplyFilterEvent({@required this.selectedDashboardPeriod}) : super([]);
 }

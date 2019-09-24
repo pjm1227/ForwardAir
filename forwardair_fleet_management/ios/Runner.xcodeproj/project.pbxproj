@@ -551,7 +551,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.do.forwardair;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = ForwardAir_Distribution_Profile;
+				PROVISIONING_PROFILE_SPECIFIER = ForwardAir_Adhoc_Profile_New;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

@@ -74,56 +74,12 @@ class DashboardState extends State<DashboardPage> {
         //To populate This Month data initially
         for (var i = 0; i < state.dashboardData.length; i++) {
           if (state.dashboardData[i].dashboardPeriod ==
-              Constants.TEXT_DASHBOARD_PERIOD) {
+              Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH) {
             _dashboardDataModel = state.dashboardData[i];
           }
         } //End
         if (_dashboardDataModel.dashboardPeriod != null) {
-          return ListView.builder(
-            scrollDirection: Axis.vertical,
-            physics: AlwaysScrollableScrollPhysics(),
-            itemCount: 4,
-            itemBuilder: (BuildContext context, int index) {
-              //To display This Week filter widget
-              if (index == 0) {
-                return _buildThisWeekWidget();
-              }
-              //To display Total loads and Total Miles widget
-              if (index == 1) {
-                return _buildWidgetTotalLoadsAndMiles(
-                    _dashboardDataModel.totalLoads != null
-                        ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalLoads)}'
-                        : 'NA',
-                    _dashboardDataModel.totalMiles != null
-                        ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalMiles)}'
-                        : 'NA');
-              }
-              //To display Fuel widget
-              else if (index == 2) {
-                return _buildFuelWidget(
-                    _dashboardDataModel.totalTractorGallons != null
-                        ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalTractorGallons)}'
-                        : 'NA',
-                    _dashboardDataModel.totalFuelCost != null
-                        ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalFuelCost)}'
-                        : 'NA');
-              }
-              //To Display NetCompensation and Deductions Widget
-              else {
-                return _buildNetCompensationWidget(
-                    Constants.TEXT_NET_CONPENSATION,
-                    _dashboardDataModel.netAmt != null
-                        ? '${Utils().formatDecimalsNumber(_dashboardDataModel.netAmt)}'
-                        : 'NA',
-                    _dashboardDataModel.grossAmt != null
-                        ? '${Utils().formatDecimalsNumber(_dashboardDataModel.grossAmt)}'
-                        : 'NA',
-                    _dashboardDataModel.deductions != null
-                        ? '${Utils().formatDecimalsNumber(_dashboardDataModel.deductions)}'
-                        : 'NA');
-              }
-            },
-          );
+          return _listViewWidget();
         } else {
           //If any error occurs, while fetching teh data
           return Center(child: Text('Failed to fetch details'));
@@ -132,7 +88,58 @@ class DashboardState extends State<DashboardPage> {
         //If any error occurs, while fetching teh data
         return Center(child: Text('Failed to fetch details'));
       }
+    } else if (state is ApplyFilterState) {
+      _dashboardDataModel = state.aModel;
+      return _listViewWidget();
     }
+  }
+
+  Widget _listViewWidget() {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      physics: AlwaysScrollableScrollPhysics(),
+      itemCount: 4,
+      itemBuilder: (BuildContext context, int index) {
+        //To display This Week filter widget
+        if (index == 0) {
+          return _buildThisWeekWidget(_dashboardDataModel.dashboardPeriod);
+        }
+        //To display Total loads and Total Miles widget
+        if (index == 1) {
+          return _buildWidgetTotalLoadsAndMiles(
+              _dashboardDataModel.totalLoads != null
+                  ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalLoads)}'
+                  : 'NA',
+              _dashboardDataModel.totalMiles != null
+                  ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalMiles)}'
+                  : 'NA');
+        }
+        //To display Fuel widget
+        else if (index == 2) {
+          return _buildFuelWidget(
+              _dashboardDataModel.totalTractorGallons != null
+                  ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalTractorGallons)}'
+                  : 'NA',
+              _dashboardDataModel.totalFuelCost != null
+                  ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalFuelCost)}'
+                  : 'NA');
+        }
+        //To Display NetCompensation and Deductions Widget
+        else {
+          return _buildNetCompensationWidget(
+              Constants.TEXT_NET_CONPENSATION,
+              _dashboardDataModel.netAmt != null
+                  ? '${Utils().formatDecimalsNumber(_dashboardDataModel.netAmt)}'
+                  : 'NA',
+              _dashboardDataModel.grossAmt != null
+                  ? '${Utils().formatDecimalsNumber(_dashboardDataModel.grossAmt)}'
+                  : 'NA',
+              _dashboardDataModel.deductions != null
+                  ? '${Utils().formatDecimalsNumber(_dashboardDataModel.deductions)}'
+                  : 'NA');
+        }
+      },
+    );
   }
 
   //This returns the Widget of Dashboard Page
@@ -292,7 +299,8 @@ class DashboardState extends State<DashboardPage> {
   }
 
   //This return the This week Filter widget
-  _buildThisWeekWidget() {
+  _buildThisWeekWidget(String aFilterTitle) {
+    aFilterTitle = Constants.TEXT_THISMONTH;
     return Container(
       height: 50,
       decoration: new BoxDecoration(
@@ -317,7 +325,7 @@ class DashboardState extends State<DashboardPage> {
                 height: 30,
                 child: Image.asset('images/ic_calendar.png')),
             leading: TextWidget(
-                text: Constants.TEXT_THISMONTH,
+                text: aFilterTitle,
                 textType: TextType.TEXT_MEDIUM,
                 isBold: true,
                 colorText: AppColors.colorWhite),
@@ -330,23 +338,8 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //This return the Text of the This week Filter
-  Widget _weekFilterWidget(String title) {
-    return Container(
-      height: 40,
-      alignment: Alignment.center,
-      child: TextWidget(
-        text: title,
-        textType: TextType.TEXT_MEDIUM,
-        colorText: AppColors.colorBlack,
-      ),
-    );
-  }
-
   //This return the Bottom sheet when user taps on This week Filter
   Widget _weekModalBottomSheet(context) {
-    //To Align a Text
-    final centerTextAlign = TextAlign.center;
     //List of options in filter bootom sheet
     final weekFilterOptions = [
       Constants.TEXT_THISWEEK,
@@ -360,7 +353,7 @@ class DashboardState extends State<DashboardPage> {
       text: Constants.TEXT_CANCEL,
       textType: TextType.TEXT_MEDIUM,
       colorText: AppColors.colorRed,
-      textAlign: centerTextAlign,
+      textAlign: TextAlign.center,
     );
     //This Returns bottom sheet
     showModalBottomSheet(
@@ -384,6 +377,29 @@ class DashboardState extends State<DashboardPage> {
                         } else {
                           //Selected Filter in  Bottom Sheet
                           print(weekFilterOptions[index]);
+                          var selectedPeriodText = '';
+                          switch (index) {
+                            case 0:
+                              selectedPeriodText = _selectedType(
+                                  DashboardPeriodType.TEXT_THISWEEK);
+                              break;
+                            case 1:
+                              selectedPeriodText = _selectedType(
+                                  DashboardPeriodType.TEXT_LASTWEEK);
+                              break;
+                            case 2:
+                              selectedPeriodText = _selectedType(
+                                  DashboardPeriodType
+                                      .TEXT_PREV_SETTLEMENT_PERIOD);
+                              break;
+                            default:
+                              selectedPeriodText = _selectedType(
+                                  DashboardPeriodType.TEXT_THISMONTH);
+                              break;
+                          }
+
+                          ApplyFilterEvent(
+                              selectedDashboardPeriod: selectedPeriodText);
                         }
                       },
                     ),
@@ -391,6 +407,33 @@ class DashboardState extends State<DashboardPage> {
                 },
               ));
         });
+  }
+
+  //Text of the Filter
+  Widget _weekFilterWidget(String title) {
+    return Container(
+      height: 40,
+      alignment: Alignment.center,
+      child: TextWidget(
+        text: title,
+        textType: TextType.TEXT_MEDIUM,
+        colorText: AppColors.colorBlack,
+      ),
+    );
+  }
+
+  //This method will return the text size
+  String _selectedType(DashboardPeriodType periodType) {
+    if (periodType == DashboardPeriodType.TEXT_THISWEEK) {
+      return Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH;
+    } else if (periodType == DashboardPeriodType.TEXT_LASTWEEK) {
+      return Constants.TEXT_DASHBOARD_PERIOD_LAST_WEEK;
+    } else if (periodType == DashboardPeriodType.TEXT_PREV_SETTLEMENT_PERIOD) {
+      return Constants.TEXT_DASHBOARD_PREVIOUS_SETTLEMENT_PERIOD;
+    } else {
+      return Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH;
+      ;
+    }
   }
 
   //This returns Holder of TotalLoadsAndMiles Widget
@@ -409,8 +452,8 @@ class DashboardState extends State<DashboardPage> {
   _totalLoadsAndMilesWidget(String aTitle, String aSubTitle) {
     final _subTitleStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 30,
-        fontWeight: FontWeight.w600,
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
         color: AppColors.darkColorBlue);
 
     return Expanded(
@@ -457,7 +500,7 @@ class DashboardState extends State<DashboardPage> {
                     aTitle == Constants.TEXT_TOTAL_LOADS
                         ? SizedBox(
                             height: 37,
-                            child: Text(aSubTitle, style: _subTitleStyle),
+                            child: TextWidget(text: aSubTitle, textType: TextType.TEXT_XLARGE,colorText: AppColors.darkColorBlue,isBold: true,),
                           )
                         : ConstrainedBox(
                             constraints: BoxConstraints(
@@ -940,4 +983,11 @@ class DashboardState extends State<DashboardPage> {
             type: PageTransitionType.fade,
             child: LoadsPage(isMiles, _dashboardDataModel)));
   }
+}
+
+enum DashboardPeriodType {
+  TEXT_THISWEEK,
+  TEXT_LASTWEEK,
+  TEXT_PREV_SETTLEMENT_PERIOD,
+  TEXT_THISMONTH,
 }

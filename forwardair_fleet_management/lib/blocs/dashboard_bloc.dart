@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
@@ -58,8 +59,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
         yield DashboardLoaded(dashboardData: posts);
       }
     }
-
-//Open Qucik Contact Sheet
+    //Open Qucik Contact Sheet
     else if (event is OpenQuickContactsEvent) {
       final posts = await fetchDataFromDB();
       yield DashboardLoaded(dashboardData: posts);
@@ -78,6 +78,20 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       yield DashboardLoaded(dashboardData: posts);
       yield QuickContactsCallState(
           selectedIndex: event.selectedIndex, dashboardData: posts);
+    }
+    //Apply Filter
+    else if (event is ApplyFilterEvent) {
+      final dashboardList = await fetchDataFromDB();
+      final selectedModel = applyFilterInaDashboard(event.selectedDashboardPeriod, dashboardList);
+      yield ApplyFilterState(aModel:selectedModel );
+    }
+  }
+
+  Dashboard_DB_Model applyFilterInaDashboard(String selectedDashboardPeriod, List<Dashboard_DB_Model> dashboardList) {
+    for (var aModel in dashboardList) {
+      if (aModel.dashboardPeriod == selectedDashboardPeriod) {
+        return aModel;
+      }
     }
   }
 
@@ -145,5 +159,4 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       return dashboardItemsFromDB;
     }
   }
-
 }
