@@ -59,22 +59,22 @@ class DrillDownBloc extends Bloc<DrillDownEvents,DrillDownState> {
       if(event.filterOption==Constants.TEXT_ASCENDING){
         var drillDownData=sortbyTractorId('Ascending',event.drillData);
         yield InitialState();
-        yield SortedState(sortedData: drillDownData);
+        yield SortedState(sortedData: drillDownData,filterOption: event.filterOption);
       }
       else if(event.filterOption==Constants.TEXT_DESCENDING){
         var drillDownData=sortbyTractorId('Descending',event.drillData);
         yield InitialState();
-        yield SortedState(sortedData: drillDownData);
+        yield SortedState(sortedData: drillDownData,filterOption: event.filterOption);
       }
       else if(event.filterOption==Constants.TEXT_HIGHTOLOW){
         var drillDownData=sortbyContribution('High',event.drillData,event.isMilePage);
         yield InitialState();
-        yield SortedState(sortedData: drillDownData);
+        yield SortedState(sortedData: drillDownData,filterOption: event.filterOption);
       }
       else if(event.filterOption==Constants.TEXT_LOWTOHIGH){
         var drillDownData=sortbyContribution('Low',event.drillData,event.isMilePage);
         yield InitialState();
-        yield SortedState(sortedData: drillDownData);
+        yield SortedState(sortedData: drillDownData,filterOption: event.filterOption);
       }
 
     }
