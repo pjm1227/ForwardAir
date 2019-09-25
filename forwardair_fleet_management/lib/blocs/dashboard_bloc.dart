@@ -1,15 +1,16 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
 import 'package:forwardair_fleet_management/blocs/states/dashboardstate.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/dashboard_request.dart';
+import 'package:forwardair_fleet_management/screens/dashboard_page.dart' as prefix0;
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/databasemanager/dashboard_table_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 import 'package:forwardair_fleet_management/apirepo/repository.dart';
+import 'package:forwardair_fleet_management/utility/constants.dart';
 
 class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   //DB provider
@@ -24,6 +25,8 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   //Flag
   bool isAPICalling = false;
 
+  //Filter Period Type
+  String _selectedPeriodTypeInFilter = '';
 
   //Initial State of the Dashboard
   @override
@@ -40,7 +43,8 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
         if (posts.length == 0) {
           yield DashboardError();
         } else {
-          yield DashboardLoaded(dashboardData: posts);
+          final selectedModel = applyFilterInaDashboard(posts);
+          yield DashboardLoaded(dashboardData: selectedModel);
         }
       }
       //Once screen gets loaded
@@ -49,7 +53,8 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
         if (posts.length == 0) {
           yield DashboardError();
         } else {
-          yield DashboardLoaded(dashboardData: posts);
+          final selectedModel = applyFilterInaDashboard(posts);
+          yield DashboardLoaded(dashboardData: selectedModel);
         }
       }
     }
@@ -60,39 +65,45 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       if (posts.length == 0) {
         yield DashboardError();
       } else {
-        yield DashboardLoaded(dashboardData: posts);
+        //If filter not applied
+         var selectedModel = applyFilterInaDashboard(posts);
+         yield DashboardLoaded(dashboardData: selectedModel);
       }
     }
     //Open Qucik Contact Sheet
     else if (event is OpenQuickContactsEvent) {
       final posts = await fetchDataFromDB();
-      yield OpenQuickContactsState(dashboardData: posts);
+      var selectedModel = applyFilterInaDashboard(posts);
+      yield OpenQuickContactsState(dashboardData: selectedModel);
     }
     //To send a mail from Quick Contact Sheet
     else if (event is QuickContactTapsOnMailEvent) {
       final posts = await fetchDataFromDB();
-      yield DashboardLoaded(dashboardData: posts);
-      yield QuickContactsMailState(
-          selectedIndex: event.selectedIndex, dashboardData: posts);
+      var selectedModel = applyFilterInaDashboard(posts);
+      yield QuickContactsMailState(selectedIndex: event.selectedIndex, dashboardData: selectedModel);
+
     }
     //To make a call from Quick Contact Sheet
     else if (event is QuickContactTapsOnCallEvent) {
       final posts = await fetchDataFromDB();
-      yield DashboardLoaded(dashboardData: posts);
-      yield QuickContactsCallState(
-          selectedIndex: event.selectedIndex, dashboardData: posts);
+      var selectedModel = applyFilterInaDashboard(posts);
+      yield QuickContactsCallState(selectedIndex: event.selectedIndex, dashboardData: selectedModel);
     }
     //Apply Filter
     else if (event is ApplyFilterEvent) {
       final dashboardList = await fetchDataFromDB();
-      final selectedModel = applyFilterInaDashboard(event.selectedDashboardPeriod, dashboardList);
-      yield ApplyFilterState(aModel:selectedModel );
+      _selectedPeriodTypeInFilter = event.selectedDashboardPeriod;
+      final selectedModel = applyFilterInaDashboard(dashboardList);
+      yield ApplyFilterState(aModel:selectedModel);
     }
   }
 
-  Dashboard_DB_Model applyFilterInaDashboard(String selectedDashboardPeriod, List<Dashboard_DB_Model> dashboardList) {
+  Dashboard_DB_Model applyFilterInaDashboard( List<Dashboard_DB_Model> dashboardList) {
+    if (_selectedPeriodTypeInFilter == '') {
+      _selectedPeriodTypeInFilter = Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH;
+    }
     for (var aModel in dashboardList) {
-      if (aModel.dashboardPeriod == selectedDashboardPeriod) {
+      if (aModel.dashboardPeriod == _selectedPeriodTypeInFilter) {
         return aModel;
       }
     }
@@ -161,6 +172,34 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     } else {
       //If data does not exist in DB.
       return dashboardItemsFromDB;
+    }
+  }
+
+
+  //This method will return the Filter Title of a Period
+  String convertPeriodToTitle(String periodType) {
+    if (periodType == Constants.TEXT_DASHBOARD_PERIOD_THIS_WEEK) {
+      return Constants.TEXT_THISWEEK;
+    } else if (periodType == Constants.TEXT_DASHBOARD_PERIOD_LAST_WEEK) {
+      return Constants.TEXT_LASTWEEK;
+    } else if (periodType ==
+        Constants.TEXT_DASHBOARD_PREVIOUS_SETTLEMENT_PERIOD) {
+      return Constants.TEXT_PREV_SETTLEMENT_PERIOD;
+    } else {
+      return Constants.TEXT_THISMONTH;
+    }
+  }
+
+  //This method will return Filter Type of a Period
+  String convertTitleToPeriod(String periodType) {
+    if (periodType == Constants.TEXT_THISWEEK) {
+      return Constants.TEXT_DASHBOARD_PERIOD_THIS_WEEK;
+    } else if (periodType == Constants.TEXT_LASTWEEK) {
+      return Constants.TEXT_DASHBOARD_PERIOD_LAST_WEEK;
+    } else if (periodType == Constants.TEXT_PREV_SETTLEMENT_PERIOD) {
+      return Constants.TEXT_DASHBOARD_PREVIOUS_SETTLEMENT_PERIOD;
+    } else {
+      return Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH;
     }
   }
 }

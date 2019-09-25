@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
 import 'package:forwardair_fleet_management/blocs/states/dashboardstate.dart';
@@ -64,7 +63,7 @@ class DashboardState extends State<DashboardPage> {
       return Center(child: CircularProgressIndicator());
     } else if (state is DashboardError) {
       _dashboardBloc.isAPICalling = false;
-      //If any error occurs, while fetching teh data
+      //If any error occurs, while fetching the data
       return Center(child: Text('Failed to fetch details'));
     } else if (state is DashboardLoaded ||
         state is OpenQuickContactsState ||
@@ -72,25 +71,20 @@ class DashboardState extends State<DashboardPage> {
         state is QuickContactsCallState) {
       //To update the ListView, once data comes
       if (state.dashboardData != null) {
-        //To populate This Month data initially
-        for (var i = 0; i < state.dashboardData.length; i++) {
-          if (state.dashboardData[i].dashboardPeriod ==
-              Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH) {
-            _dashboardDataModel = state.dashboardData[i];
-          }
-        } //End
+        _dashboardDataModel = state.dashboardData;
+        //Fetched Data
         if (_dashboardDataModel.dashboardPeriod != null) {
           _dashboardBloc.isAPICalling = false;
           return _listViewWidget();
         } else {
           _dashboardBloc.isAPICalling = false;
-          //If any error occurs, while fetching teh data
-          return Center(child: Text('Failed to fetch details'));
+          //If any error occurs, while fetching the data
+          return Center(child: Text('Failed to fetch details.'));
         }
       } else {
         _dashboardBloc.isAPICalling = false;
         //If any error occurs, while fetching teh data
-        return Center(child: Text('Failed to fetch details'));
+        return Center(child: Text('Failed to fetch details.'));
       }
     } else if (state is ApplyFilterState) {
       _dashboardDataModel = state.aModel;
@@ -107,7 +101,12 @@ class DashboardState extends State<DashboardPage> {
       itemBuilder: (BuildContext context, int index) {
         //To display This Week filter widget
         if (index == 0) {
-          return _buildThisWeekWidget(_dashboardDataModel.dashboardPeriod);
+          final filterPeriod = _dashboardBloc
+              .convertPeriodToTitle(_dashboardDataModel.dashboardPeriod);
+          print(
+              ' Selected Period from model ${_dashboardDataModel.dashboardPeriod}');
+          print(' Selected Text $filterPeriod');
+          return _buildThisWeekWidget(filterPeriod);
         }
         //To display Total loads and Total Miles widget
         if (index == 1) {
@@ -227,6 +226,7 @@ class DashboardState extends State<DashboardPage> {
   //Qucik Constacts Widget
   Widget _bottomNavigationBarWidget() {
     return BottomAppBar(
+      elevation: 0,
       clipBehavior: Clip.antiAlias,
       child: Container(
         color: AppColors.colorDashboard_Bg,
@@ -273,17 +273,17 @@ class DashboardState extends State<DashboardPage> {
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: SizedBox(
-                              height: 25,
-                              width: 25,
-                              child: Image.asset('images/ic_mail.png'),
+                              height: 28,
+                              width: 28,
+                              child: Image.asset('images/2x/ic_mail.png'),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 20.0),
                             child: SizedBox(
-                              height: 25,
-                              width: 25,
-                              child: Image.asset('images/ic_call.png'),
+                              height: 28,
+                              width: 28,
+                              child: Image.asset('images/2x/ic_call.png'),
                             ),
                           )
                         ])
@@ -293,9 +293,9 @@ class DashboardState extends State<DashboardPage> {
                 ),
                 onTap: () {
                   //To show the Quick Contact Details
-                   if (_dashboardBloc.isAPICalling == false) {
+                  if (_dashboardBloc.isAPICalling == false) {
                     _dashboardBloc.dispatch(OpenQuickContactsEvent());
-                   }
+                  }
                 },
               ),
             ),
@@ -307,7 +307,6 @@ class DashboardState extends State<DashboardPage> {
 
   //This return the This week Filter widget
   _buildThisWeekWidget(String aFilterTitle) {
-    aFilterTitle = Constants.TEXT_THISMONTH;
     return Container(
       height: 50,
       decoration: new BoxDecoration(
@@ -383,30 +382,14 @@ class DashboardState extends State<DashboardPage> {
                           Navigator.of(context).pop();
                         } else {
                           //Selected Filter in  Bottom Sheet
+                          Navigator.of(context).pop();
                           print(weekFilterOptions[index]);
-                          var selectedPeriodText = '';
-                          switch (index) {
-                            case 0:
-                              selectedPeriodText = _selectedType(
-                                  DashboardPeriodType.TEXT_THISWEEK);
-                              break;
-                            case 1:
-                              selectedPeriodText = _selectedType(
-                                  DashboardPeriodType.TEXT_LASTWEEK);
-                              break;
-                            case 2:
-                              selectedPeriodText = _selectedType(
-                                  DashboardPeriodType
-                                      .TEXT_PREV_SETTLEMENT_PERIOD);
-                              break;
-                            default:
-                              selectedPeriodText = _selectedType(
-                                  DashboardPeriodType.TEXT_THISMONTH);
-                              break;
-                          }
-
-                          ApplyFilterEvent(
-                              selectedDashboardPeriod: selectedPeriodText);
+                          var selectedPeriodText = _dashboardBloc
+                              .convertTitleToPeriod(weekFilterOptions[index]);
+                          print('Send to Bloc');
+                          print(selectedPeriodText);
+                          _dashboardBloc.dispatch(ApplyFilterEvent(
+                              selectedDashboardPeriod: selectedPeriodText));
                         }
                       },
                     ),
@@ -429,34 +412,6 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //This method will return the Filter Title
-  String _selectedTitle(DashboardPeriodType periodType) {
-    if (periodType == DashboardPeriodType.TEXT_THISWEEK) {
-      return Constants.TEXT_THISWEEK;
-    } else if (periodType == DashboardPeriodType.TEXT_LASTWEEK) {
-      return Constants.TEXT_LASTWEEK;
-    } else if (periodType == DashboardPeriodType.TEXT_PREV_SETTLEMENT_PERIOD) {
-      return Constants.TEXT_PREV_SETTLEMENT_PERIOD;
-    } else {
-      return Constants.TEXT_THISMONTH;
-      ;
-    }
-  }
-
-  //This method will return Filter Type
-  String _selectedType(DashboardPeriodType periodType) {
-    if (periodType == DashboardPeriodType.TEXT_THISWEEK) {
-      return Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH;
-    } else if (periodType == DashboardPeriodType.TEXT_LASTWEEK) {
-      return Constants.TEXT_DASHBOARD_PERIOD_LAST_WEEK;
-    } else if (periodType == DashboardPeriodType.TEXT_PREV_SETTLEMENT_PERIOD) {
-      return Constants.TEXT_DASHBOARD_PREVIOUS_SETTLEMENT_PERIOD;
-    } else {
-      return Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH;
-      ;
-    }
-  }
-
   //This returns Holder of TotalLoadsAndMiles Widget
   _buildWidgetTotalLoadsAndMiles(String totalLoads, String totalMiles) {
     return Container(
@@ -471,12 +426,6 @@ class DashboardState extends State<DashboardPage> {
 
   //This returns TotalLoadsAndMiles Widget
   _totalLoadsAndMilesWidget(String aTitle, String aSubTitle) {
-    final _subTitleStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-        color: AppColors.darkColorBlue);
-
     return Expanded(
       child: new InkWell(
         child: Container(
@@ -514,32 +463,21 @@ class DashboardState extends State<DashboardPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 10.0, right: 5, top: 10),
+                padding: const EdgeInsets.only(left: 10.0, right: 5, top: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    aTitle == Constants.TEXT_TOTAL_LOADS
-                        ? SizedBox(
-                            height: 37,
-                            child: TextWidget(
-                              text: aSubTitle,
-                              textType: TextType.TEXT_XLARGE,
-                              colorText: AppColors.darkColorBlue,
-                              isBold: true,
-                            ),
-                          )
-                        : ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minWidth: 75.0,
-                              maxWidth: 90.0,
-                              minHeight: 37.0,
-                              maxHeight: 37.0,
-                            ),
-                            child: AutoSizeText(
-                              aSubTitle,
-                              style: _subTitleStyle,
-                            ),
-                          ),
+                    Flexible(
+                      child: Container(
+                        padding: EdgeInsets.only(right: 10),
+                        child: TextWidget(
+                          text: aSubTitle,
+                          textType: TextType.TEXT_MEDIUM,
+                          colorText: AppColors.darkColorBlue,
+                          isBold: true,
+                        ),
+                      ),
+                    ),
                     Container(
                       padding: EdgeInsets.only(top: 5.0),
                       height: 35,
@@ -569,11 +507,6 @@ class DashboardState extends State<DashboardPage> {
 
   //This returns Fuel Widget
   _buildFuelWidget(String totalGallons, String totalFuelAmount) {
-    final _subTitleStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-        color: AppColors.darkColorBlue);
 
     return Container(
       margin: new EdgeInsets.only(top: 5, left: 10.0, bottom: 5, right: 10),
@@ -609,30 +542,39 @@ class DashboardState extends State<DashboardPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0, right: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 27.0,
-                            child: TextWidget(
-                              text: totalGallons,
-                              colorText: AppColors.darkColorBlue,
-                              textType: TextType.TEXT_XLARGE,
-                              isBold: true,
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5.0, right: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Flexible(
+                              child: Container(
+                                padding: const EdgeInsets.only( top: 5,),
+                                child: TextWidget(
+                                  text: totalGallons,
+                                  textType: TextType.TEXT_MEDIUM,
+                                  colorText: AppColors.darkColorBlue,
+                                  isBold: true,
+                                ),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 3.0),
-                            child: TextWidget(
-                                text: Constants.TEXT_TOTAL_GALLONS,
-                                colorText: AppColors.colorTotalGallons),
-                          ),
-                        ],
+
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: TextWidget(
+                                  text: Constants.TEXT_TOTAL_GALLONS,
+                                  colorText: AppColors.colorTotalGallons),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    Padding(
+                    Expanded(flex: 1,
+                      child: Padding(
                       padding:
                           const EdgeInsets.only(top: 5.0, right: 10, left: 5),
                       child: Column(
@@ -644,43 +586,53 @@ class DashboardState extends State<DashboardPage> {
                           ),
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0, right: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minWidth: 75.0,
-                              maxWidth: 100.0,
-                              minHeight: 27.0,
-                              maxHeight: 27.0,
+                    ),),
+                    Expanded(
+                      flex: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5.0, right: 10),
+                        child:
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                           Flexible(
+                             child: Container(
+                               padding: const EdgeInsets.only( top: 5, right: 10),
+                                    child: TextWidget(
+                                      text: totalFuelAmount + '\$',
+                                      textType: TextType.TEXT_MEDIUM,
+                                      colorText: AppColors.darkColorBlue,
+                                      isBold: true,
+                                    ),
+
+                              ),
+                           ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: TextWidget(
+                                  text: Constants.TEXT_TOTAL_FUEL_AMOUNT,
+                                  colorText: AppColors.colorTotalGallons),
                             ),
-                            child: AutoSizeText(totalFuelAmount + '\$',
-                                style: _subTitleStyle),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 3.0),
-                            child: TextWidget(
-                                text: Constants.TEXT_TOTAL_FUEL_AMOUNT,
-                                colorText: AppColors.colorTotalGallons),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 5),
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: 35,
-                            width: 35,
-                            child: Image.asset(
-                              'images/img_fuel.png',
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 5),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 35,
+                              width: 35,
+                              child: Image.asset(
+                                'images/img_fuel.png',
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -735,7 +687,7 @@ class DashboardState extends State<DashboardPage> {
                       child: TextWidget(
                         text: aSubTitle + '\$',
                         colorText: AppColors.darkColorBlue,
-                        textType: TextType.TEXT_XLARGE,
+                        textType: TextType.TEXT_MEDIUM,
                         isBold: true,
                       ),
                     ),
@@ -787,7 +739,7 @@ class DashboardState extends State<DashboardPage> {
                   TextWidget(
                       text: sTitle,
                       isBold: true,
-                      textType: TextType.TEXT_LARGE,
+                      textType: TextType.TEXT_MEDIUM,
                       colorText: AppColors.darkColorBlue),
                 ],
               ),
@@ -819,89 +771,89 @@ class DashboardState extends State<DashboardPage> {
     ];
 
     return Container(
-          height: MediaQuery.of(context).size.height * .40,
-          child: Column(
-            children: <Widget>[
-              InkWell(
-                child: Container(
-                  height: 30,
-                  width: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 15, bottom: 10),
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.colorGreyInBottomSheet,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12.0))),
-                      ),
+        height: MediaQuery.of(context).size.height * .40,
+        child: Column(
+          children: <Widget>[
+            InkWell(
+              child: Container(
+                height: 30,
+                width: 50,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 10),
+                  child: Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.colorGreyInBottomSheet,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(12.0))),
                     ),
                   ),
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
               ),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: 3,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        decoration: new BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                                width: 0.5,
-                                color: AppColors.colorGreyInBottomSheet),
-                          ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      decoration: new BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              width: 0.5,
+                              color: AppColors.colorGreyInBottomSheet),
                         ),
-                        child: Container(
-                          height: 90,
-                          child: new ListTile(
-                            leading: _userIconWidget(index),
-                            title: TextWidget(
-                              text: quickContactList[index],
-                              textType: TextType.TEXT_MEDIUM,
-                              colorText: AppColors.lightBlack,
-                            ),
-                            subtitle: Padding(
-                              padding: EdgeInsets.only(top: 5),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: new Text(
-                                          _quickContactEmails[index],
-                                          style: _textSubStyle,
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        padding:
-                                            EdgeInsets.only(top: 5, bottom: 5),
-                                        child: new Text(
-                                            _quickContactPhoneNumbers[index],
-                                            style: _textSubStyle),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            trailing: _roundedIconsRow(index),
+                      ),
+                      child: Container(
+                        height: 90,
+                        child: new ListTile(
+                          leading: _userIconWidget(index),
+                          title: TextWidget(
+                            text: quickContactList[index],
+                            textType: TextType.TEXT_MEDIUM,
+                            colorText: AppColors.lightBlack,
                           ),
+                          subtitle: Padding(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: new Text(
+                                        _quickContactEmails[index],
+                                        style: _textSubStyle,
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      padding:
+                                          EdgeInsets.only(top: 5, bottom: 5),
+                                      child: new Text(
+                                          _quickContactPhoneNumbers[index],
+                                          style: _textSubStyle),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          trailing: _roundedIconsRow(index),
                         ),
-                      );
-                    }),
-              )
-            ],
-          ));
-    }
+                      ),
+                    );
+                  }),
+            )
+          ],
+        ));
+  }
 
   void _buildBottomSheet(context) {
     showModalBottomSheet(
@@ -1025,11 +977,4 @@ class DashboardState extends State<DashboardPage> {
 //            type: PageTransitionType.fade,
 //            child: LoadsPage(isMiles, _dashboardDataModel)));
   }
-}
-
-enum DashboardPeriodType {
-  TEXT_THISWEEK,
-  TEXT_LASTWEEK,
-  TEXT_PREV_SETTLEMENT_PERIOD,
-  TEXT_THISMONTH,
 }

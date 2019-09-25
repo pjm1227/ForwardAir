@@ -16,7 +16,7 @@ class DashboardError extends DashboardState {}
 
 //It will handle Loaded state for Dashboard page
 class DashboardLoaded extends DashboardState {
-  final List<Dashboard_DB_Model> dashboardData;
+  final Dashboard_DB_Model dashboardData;
 
   DashboardLoaded({
     this.dashboardData
@@ -26,7 +26,7 @@ class DashboardLoaded extends DashboardState {
 
 //It will handle bottom Sheet actions
 class OpenQuickContactsState extends DashboardState {
-  final List<Dashboard_DB_Model> dashboardData;
+  final Dashboard_DB_Model dashboardData;
 
   OpenQuickContactsState({
     this.dashboardData
@@ -36,14 +36,14 @@ class OpenQuickContactsState extends DashboardState {
 
 //It will handle bottom Sheet actions
 class QuickContactsMailState extends DashboardState {
-  final List<Dashboard_DB_Model> dashboardData;
+  final Dashboard_DB_Model dashboardData;
   final int selectedIndex;
   QuickContactsMailState({@required this.selectedIndex, @required this.dashboardData}) : super([selectedIndex, dashboardData]);
 }
 
 //It will handle bottom Sheet actions
 class QuickContactsCallState extends DashboardState {
-  final List<Dashboard_DB_Model> dashboardData;
+  final Dashboard_DB_Model dashboardData;
   final int selectedIndex;
   QuickContactsCallState({@required this.selectedIndex, @required this.dashboardData}) : super([selectedIndex, dashboardData]);
 }

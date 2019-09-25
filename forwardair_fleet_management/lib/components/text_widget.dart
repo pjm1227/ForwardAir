@@ -46,6 +46,7 @@ class TextWidget extends StatelessWidget {
             : EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
         child: Text(
           text,
+          overflow: TextOverflow.ellipsis,
           textAlign: textAlign != null ? textAlign : null,
           maxLines: this.maxLines != null ? this.maxLines : null,
           style: TextStyle(

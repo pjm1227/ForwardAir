@@ -19,7 +19,6 @@ dependencies:
   fluttertoast:
   flutter_bloc:
   page_transition:
-  auto_size_text:
   url_launcher:
   connectivity:
   pull_to_refresh:
