@@ -47,7 +47,6 @@ class DashboardState extends State<DashboardPage> {
     Constants.TEXT_SAFETY_PHONENUMBER,
     Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER
   ];
-
   //To Dispose the DashboardBloc
   @override
   void dispose() {
@@ -61,8 +60,10 @@ class DashboardState extends State<DashboardPage> {
     _refreshController.refreshCompleted();
     if (state is InitialState) {
       //Initial State
+      _dashboardBloc.isAPICalling = false;
       return Center(child: CircularProgressIndicator());
     } else if (state is DashboardError) {
+      _dashboardBloc.isAPICalling = false;
       //If any error occurs, while fetching teh data
       return Center(child: Text('Failed to fetch details'));
     } else if (state is DashboardLoaded ||
@@ -79,17 +80,21 @@ class DashboardState extends State<DashboardPage> {
           }
         } //End
         if (_dashboardDataModel.dashboardPeriod != null) {
+          _dashboardBloc.isAPICalling = false;
           return _listViewWidget();
         } else {
+          _dashboardBloc.isAPICalling = false;
           //If any error occurs, while fetching teh data
           return Center(child: Text('Failed to fetch details'));
         }
       } else {
+        _dashboardBloc.isAPICalling = false;
         //If any error occurs, while fetching teh data
         return Center(child: Text('Failed to fetch details'));
       }
     } else if (state is ApplyFilterState) {
       _dashboardDataModel = state.aModel;
+      _dashboardBloc.isAPICalling = false;
       return _listViewWidget();
     }
 
@@ -158,6 +163,7 @@ class DashboardState extends State<DashboardPage> {
           return true;
         },
         listener: (context, state) {
+          print('Dashboard State in Listner $state');
           if (state is OpenQuickContactsState) {
             _buildBottomSheet(context);
           } else if (state is QuickContactsMailState) {
@@ -210,6 +216,7 @@ class DashboardState extends State<DashboardPage> {
                 enablePullDown: true,
                 header: MaterialClassicHeader(),
                 onRefresh: () {
+                  _dashboardBloc.isAPICalling = true;
                   _dashboardBloc.dispatch(PullToRefreshDashboardEvent());
                 },
                 child: _childWidgetToRefresh(state));
@@ -290,7 +297,9 @@ class DashboardState extends State<DashboardPage> {
                 ),
                 onTap: () {
                   //To show the Quick Contact Details
-                  //_dashboardBloc.dispatch(OpenQuickContactsEvent());
+                   if (_dashboardBloc.isAPICalling == false) {
+                    _dashboardBloc.dispatch(OpenQuickContactsEvent());
+                   }
                 },
               ),
             ),
@@ -302,7 +311,6 @@ class DashboardState extends State<DashboardPage> {
 
   //This return the This week Filter widget
   _buildThisWeekWidget(String aFilterTitle) {
-
     aFilterTitle = Constants.TEXT_THISMONTH;
     return Container(
       height: 50,
@@ -802,7 +810,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  void _buildBottomSheet(context) {
+  Widget _quickContactModalSheet() {
     final _textSubStyle = TextStyle(
         fontFamily: Constants.FONT_FAMILY_ROBOTO,
         fontSize: 11,
@@ -815,93 +823,96 @@ class DashboardState extends State<DashboardPage> {
       Constants.TEXT_REFERRAL_AND_DRIVERRELATION
     ];
 
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-              height: MediaQuery.of(context).size.height * .40,
-              child: Column(
-                children: <Widget>[
-                  InkWell(
-                    child: Container(
-                      height: 30,
-                      width: 50,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 15, bottom: 10),
-                        child: Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.colorGreyInBottomSheet,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12.0))),
-                          ),
-                        ),
+    return Container(
+          height: MediaQuery.of(context).size.height * .40,
+          child: Column(
+            children: <Widget>[
+              InkWell(
+                child: Container(
+                  height: 30,
+                  width: 50,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 15, bottom: 10),
+                    child: Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: AppColors.colorGreyInBottomSheet,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
                       ),
                     ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: 3,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            decoration: new BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    width: 0.5,
-                                    color: AppColors.colorGreyInBottomSheet),
-                              ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: 3,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        decoration: new BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                                width: 0.5,
+                                color: AppColors.colorGreyInBottomSheet),
+                          ),
+                        ),
+                        child: Container(
+                          height: 90,
+                          child: new ListTile(
+                            leading: _userIconWidget(index),
+                            title: TextWidget(
+                              text: quickContactList[index],
+                              textType: TextType.TEXT_MEDIUM,
+                              colorText: AppColors.lightBlack,
                             ),
-                            child: Container(
-                              height: 90,
-                              child: new ListTile(
-                                leading: _userIconWidget(index),
-                                title: TextWidget(
-                                  text: quickContactList[index],
-                                  textType: TextType.TEXT_MEDIUM,
-                                  colorText: AppColors.lightBlack,
-                                ),
-                                subtitle: Padding(
-                                  padding: EdgeInsets.only(top: 5),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                            subtitle: Padding(
+                              padding: EdgeInsets.only(top: 5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
                                     children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Expanded(
-                                            child: new Text(
-                                              _quickContactEmails[index],
-                                              style: _textSubStyle,
-                                              maxLines: 2,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          Container(
-                                            padding: EdgeInsets.only(
-                                                top: 5, bottom: 5),
-                                            child: new Text(
-                                                _quickContactPhoneNumbers[
-                                                    index],
-                                                style: _textSubStyle),
-                                          ),
-                                        ],
+                                      Expanded(
+                                        child: new Text(
+                                          _quickContactEmails[index],
+                                          style: _textSubStyle,
+                                          maxLines: 2,
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                                trailing: _roundedIconsRow(index),
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                        padding:
+                                            EdgeInsets.only(top: 5, bottom: 5),
+                                        child: new Text(
+                                            _quickContactPhoneNumbers[index],
+                                            style: _textSubStyle),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        }),
-                  )
-                ],
-              ));
+                            trailing: _roundedIconsRow(index),
+                          ),
+                        ),
+                      );
+                    }),
+              )
+            ],
+          ));
+    }
+
+  void _buildBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return _quickContactModalSheet();
         });
   }
 
