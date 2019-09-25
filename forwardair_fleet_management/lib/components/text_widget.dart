@@ -60,7 +60,11 @@ class TextWidget extends StatelessWidget {
 
   //This method will return the text size
   double _textSize(TextType textType) {
-    if (textType == TextType.TEXT_SMALL) {
+    if (textType == TextType.TEXT_XSMALL) {
+      return 10;
+    } else if (textType == TextType.TEXT_NORMAL) {
+      return 12;
+    } else if (textType == TextType.TEXT_SMALL) {
       return 14;
     } else if (textType == TextType.TEXT_MEDIUM) {
       return 16;
@@ -74,4 +78,11 @@ class TextWidget extends StatelessWidget {
   }
 }
 
-enum TextType { TEXT_SMALL, TEXT_MEDIUM, TEXT_LARGE, TEXT_XLARGE }
+enum TextType {
+  TEXT_SMALL,
+  TEXT_MEDIUM,
+  TEXT_LARGE,
+  TEXT_XLARGE,
+  TEXT_XSMALL,
+  TEXT_NORMAL
+}

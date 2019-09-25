@@ -96,6 +96,13 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       final selectedModel = applyFilterInaDashboard(dashboardList);
       yield ApplyFilterState(aModel:selectedModel);
     }
+
+    else if(event is DrillDownPageEvent){
+      final posts = await fetchDataFromDB();
+      var selectedModel = applyFilterInaDashboard(posts);
+      yield DashboardLoaded(dashboardData: selectedModel);
+      yield DrillDownPageState(isMilePage: event.isMilePage,dashboardData: posts);
+    }
   }
 
   Dashboard_DB_Model applyFilterInaDashboard( List<Dashboard_DB_Model> dashboardList) {

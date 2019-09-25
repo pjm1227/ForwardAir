@@ -34,6 +34,17 @@ class OpenQuickContactsState extends DashboardState {
 
 }
 
+//it will handle the navigation to drillDown page
+
+class DrillDownPageState extends DashboardState {
+  final bool isMilePage;
+  final List<Dashboard_DB_Model> dashboardData;
+
+  DrillDownPageState({@required this.isMilePage, @required this.dashboardData}) : super([isMilePage, dashboardData]);
+
+
+}
+
 //It will handle bottom Sheet actions
 class QuickContactsMailState extends DashboardState {
   final Dashboard_DB_Model dashboardData;

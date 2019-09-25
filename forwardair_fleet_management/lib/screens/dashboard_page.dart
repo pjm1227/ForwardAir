@@ -12,7 +12,7 @@ import 'package:forwardair_fleet_management/utility/callandmailservice.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
-//import 'package:forwardair_fleet_management/screens/drill_down_screen.dart';
+import 'package:forwardair_fleet_management/screens/drill_down_screen.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 
 /*
@@ -68,7 +68,8 @@ class DashboardState extends State<DashboardPage> {
     } else if (state is DashboardLoaded ||
         state is OpenQuickContactsState ||
         state is QuickContactsMailState ||
-        state is QuickContactsCallState) {
+        state is QuickContactsCallState ||
+        state is DrillDownPageState) {
       //To update the ListView, once data comes
       if (state.dashboardData != null) {
         _dashboardDataModel = state.dashboardData;
@@ -90,6 +91,10 @@ class DashboardState extends State<DashboardPage> {
       _dashboardDataModel = state.aModel;
       _dashboardBloc.isAPICalling = false;
       return _listViewWidget();
+    } else {
+      _dashboardBloc.isAPICalling = false;
+      //If any error occurs, while fetching teh data
+      return Center(child: Text('Failed to fetch details.'));
     }
   }
 
@@ -200,6 +205,8 @@ class DashboardState extends State<DashboardPage> {
                 }
                 break;
             }
+          } else if (state is DrillDownPageState) {
+            navigateToDrillDownPage(state.isMilePage);
           }
         },
         child: BlocBuilder<DashboardBloc, dynamic>(
@@ -497,9 +504,11 @@ class DashboardState extends State<DashboardPage> {
           ),
         ),
         onTap: () {
-          navigateToDrillDownPage(
-              aTitle == Constants.TEXT_TOTAL_LOADS ? false : true);
-          print(aTitle == Constants.TEXT_TOTAL_LOADS ? 'Loads' : 'Miles');
+          _dashboardBloc.dispatch(DrillDownPageEvent(
+              isMilePage: aTitle == Constants.TEXT_TOTAL_LOADS ? false : true));
+//          navigateToDrillDownPage(
+//              aTitle == Constants.TEXT_TOTAL_LOADS ? false : true);
+//          print(aTitle == Constants.TEXT_TOTAL_LOADS ? 'Loads' : 'Miles');
         },
       ),
     );
@@ -507,7 +516,6 @@ class DashboardState extends State<DashboardPage> {
 
   //This returns Fuel Widget
   _buildFuelWidget(String totalGallons, String totalFuelAmount) {
-
     return Container(
       margin: new EdgeInsets.only(top: 5, left: 10.0, bottom: 5, right: 10),
       height: 90,
@@ -553,7 +561,9 @@ class DashboardState extends State<DashboardPage> {
                           children: <Widget>[
                             Flexible(
                               child: Container(
-                                padding: const EdgeInsets.only( top: 5,),
+                                padding: const EdgeInsets.only(
+                                  top: 5,
+                                ),
                                 child: TextWidget(
                                   text: totalGallons,
                                   textType: TextType.TEXT_MEDIUM,
@@ -562,7 +572,6 @@ class DashboardState extends State<DashboardPage> {
                                 ),
                               ),
                             ),
-
                             Padding(
                               padding: const EdgeInsets.only(top: 5.0),
                               child: TextWidget(
@@ -573,41 +582,42 @@ class DashboardState extends State<DashboardPage> {
                         ),
                       ),
                     ),
-                    Expanded(flex: 1,
+                    Expanded(
+                      flex: 1,
                       child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 5.0, right: 10, left: 5),
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: 35,
-                            width: 0.5,
-                            color: Colors.grey,
-                          ),
-                        ],
+                        padding:
+                            const EdgeInsets.only(top: 5.0, right: 10, left: 5),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 35,
+                              width: 0.5,
+                              color: Colors.grey,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),),
+                    ),
                     Expanded(
                       flex: 5,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 5.0, right: 10),
-                        child:
-                        Column(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                           Flexible(
-                             child: Container(
-                               padding: const EdgeInsets.only( top: 5, right: 10),
-                                    child: TextWidget(
-                                      text: totalFuelAmount + '\$',
-                                      textType: TextType.TEXT_MEDIUM,
-                                      colorText: AppColors.darkColorBlue,
-                                      isBold: true,
-                                    ),
-
+                            Flexible(
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.only(top: 5, right: 10),
+                                child: TextWidget(
+                                  text: totalFuelAmount + '\$',
+                                  textType: TextType.TEXT_MEDIUM,
+                                  colorText: AppColors.darkColorBlue,
+                                  isBold: true,
+                                ),
                               ),
-                           ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(top: 5.0),
                               child: TextWidget(
@@ -807,12 +817,12 @@ class DashboardState extends State<DashboardPage> {
                         ),
                       ),
                       child: Container(
-                        height: 90,
+                        height: 80,
                         child: new ListTile(
                           leading: _userIconWidget(index),
                           title: TextWidget(
                             text: quickContactList[index],
-                            textType: TextType.TEXT_MEDIUM,
+                            textType: TextType.TEXT_NORMAL,
                             colorText: AppColors.lightBlack,
                           ),
                           subtitle: Padding(
@@ -822,23 +832,31 @@ class DashboardState extends State<DashboardPage> {
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
-                                    Expanded(
-                                      child: new Text(
-                                        _quickContactEmails[index],
-                                        style: _textSubStyle,
-                                        maxLines: 2,
-                                      ),
+                                     Expanded(
+                                       flex: 2,
+                                       child: Container(
+                                         child: TextWidget(
+                                            text: _quickContactEmails[index],
+                                            colorText: AppColors.lightBlack,
+                                            textType: TextType.TEXT_XSMALL,
                                     ),
+                                       ),
+                                     ),
                                   ],
                                 ),
                                 Row(
                                   children: <Widget>[
-                                    Container(
-                                      padding:
-                                          EdgeInsets.only(top: 5, bottom: 5),
-                                      child: new Text(
-                                          _quickContactPhoneNumbers[index],
-                                          style: _textSubStyle),
+                                    Expanded(
+                                      flex:2,
+                                      child: Container(
+                                        padding:
+                                        EdgeInsets.only(top: 5, bottom: 5),
+                                        child: TextWidget(
+                                          text: _quickContactPhoneNumbers[index],
+                                          colorText: AppColors.lightBlack,
+                                          textType: TextType.TEXT_XSMALL,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -892,14 +910,14 @@ class DashboardState extends State<DashboardPage> {
 
   _roundedIconsRow(int index) {
     return Container(
-      width: 150,
+      width: 100,
       child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
         InkWell(
           child: Padding(
             padding: const EdgeInsets.only(left: 5, right: 12.0),
             child: SizedBox(
-              height: 40,
-              width: 40,
+              height: 35,
+              width: 35,
               child: Image.asset('images/ic_mail_1.png'),
             ),
           ),
@@ -971,10 +989,10 @@ class DashboardState extends State<DashboardPage> {
   }
 
   void navigateToDrillDownPage(bool isMiles) {
-//    Navigator.push(
-//        context,
-//        PageTransition(
-//            type: PageTransitionType.fade,
-//            child: LoadsPage(isMiles, _dashboardDataModel)));
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: LoadsPage(isMiles, _dashboardDataModel)));
   }
 }

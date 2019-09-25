@@ -40,7 +40,9 @@ class DrillDataLoaded extends DrillDownState {
 
 class SortedState extends DrillDownState {
   final DrillDownModel sortedData;
+  String filterOption;
 
-  SortedState({
-    this.sortedData
-  }) : super([sortedData]);}
+  SortedState({@required this.sortedData, @required this.filterOption}) : super([sortedData, filterOption]);
+
+
+}
