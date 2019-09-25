@@ -200,26 +200,25 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: TextWidget(
-                      text:'${loadData.originCity},${loadData.originSt}',
+                      text:loadData.originCity!=null?'${loadData.originCity},${loadData.originSt}':'NA',
                       colorText: Color.fromRGBO(23, 87, 99, 1),
-                      textType: TextType.TEXT_MEDIUM,
+                      textType: TextType.TEXT_SMALL,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0, left: 10),
-                    child: Text(
-                      '2019/07/08',
-                      style: TextStyle(
-                          color: Color.fromRGBO(118, 119, 120, 1),
-                          fontSize: 13,
-                          fontFamily: 'Roboto'),
+                    child:  TextWidget(
+                      text:Utils.formatDateFromString(loadData.dispatchDt),
+                      colorText: Color.fromRGBO(118, 119, 120, 1),
+                      textType: TextType.TEXT_NORMAL,
+
                     ),
                   ),
                 ],
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                    top: 0, left: 5, right: 5.0, bottom: 24),
+                    top: 0, left: 8, right: 8.0, bottom: 24),
                 child: Icon(Icons.arrow_forward),
               ),
               Column(
@@ -229,13 +228,11 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
                     children: <Widget>[
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[Text(
-                          '${loadData.destCity},${loadData.destSt}',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Color.fromRGBO(23, 87, 99, 1),
-                              fontSize: 16,
-                              fontFamily: 'Roboto'),
+                        children: <Widget>[TextWidget(
+                          text:'${loadData.destCity},${loadData.destSt}',
+                          colorText: Color.fromRGBO(23, 87, 99, 1),
+                          textType: TextType.TEXT_SMALL,
+
                         ),
                         ],
                       ),
@@ -243,13 +240,13 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[Padding(
                           padding: const EdgeInsets.only(left:4.0),
-                          child: Text(
-                            miles,
-                            style: TextStyle(
-                              color: Color.fromRGBO(0, 0, 0, 1),
-                              fontSize: 14,
-                              fontFamily: 'Roboto',
-                              fontWeight: FontWeight.w700,),
+                          child: TextWidget(
+                            text:miles,
+                            colorText: Color.fromRGBO(0, 0, 0, 1),
+                            textType: TextType.TEXT_SMALL,
+                            isBold: true,
+
+
                           ),
                         ),
                         ],
@@ -258,12 +255,10 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      '2019/07/08',
-                      style: TextStyle(
-                          color: Color.fromRGBO(118, 119, 120, 1),
-                          fontSize: 13,
-                          fontFamily: 'Roboto'),
+                    child: TextWidget(
+                      text:Utils.formatDateFromString(loadData.settlementPaidDt),
+                      colorText: Color.fromRGBO(118, 119, 120, 1),
+                      textType: TextType.TEXT_NORMAL,
                     ),
                   ),
                 ],
@@ -279,12 +274,11 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 10),
-                child: Text("Driver Details",
+                child: TextWidget(text:"Driver Details",
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Color.fromRGBO(118, 119, 120, 1),
-                        fontFamily: 'Roboto')),
+                    colorText: Color.fromRGBO(118, 119, 120, 1),
+                     textType: TextType.TEXT_NORMAL
+                    ),
               ),
             ],
           ),
@@ -293,14 +287,14 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10),
-                child: Text(loadData.driver2Id==null?
+                child: TextWidget(text:loadData.driver2Id==null?
                 '${loadData.driver1FirstName} ${loadData.driver1LastName} from ${loadData.driverOriginCity},${loadData.driverOriginSt}':
-                "${loadData.driver1FirstName} ${loadData.driver1LastName},${loadData.driver2FirstName} ${loadData.driver2LastName}  from ${loadData.driverOriginCity},${loadData.driverOriginSt}",
+                "${loadData.driver1FirstName} ${loadData.driver1LastName}, ${loadData.driver2FirstName} ${loadData.driver2LastName}  from ${loadData.driverOriginCity},${loadData.driverOriginSt}",
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        color: Color.fromRGBO(0, 0, 0, 1),
-                        fontSize: 10,
-                        fontFamily: 'Roboto')),
+                  colorText: Color.fromRGBO(0, 0, 0, 1),
+                  textType: TextType.TEXT_XSMALL
+
+                ),
               ),
             ],
           ),
@@ -310,10 +304,6 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
   }
 
   Container rectangleWidget() {
-    TextStyle _boldStyle = TextStyle(
-        fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold);
-    TextStyle _normalStyle = TextStyle(
-        fontSize: 13, color: Colors.white, fontWeight: FontWeight.normal);
 
     return new Container(
       height: 80.0,
@@ -335,9 +325,11 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 6.0),
-                      child: Text(
-                        isMilePage ?"${tractorData.totalMiles}":'${tractorData.totalLoads}',
-                        style: TextStyle(fontSize: 16,fontFamily: 'Roboto',fontWeight: FontWeight.w700,color: Color.fromRGBO(255, 255, 255, 1)),
+                      child: TextWidget(
+                        text:isMilePage ?"${Utils().formatDecimalToWholeNumber(tractorData.totalMiles)}":'${Utils().formatDecimalToWholeNumber(tractorData.totalLoads)}',
+                        colorText:Color.fromRGBO(255, 255, 255, 1),
+                        textType: TextType.TEXT_MEDIUM,
+                        isBold: true,
                       ),
                     ),
                   ],
@@ -375,9 +367,12 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 6.0),
-                      child: Text(
-                        isMilePage ?"${tractorData.emptyMiles}":'${tractorData.emptyLoads}',
-                        style:TextStyle(fontSize: 16,fontFamily: 'Roboto',fontWeight: FontWeight.w700,color: Color.fromRGBO(255, 255, 255, 1)),
+                      child: TextWidget(
+                        text:isMilePage ?"${Utils().formatDecimalToWholeNumber(tractorData.emptyMiles)}":'${Utils().formatDecimalToWholeNumber(tractorData.emptyLoads)}',
+                        colorText:Color.fromRGBO(255, 255, 255, 1),
+                        textType: TextType.TEXT_MEDIUM,
+                        isBold: true,
+
                       ),
                     ),
                   ],
@@ -415,9 +410,11 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 6.0),
-                      child: Text(
-                        isMilePage ?"${tractorData.loadedMiles}":'${tractorData.loadedLoads}',
-                        style:TextStyle(fontSize: 16,fontFamily: 'Roboto',fontWeight: FontWeight.w700,color: Color.fromRGBO(255, 255, 255, 1)),
+                      child: TextWidget(
+                        text:isMilePage ?"${Utils().formatDecimalToWholeNumber(tractorData.loadedMiles)}":'${Utils().formatDecimalToWholeNumber(tractorData.loadedLoads)}',
+                        colorText:Color.fromRGBO(255, 255, 255, 1),
+                        textType: TextType.TEXT_MEDIUM,
+                        isBold: true,
                         textAlign: TextAlign.center,
                       ),
                     ),

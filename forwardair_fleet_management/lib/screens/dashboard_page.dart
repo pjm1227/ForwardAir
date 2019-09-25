@@ -70,7 +70,8 @@ class DashboardState extends State<DashboardPage> {
     } else if (state is DashboardLoaded ||
         state is OpenQuickContactsState ||
         state is QuickContactsMailState ||
-        state is QuickContactsCallState) {
+        state is QuickContactsCallState ||
+        state is DrillDownPageState) {
       //To update the ListView, once data comes
       if (state.dashboardData != null) {
         //To populate This Month data initially
@@ -204,7 +205,7 @@ class DashboardState extends State<DashboardPage> {
                 break;
             }
           }
-          else if(state is drillDownPageState){
+          else if(state is DrillDownPageState){
             navigateToDrillDownPage(state.isMilePage);
           }
         },
@@ -564,7 +565,7 @@ class DashboardState extends State<DashboardPage> {
           ),
         ),
         onTap: () {
-          _dashboardBloc.dispatch(drillDownPageEvent(isMilePage:  aTitle == Constants.TEXT_TOTAL_LOADS ? false : true));
+          _dashboardBloc.dispatch(DrillDownPageEvent(isMilePage:  aTitle == Constants.TEXT_TOTAL_LOADS ? false : true));
 //          navigateToDrillDownPage(
 //              aTitle == Constants.TEXT_TOTAL_LOADS ? false : true);
 //          print(aTitle == Constants.TEXT_TOTAL_LOADS ? 'Loads' : 'Miles');
