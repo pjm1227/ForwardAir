@@ -37,18 +37,7 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
   @override
   Widget build(BuildContext context) {
 
-    TextStyle _boldStyle = TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        color: Colors.grey,
-        fontWeight: FontWeight.w700);
-    TextStyle _appBarboldStyle = TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 18,
-        color: Colors.white,
-        fontWeight: FontWeight.w600);
-    Color topWidgetColor = Color.fromRGBO(15, 43, 52, 1);
-    Color pageBgColor = Color.fromRGBO(246, 246, 246, 1);
+
 
     if (dashboardData.weekStart != null) {
       _loadBloc.dispatch(
@@ -87,13 +76,11 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
             return Scaffold(
                 appBar: AppBar(
                   backgroundColor: Color.fromRGBO(15, 43, 52, 1),
-                  title: Text(
-                    isMilePage ?"Tractor ID Miles":"Tractor ID Loads",
-                    style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 1),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        fontFamily: 'Robot'),
+                  title: TextWidget(
+                    text:isMilePage ?"Tractor ID Miles":"Tractor ID Loads",
+                    colorText: Color.fromRGBO(255, 255, 255, 1),
+                    textType: TextType.TEXT_MEDIUM,
+                    isBold: true,
                   ),
                   leading: InkWell(
                     child: Icon(Icons.arrow_back,color: Colors.white),

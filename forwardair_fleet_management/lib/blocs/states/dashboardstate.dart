@@ -34,12 +34,14 @@ class OpenQuickContactsState extends DashboardState {
 
 }
 
-class drillDownPageState extends DashboardState {
-  final bool isMilePage;
+//it will handle the navigation to drillDown page
 
-  drillDownPageState({
-    this.isMilePage
-  }) : super([isMilePage]);
+class DrillDownPageState extends DashboardState {
+  final bool isMilePage;
+  final List<Dashboard_DB_Model> dashboardData;
+
+  DrillDownPageState({@required this.isMilePage, @required this.dashboardData}) : super([isMilePage, dashboardData]);
+
 
 }
 

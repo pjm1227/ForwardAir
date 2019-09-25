@@ -13,8 +13,9 @@ import 'package:forwardair_fleet_management/utility/callandmailservice.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
-//import 'package:forwardair_fleet_management/screens/drill_down_screen.dart';
+import 'package:forwardair_fleet_management/screens/drill_down_screen.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
+
 
 /*
   DashboardPage to display dashboard details.
@@ -433,7 +434,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //This method will return the Filter Title
+//  This method will return the Filter Title
   String _selectedTitle(DashboardPeriodType periodType) {
     if (periodType == DashboardPeriodType.TEXT_THISWEEK) {
       return Constants.TEXT_THISWEEK;
@@ -1024,11 +1025,11 @@ class DashboardState extends State<DashboardPage> {
   }
 
   void navigateToDrillDownPage(bool isMiles) {
-//    Navigator.push(
-//        context,
-//        PageTransition(
-//            type: PageTransitionType.fade,
-//            child: LoadsPage(isMiles, _dashboardDataModel)));
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: LoadsPage(isMiles, _dashboardDataModel)));
   }
 }
 
