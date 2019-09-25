@@ -21,6 +21,10 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   //For API Calling
   final apiManager = DashboardRequest();
 
+  //Flag
+  bool isAPICalling = false;
+
+
   //Initial State of the Dashboard
   @override
   get initialState => InitialState();
@@ -62,7 +66,6 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     //Open Qucik Contact Sheet
     else if (event is OpenQuickContactsEvent) {
       final posts = await fetchDataFromDB();
-      yield DashboardLoaded(dashboardData: posts);
       yield OpenQuickContactsState(dashboardData: posts);
     }
     //To send a mail from Quick Contact Sheet
@@ -106,6 +109,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       try {
         //Making API Call
         final _repository = Repository();
+        isAPICalling = true;
         final responseBody = await _repository.makeDashboardRequest(
             userModel.token != null ? userModel.token : '');
         final dashboardItems =
