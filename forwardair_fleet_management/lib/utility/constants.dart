@@ -79,6 +79,7 @@ class Constants {
   static const String TEXT_DASHBOARD_PERIOD_THIS_WEEK = "T";
   static const String TEXT_DASHBOARD_PREVIOUS_SETTLEMENT_PERIOD = "P";
   static const String TEXT_DASHBOARD_PERIOD_LAST_WEEK = "L";
+  static const String TEXT_NO_RESULTS_FOUND = 'No Results Found.';
   //Quick Contact Details
   //1. Dispatch
   static const String TEXT_DISPATCH_QUCKCONTACT_EMAIL = 'FA_dispatch@forwardair.com';

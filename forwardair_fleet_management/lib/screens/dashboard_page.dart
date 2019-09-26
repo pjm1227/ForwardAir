@@ -54,6 +54,26 @@ class DashboardState extends State<DashboardPage> {
     super.dispose();
   }
 
+  Widget noResultsFoundWidget() {
+    _dashboardBloc.isAPICalling = false;
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(bottom: 10),
+          child: Image(
+              image: AssetImage('images/img_no_result_found.png'),
+              fit: BoxFit.cover),
+        ),
+        TextWidget(
+          text: Constants.TEXT_NO_RESULTS_FOUND,
+          textType: TextType.TEXT_MEDIUM,
+        ),
+      ],
+    ));
+  }
+
   //Child Widgets of the Refresh Controller
   Widget _childWidgetToRefresh(dynamic state) {
     _refreshController.refreshCompleted();
@@ -62,15 +82,14 @@ class DashboardState extends State<DashboardPage> {
       _dashboardBloc.isAPICalling = false;
       return Center(child: CircularProgressIndicator());
     } else if (state is DashboardError) {
-      _dashboardBloc.isAPICalling = false;
-      //If any error occurs, while fetching the data
-      return Center(child: Text('Failed to fetch details'));
-    } else if (state is DashboardLoaded ||
+      //Error State
+      return noResultsFoundWidget();
+    } // Success State
+    else if (state is DashboardLoaded ||
         state is OpenQuickContactsState ||
         state is QuickContactsMailState ||
         state is QuickContactsCallState ||
         state is DrillDownPageState) {
-      //To update the ListView, once data comes
       if (state.dashboardData != null) {
         _dashboardDataModel = state.dashboardData;
         //Fetched Data
@@ -78,23 +97,21 @@ class DashboardState extends State<DashboardPage> {
           _dashboardBloc.isAPICalling = false;
           return _listViewWidget();
         } else {
-          _dashboardBloc.isAPICalling = false;
-          //If any error occurs, while fetching the data
-          return Center(child: Text('Failed to fetch details.'));
+          //No Data Found
+          return noResultsFoundWidget();
         }
       } else {
-        _dashboardBloc.isAPICalling = false;
-        //If any error occurs, while fetching teh data
-        return Center(child: Text('Failed to fetch details.'));
+        //No Data Found
+        return noResultsFoundWidget();
       }
-    } else if (state is ApplyFilterState) {
+    } //ApplyFilter State
+    else if (state is ApplyFilterState) {
       _dashboardDataModel = state.aModel;
       _dashboardBloc.isAPICalling = false;
       return _listViewWidget();
     } else {
-      _dashboardBloc.isAPICalling = false;
-      //If any error occurs, while fetching teh data
-      return Center(child: Text('Failed to fetch details.'));
+      //No Data Found
+      return noResultsFoundWidget();
     }
   }
 
@@ -104,7 +121,7 @@ class DashboardState extends State<DashboardPage> {
       physics: AlwaysScrollableScrollPhysics(),
       itemCount: 4,
       itemBuilder: (BuildContext context, int index) {
-        //To display This Week filter widget
+        //Filter widget
         if (index == 0) {
           final filterPeriod = _dashboardBloc
               .convertPeriodToTitle(_dashboardDataModel.dashboardPeriod);
@@ -113,7 +130,7 @@ class DashboardState extends State<DashboardPage> {
           print(' Selected Text $filterPeriod');
           return _buildThisWeekWidget(filterPeriod);
         }
-        //To display Total loads and Total Miles widget
+        //Total loads and Total Miles widget
         if (index == 1) {
           return _buildWidgetTotalLoadsAndMiles(
               _dashboardDataModel.totalLoads != null
@@ -123,7 +140,7 @@ class DashboardState extends State<DashboardPage> {
                   ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalMiles)}'
                   : 'NA');
         }
-        //To display Fuel widget
+        //Fuel widget
         else if (index == 2) {
           return _buildFuelWidget(
               _dashboardDataModel.totalTractorGallons != null
@@ -133,7 +150,7 @@ class DashboardState extends State<DashboardPage> {
                   ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalFuelCost)}'
                   : 'NA');
         }
-        //To Display NetCompensation and Deductions Widget
+        //NetCompensation and Deductions Widget
         else {
           return _buildNetCompensationWidget(
               Constants.TEXT_NET_CONPENSATION,
@@ -277,20 +294,24 @@ class DashboardState extends State<DashboardPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Row(children: [
-                          Padding(
+                          Container(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: SizedBox(
-                              height: 28,
-                              width: 28,
-                              child: Image.asset('images/2x/ic_mail.png'),
+                              height: 30,
+                              width: 30,
+                              child: Image(
+                                  image: new AssetImage('images/ic_mail.png'),
+                                  fit: BoxFit.fill),
                             ),
                           ),
-                          Padding(
+                          Container(
                             padding: const EdgeInsets.only(right: 20.0),
                             child: SizedBox(
-                              height: 28,
-                              width: 28,
-                              child: Image.asset('images/2x/ic_call.png'),
+                              height: 30,
+                              width: 30,
+                              child: Image(
+                                  image: new AssetImage('images/ic_call.png'),
+                                  fit: BoxFit.fill),
                             ),
                           )
                         ])
@@ -767,19 +788,13 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //Quick Contact Modal Sheet
   Widget _quickContactModalSheet() {
-    final _textSubStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 11,
-        fontWeight: FontWeight.normal,
-        color: AppColors.lightBlack);
-
     final quickContactList = [
       Constants.TEXT_DISPATCH,
       Constants.TEXT_SAFETY_OFFICER,
       Constants.TEXT_REFERRAL_AND_DRIVERRELATION
     ];
-
     return Container(
         height: MediaQuery.of(context).size.height * .40,
         child: Column(
@@ -832,27 +847,28 @@ class DashboardState extends State<DashboardPage> {
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
-                                     Expanded(
-                                       flex: 2,
-                                       child: Container(
-                                         child: TextWidget(
-                                            text: _quickContactEmails[index],
-                                            colorText: AppColors.lightBlack,
-                                            textType: TextType.TEXT_XSMALL,
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        child: TextWidget(
+                                          text: _quickContactEmails[index],
+                                          colorText: AppColors.lightBlack,
+                                          textType: TextType.TEXT_XSMALL,
+                                        ),
+                                      ),
                                     ),
-                                       ),
-                                     ),
                                   ],
                                 ),
                                 Row(
                                   children: <Widget>[
                                     Expanded(
-                                      flex:2,
+                                      flex: 2,
                                       child: Container(
                                         padding:
-                                        EdgeInsets.only(top: 5, bottom: 5),
+                                            EdgeInsets.only(top: 5, bottom: 5),
                                         child: TextWidget(
-                                          text: _quickContactPhoneNumbers[index],
+                                          text:
+                                              _quickContactPhoneNumbers[index],
                                           colorText: AppColors.lightBlack,
                                           textType: TextType.TEXT_XSMALL,
                                         ),
@@ -873,6 +889,7 @@ class DashboardState extends State<DashboardPage> {
         ));
   }
 
+  //Bottom Sheet
   void _buildBottomSheet(context) {
     showModalBottomSheet(
         context: context,
@@ -881,6 +898,7 @@ class DashboardState extends State<DashboardPage> {
         });
   }
 
+  //User Icons
   _userIconWidget(int index) {
     String imageName = '';
     switch (index) {
@@ -894,7 +912,6 @@ class DashboardState extends State<DashboardPage> {
         imageName = 'images/ic_driver_relations.png';
         break;
     }
-
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
@@ -908,6 +925,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //Rounded Icons
   _roundedIconsRow(int index) {
     return Container(
       width: 100,
@@ -918,30 +936,13 @@ class DashboardState extends State<DashboardPage> {
             child: SizedBox(
               height: 35,
               width: 35,
-              child: Image.asset('images/ic_mail_1.png'),
+              child: Image(
+                  image: AssetImage('images/ic_mail_1.png'), fit: BoxFit.fill),
             ),
           ),
           onTap: () {
             _dashboardBloc
                 .dispatch(QuickContactTapsOnMailEvent(selectedIndex: index));
-//            switch (index) {
-//              case 0:
-//                {
-//                  _service.sendEmail(Constants.TEXT_DISPATCH_QUCKCONTACT_EMAIL);
-//                }
-//                break;
-//              case 1:
-//                {
-//                  _service.sendEmail(Constants.TEXT_SAFETY_QUCKCONTACT_EMAIL);
-//                }
-//                break;
-//              case 2:
-//                {
-//                  _service.sendEmail(
-//                      Constants.TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL);
-//                }
-//                break;
-//            }
           },
         ),
         InkWell(
@@ -950,30 +951,13 @@ class DashboardState extends State<DashboardPage> {
             child: SizedBox(
               height: 35,
               width: 35,
-              child: Image.asset('images/ic_call_1.png'),
+              child: Image(
+                  image: AssetImage('images/ic_call_1.png'), fit: BoxFit.fill),
             ),
           ),
           onTap: () {
             _dashboardBloc
                 .dispatch(QuickContactTapsOnCallEvent(selectedIndex: index));
-
-//            switch (index) {
-//              case 0:
-//                {
-//                  _service.call(Constants.TEXT_DISPATCH_PHONENUMBER);
-//                }
-//                break;
-//              case 1:
-//                {
-//                  _service.call(Constants.TEXT_SAFETY_PHONENUMBER);
-//                }
-//                break;
-//              case 2:
-//                {
-//                  _service.call(Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER);
-//                }
-//                break;
-//            }
           },
         )
       ]),
@@ -988,6 +972,7 @@ class DashboardState extends State<DashboardPage> {
             type: PageTransitionType.fade, child: FeaturesComingSoonPage()));
   }
 
+  //To navigate to Drill Down
   void navigateToDrillDownPage(bool isMiles) {
     Navigator.push(
         context,
