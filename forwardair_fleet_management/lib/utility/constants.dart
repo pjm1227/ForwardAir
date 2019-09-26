@@ -57,6 +57,10 @@ class Constants {
   static const String TEXT_REPORT_INCIDENTOROTHER = 'Report Incident/Other';
   static const String TEXT_VIEW_HISTORY = 'View History';
   static const String TEXT_FLEET_OWNER = 'Fleet Owner';
+  static const String TEXT_FLEET_OWNER_DRIVER = 'Fleet Owner Driver';
+  static const String TEXT_DRIVER_FOR_FLEET = 'Driver for Fleet';
+  static const String TEXT_OWNER_OPERATOR = 'Owner Operator';
+  static const String TEXT_COMPANY_DRIVER = 'Company Driver';
   //Dashboard
   static const String TEXT_NET_CONPENSATION = 'Net Compensation';
   static const String TEXT_QUICK_CONTACT = 'QUICK CONTACT';

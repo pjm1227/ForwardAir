@@ -1,6 +1,7 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
+import 'package:forwardair_fleet_management/databasemanager/user_role_manager.dart';
+import 'package:forwardair_fleet_management/utility/constants.dart';
+import 'package:package_info/package_info.dart';
 
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
@@ -8,13 +9,16 @@ import 'package:forwardair_fleet_management/databasemanager/terms_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 import 'package:forwardair_fleet_management/models/login_model.dart';
 
-import 'package:package_info/package_info.dart';
 
 //SideMenu Bloc,All business logic for drawer menu
 class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
   //User Details
   UserDetails userDetails = UserDetails();
+  //User Role
+  UserRole userRole = UserRole();
+  //Version
   String versionNumer = '';
+  //Expand Flag
   bool expandFlag = false;
 
   //It will call to map initial State
@@ -73,4 +77,27 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
     //Deleting all data in User Table
     return await userManager.deleteUserData();
   }
+
+  String convertUserTypeToText(String userType) {
+    String userTypeText = '';
+     switch (userType) {
+       case 'FO':
+         userTypeText = Constants.TEXT_FLEET_OWNER;
+         break;
+       case 'FOD':
+         userTypeText = Constants.TEXT_FLEET_OWNER_DRIVER;
+         break;
+       case 'FD':
+         userTypeText = Constants.TEXT_DRIVER_FOR_FLEET;
+         break;
+       case 'OO':
+         userTypeText = Constants.TEXT_OWNER_OPERATOR;
+         break;
+       case 'CD':
+         userTypeText = Constants.TEXT_COMPANY_DRIVER;
+         break;
+     }
+     return userTypeText;
+  }
+
 }

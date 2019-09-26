@@ -357,7 +357,7 @@ class _HomePageState extends State<HomePage> {
   //Scaffold Widget
   Widget _scaffoldWidget() {
     return Scaffold(
-        key: _scaffold,
+      key: _scaffold,
       appBar: new AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
         centerTitle: false,
@@ -509,7 +509,15 @@ class _HomePageState extends State<HomePage> {
                                 //User Role Text
                                 subtitle: Container(
                                   child: TextWidget(
-                                    text: Constants.TEXT_FLEET_OWNER,
+                                    text: _sideMenuBloc.userDetails != null
+                                        ? _sideMenuBloc.userDetails.usertype ==
+                                                null
+                                            ? ''
+                                            : _sideMenuBloc
+                                                .convertUserTypeToText(
+                                                    _sideMenuBloc
+                                                        .userDetails.usertype)
+                                        : '',
                                     colorText: AppColors.colorWhite,
                                     textType: TextType.TEXT_MEDIUM,
                                   ),
