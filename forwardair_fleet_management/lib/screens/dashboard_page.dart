@@ -460,7 +460,6 @@ class DashboardState extends State<DashboardPage> {
           margin: aTitle == Constants.TEXT_TOTAL_LOADS
               ? EdgeInsets.only(top: 5, bottom: 5, right: 5, left: 0)
               : EdgeInsets.only(top: 5, bottom: 5, right: 0, left: 5),
-          height: 80,
           decoration: new BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
@@ -491,7 +490,7 @@ class DashboardState extends State<DashboardPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 10.0, right: 5, top: 5),
+                padding: const EdgeInsets.only(left: 10.0, right: 5, top: 5, bottom: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -539,7 +538,6 @@ class DashboardState extends State<DashboardPage> {
   _buildFuelWidget(String totalGallons, String totalFuelAmount) {
     return Container(
       margin: new EdgeInsets.only(top: 5, left: 10.0, bottom: 5, right: 10),
-      height: 90,
       decoration: new BoxDecoration(
         color: Colors.white,
         shape: BoxShape.rectangle,
@@ -568,105 +566,108 @@ class DashboardState extends State<DashboardPage> {
                     colorText: AppColors.colorBlue,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 5.0, right: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Flexible(
-                              child: Container(
-                                padding: const EdgeInsets.only(
-                                  top: 5,
+                Padding(
+                  padding: const EdgeInsets.only(bottom:10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0, right: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Flexible(
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                    top: 5,
+                                  ),
+                                  child: TextWidget(
+                                    text: totalGallons,
+                                    textType: TextType.TEXT_MEDIUM,
+                                    colorText: AppColors.darkColorBlue,
+                                    isBold: true,
+                                  ),
                                 ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
                                 child: TextWidget(
-                                  text: totalGallons,
-                                  textType: TextType.TEXT_MEDIUM,
-                                  colorText: AppColors.darkColorBlue,
-                                  isBold: true,
+                                    text: Constants.TEXT_TOTAL_GALLONS,
+                                    colorText: AppColors.colorTotalGallons),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(top: 5.0, right: 10, left: 5),
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                height: 35,
+                                width: 0.5,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0, right: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Flexible(
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.only(top: 5, right: 10),
+                                  child: TextWidget(
+                                    text: totalFuelAmount + '\$',
+                                    textType: TextType.TEXT_MEDIUM,
+                                    colorText: AppColors.darkColorBlue,
+                                    isBold: true,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: TextWidget(
-                                  text: Constants.TEXT_TOTAL_GALLONS,
-                                  colorText: AppColors.colorTotalGallons),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: 5.0, right: 10, left: 5),
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              height: 35,
-                              width: 0.5,
-                              color: Colors.grey,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 5.0, right: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Flexible(
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.only(top: 5, right: 10),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
                                 child: TextWidget(
-                                  text: totalFuelAmount + '\$',
-                                  textType: TextType.TEXT_MEDIUM,
-                                  colorText: AppColors.darkColorBlue,
-                                  isBold: true,
+                                    text: Constants.TEXT_TOTAL_FUEL_AMOUNT,
+                                    colorText: AppColors.colorTotalGallons),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12,top: 5),
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                height: 35,
+                                width: 35,
+                                child: Image.asset(
+                                  'images/img_fuel.png',
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: TextWidget(
-                                  text: Constants.TEXT_TOTAL_FUEL_AMOUNT,
-                                  colorText: AppColors.colorTotalGallons),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 5),
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              height: 35,
-                              width: 35,
-                              child: Image.asset(
-                                'images/img_fuel.png',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 )
               ],
             )),
@@ -722,13 +723,21 @@ class DashboardState extends State<DashboardPage> {
                         isBold: true,
                       ),
                     ),
-                    Container(
-                      height: 35,
-                      width: 35,
-                      child: Image.asset(
-                        'images/img_net.png',
+                    Padding(
+                      padding: const EdgeInsets.only(right: 2),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height: 30,
+                            width: 30,
+                            child: Image.asset(
+                              'images/img_net.png',
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+
                   ],
                 ),
                 grossCompensationAndDeductionsWiget(
@@ -762,16 +771,23 @@ class DashboardState extends State<DashboardPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  TextWidget(
-                    text: title,
-                    isBold: true,
-                    colorText: AppColors.colorBlue,
-                  ),
-                  TextWidget(
-                      text: sTitle,
+                  Expanded(
+                    child: TextWidget(
+                      textAlign: TextAlign.left,
+                      text: title,
                       isBold: true,
-                      textType: TextType.TEXT_MEDIUM,
-                      colorText: AppColors.darkColorBlue),
+                      colorText: AppColors.colorBlue,
+                    ),
+                  ),
+                  Expanded(
+
+                    child: TextWidget(
+                        text: sTitle,
+                        textAlign: TextAlign.right,
+                        isBold: true,
+                        textType: TextType.TEXT_MEDIUM,
+                        colorText: AppColors.darkColorBlue),
+                  ),
                 ],
               ),
             ),
@@ -832,52 +848,52 @@ class DashboardState extends State<DashboardPage> {
                         ),
                       ),
                       child: Container(
-                        height: 80,
                         child: new ListTile(
                           leading: _userIconWidget(index),
-                          title: TextWidget(
-                            text: quickContactList[index],
-                            textType: TextType.TEXT_NORMAL,
-                            colorText: AppColors.lightBlack,
-                          ),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(top: 5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        child: TextWidget(
-                                          text: _quickContactEmails[index],
-                                          colorText: AppColors.lightBlack,
-                                          textType: TextType.TEXT_XSMALL,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        padding:
-                                            EdgeInsets.only(top: 5, bottom: 5),
-                                        child: TextWidget(
-                                          text:
-                                              _quickContactPhoneNumbers[index],
-                                          colorText: AppColors.lightBlack,
-                                          textType: TextType.TEXT_XSMALL,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                          title: Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: TextWidget(
+                              text: quickContactList[index],
+                              textType: TextType.TEXT_NORMAL,
+                              colorText: AppColors.lightBlack,
                             ),
+                          ),
+                          subtitle: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 5,),
+                                      child: TextWidget(
+                                        text: _quickContactEmails[index],
+                                        colorText: AppColors.lightBlack,
+                                        textType: TextType.TEXT_XSMALL,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.only(top: 5, bottom: 5),
+                                      child: TextWidget(
+                                        text:
+                                            _quickContactPhoneNumbers[index],
+                                        colorText: AppColors.lightBlack,
+                                        textType: TextType.TEXT_XSMALL,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                           trailing: _roundedIconsRow(index),
                         ),
