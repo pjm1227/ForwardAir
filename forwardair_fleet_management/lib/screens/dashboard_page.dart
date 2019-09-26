@@ -79,7 +79,7 @@ class DashboardState extends State<DashboardPage> {
     _refreshController.refreshCompleted();
     if (state is InitialState) {
       //Initial State
-      _dashboardBloc.isAPICalling = false;
+      _dashboardBloc.isAPICalling = true;
       return Center(child: CircularProgressIndicator());
     } else if (state is DashboardError) {
       //Error State
@@ -272,65 +272,82 @@ class DashboardState extends State<DashboardPage> {
           child: Container(
             child: Material(
               color: Colors.transparent,
-              child: InkWell(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
-                          child: TextWidget(
-                            text: Constants.TEXT_QUICK_CONTACT,
-                            colorText: AppColors.colorWhite,
-                            textType: TextType.TEXT_SMALL,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(children: [
-                          Container(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: SizedBox(
-                              height: 30,
-                              width: 30,
-                              child: Image(
-                                  image: new AssetImage('images/ic_mail.png'),
-                                  fit: BoxFit.fill),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(right: 20.0),
-                            child: SizedBox(
-                              height: 30,
-                              width: 30,
-                              child: Image(
-                                  image: new AssetImage('images/ic_call.png'),
-                                  fit: BoxFit.fill),
-                            ),
-                          )
-                        ])
-                      ],
-                    )
-                  ],
-                ),
-                onTap: () {
-                  //To show the Quick Contact Details
-                  if (_dashboardBloc.isAPICalling == false) {
-                    _dashboardBloc.dispatch(OpenQuickContactsEvent());
-                  }
-                },
-              ),
+              child: _handleTapEventForQuickContact(),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget redColorBottomBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: TextWidget(
+                text: Constants.TEXT_QUICK_CONTACT,
+                colorText: AppColors.colorWhite,
+                textType: TextType.TEXT_SMALL,
+              ),
+            ),
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(children: [
+              Container(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: Image(
+                      image: new AssetImage('images/ic_mail.png'),
+                      fit: BoxFit.fill),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: Image(
+                      image: new AssetImage('images/ic_call.png'),
+                      fit: BoxFit.fill),
+                ),
+              )
+            ])
+          ],
+        )
+      ],
+    );
+  }
+
+  //Open Quick Tap Handler
+  Widget _handleTapEventForQuickContact() {
+    if (_dashboardBloc.isAPICalling == false) {
+      return InkWell(
+        onDoubleTap: () {},
+        child: redColorBottomBar(),
+        onTap: () {
+          //To show the Quick Contact Details
+          if (_dashboardBloc.isAPICalling == false) {
+            _dashboardBloc.dispatch(OpenQuickContactsEvent());
+          }
+        },
+      );
+    } else {
+      print('Ignoring Taps');
+      return IgnorePointer(
+        child: redColorBottomBar(),
+      );
+    }
   }
 
   //This return the This week Filter widget
@@ -490,7 +507,8 @@ class DashboardState extends State<DashboardPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 10.0, right: 5, top: 5, bottom: 5),
+                padding: const EdgeInsets.only(
+                    left: 10.0, right: 5, top: 5, bottom: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -526,9 +544,6 @@ class DashboardState extends State<DashboardPage> {
         onTap: () {
           _dashboardBloc.dispatch(DrillDownPageEvent(
               isMilePage: aTitle == Constants.TEXT_TOTAL_LOADS ? false : true));
-//          navigateToDrillDownPage(
-//              aTitle == Constants.TEXT_TOTAL_LOADS ? false : true);
-//          print(aTitle == Constants.TEXT_TOTAL_LOADS ? 'Loads' : 'Miles');
         },
       ),
     );
@@ -567,7 +582,7 @@ class DashboardState extends State<DashboardPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom:10.0),
+                  padding: const EdgeInsets.only(bottom: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -606,8 +621,8 @@ class DashboardState extends State<DashboardPage> {
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding:
-                              const EdgeInsets.only(top: 5.0, right: 10, left: 5),
+                          padding: const EdgeInsets.only(
+                              top: 5.0, right: 10, left: 5),
                           child: Column(
                             children: <Widget>[
                               Container(
@@ -652,7 +667,7 @@ class DashboardState extends State<DashboardPage> {
                       Expanded(
                         flex: 1,
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 12,top: 5),
+                          padding: const EdgeInsets.only(right: 12, top: 5),
                           child: Column(
                             children: <Widget>[
                               Container(
@@ -737,7 +752,6 @@ class DashboardState extends State<DashboardPage> {
                         ],
                       ),
                     ),
-
                   ],
                 ),
                 grossCompensationAndDeductionsWiget(
@@ -780,7 +794,6 @@ class DashboardState extends State<DashboardPage> {
                     ),
                   ),
                   Expanded(
-
                     child: TextWidget(
                         text: sTitle,
                         textAlign: TextAlign.right,
@@ -866,7 +879,9 @@ class DashboardState extends State<DashboardPage> {
                                   Expanded(
                                     flex: 2,
                                     child: Container(
-                                      padding: EdgeInsets.only(top: 5,),
+                                      padding: EdgeInsets.only(
+                                        top: 5,
+                                      ),
                                       child: TextWidget(
                                         text: _quickContactEmails[index],
                                         colorText: AppColors.lightBlack,
@@ -884,8 +899,7 @@ class DashboardState extends State<DashboardPage> {
                                       padding:
                                           EdgeInsets.only(top: 5, bottom: 5),
                                       child: TextWidget(
-                                        text:
-                                            _quickContactPhoneNumbers[index],
+                                        text: _quickContactPhoneNumbers[index],
                                         colorText: AppColors.lightBlack,
                                         textType: TextType.TEXT_XSMALL,
                                       ),
