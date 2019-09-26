@@ -572,7 +572,7 @@ class _HomePageState extends State<HomePage> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Logout ?"),
+      title: Text("Logout"),
       content: Text("Are you sure you want to Logout?"),
       actions: [
         cancelButton,

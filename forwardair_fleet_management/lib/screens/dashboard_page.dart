@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forwardair_fleet_management/components/shimmer/dashboard_shimmer.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:page_transition/page_transition.dart';
@@ -15,6 +16,8 @@ import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
 import 'package:forwardair_fleet_management/screens/drill_down_screen.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 
+import 'load_screen.dart';
+
 /*
   DashboardPage to display dashboard details.
 */
@@ -22,7 +25,6 @@ import 'package:forwardair_fleet_management/components/text_widget.dart';
 class DashboardPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return DashboardState();
   }
 }
@@ -30,8 +32,10 @@ class DashboardPage extends StatefulWidget {
 class DashboardState extends State<DashboardPage> {
   //Dashboard Bloc
   DashboardBloc _dashboardBloc = DashboardBloc();
+
   //To make a call and send mail
   var _service = CallsAndMailService();
+
   //Pull to refresh
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -46,6 +50,7 @@ class DashboardState extends State<DashboardPage> {
     Constants.TEXT_SAFETY_PHONENUMBER,
     Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER
   ];
+
   //To Dispose the DashboardBloc
   @override
   void dispose() {
@@ -80,7 +85,7 @@ class DashboardState extends State<DashboardPage> {
     if (state is InitialState) {
       //Initial State
       _dashboardBloc.isAPICalling = true;
-      return Center(child: CircularProgressIndicator());
+      return Center(child: DashBoardShimmer());
     } else if (state is DashboardError) {
       //Error State
       return noResultsFoundWidget();
@@ -942,6 +947,7 @@ class DashboardState extends State<DashboardPage> {
         imageName = 'images/ic_driver_relations.png';
         break;
     }
+
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
@@ -955,7 +961,6 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //Rounded Icons
   _roundedIconsRow(int index) {
     return Container(
       width: 100,
@@ -1008,6 +1013,7 @@ class DashboardState extends State<DashboardPage> {
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: LoadsPage(isMiles, _dashboardDataModel)));
+            child: LoadPage(
+                isLoadPage: isMiles, dashboardData: _dashboardDataModel)));
   }
 }

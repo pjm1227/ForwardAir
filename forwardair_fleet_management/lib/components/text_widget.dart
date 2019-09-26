@@ -62,8 +62,6 @@ class TextWidget extends StatelessWidget {
   double _textSize(TextType textType) {
     if (textType == TextType.TEXT_XSMALL) {
       return 10;
-    } else if (textType == TextType.TEXT_NORMAL) {
-      return 12;
     } else if (textType == TextType.TEXT_SMALL) {
       return 14;
     } else if (textType == TextType.TEXT_MEDIUM) {

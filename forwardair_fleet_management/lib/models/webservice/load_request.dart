@@ -1,17 +1,12 @@
-class LoadDetailRequest {
+class LoadRequest {
   final String weekStart;
   final String weekEnd;
   final int month;
-  final String year;
+  final int year;
   final String tractorId;
 
-  LoadDetailRequest(this.weekStart, this.weekEnd,this.month,this.year,this.tractorId);
-
-/*
-  LoginRequest.fromJson(Map<String, dynamic> json)
-      : userName = json['userName'],
-        password = json['password'];*/
-
+  LoadRequest({this.weekStart, this.weekEnd,this.month,this.year,this.tractorId});
+  
   Map<String, dynamic> toJson() => {
     '"weekStart"': '"$weekStart"',
     '"weekEnd"': '"$weekEnd"',

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/blocs/drill_down_bloc.dart';
 import 'package:forwardair_fleet_management/blocs/events/drill_down_event.dart';
 import 'package:forwardair_fleet_management/blocs/states/drill_down_state.dart';
-import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/drillDown/drill_down_model.dart';
 import 'package:forwardair_fleet_management/models/loadDetails/load_detail_model.dart';
@@ -17,8 +16,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
 class LoadsPage extends StatefulWidget {
-  bool isMilePage;
-  Dashboard_DB_Model dashboardData;
+  final bool isMilePage;
+  final Dashboard_DB_Model dashboardData;
 
   LoadsPage( this.isMilePage,this.dashboardData);
   @override
@@ -43,7 +42,6 @@ class _LoadsPageState extends State<LoadsPage> {
   List<Tractors> topContributor; // this is constant for top contributors
    List<Tractors> others; // this will be changed based on sorting  for other contributors
    List<Tractors> top;  // this will be changed based on sorting  for top contributors
-   String _filterSelection=Constants.TEXT_HIGHTOLOW;
 
   //color list which is used in pie chart
   List<Color> colorList = [
@@ -130,7 +128,7 @@ class _LoadsPageState extends State<LoadsPage> {
                       children: <Widget>[
                         //Top Widget
                         new Container(
-                            height: MediaQuery.of(context).size.height * 0.6,
+                            height: MediaQuery.of(context).size.height * 0.7,
                             color: topWidgetColor,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -143,7 +141,7 @@ class _LoadsPageState extends State<LoadsPage> {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                TextWidget(text:_filterSelection,colorText: Colors.grey,textType: TextType.TEXT_SMALL,isBold: true,),
+                                Text("Top Contributors", style: _boldStyle),
                                 filterWidget(),
                               ]),
                         ),
@@ -190,7 +188,6 @@ class _LoadsPageState extends State<LoadsPage> {
                 print('Entering with sorted Data');
                 getTopTen(state.sortedData);
                 getLoadedEmptyPercent();
-                filterText=state.filterOption;
 
               }
            //view after sorting data keeping chart data constant
@@ -228,8 +225,7 @@ class _LoadsPageState extends State<LoadsPage> {
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Text(_filterSelection, style: _boldStyle),
-
+                                    Text("Top Contributors", style: _boldStyle),
                                     filterWidget(),
                                   ]),
                             ),
@@ -295,16 +291,18 @@ class _LoadsPageState extends State<LoadsPage> {
               Row(children: [
                 Expanded(
                   flex: 2,
-                  child: TextWidget(text:'Sort By',
-                      colorText: Colors.black,
-                      textType: TextType.TEXT_SMALL,
-                     ),
+                  child: Text(filterText==''?'Sort By':filterText,
+                      style: TextStyle(
+                          fontFamily: Constants.FONT_FAMILY_ROBOTO,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black)),
                 ),
                 Expanded(
                     flex: 1,
                     child:Icon(Icons.arrow_drop_down))
               ]),
-
+              Divider(height: 1,color: Colors.grey,)
             ],),
             onTap: () {
               _filterModalBottomSheet(context);
@@ -781,9 +779,9 @@ class _LoadsPageState extends State<LoadsPage> {
 
    void navigateToLoadDetailPage(Tractors tractorData) {
      _drillDowndBloc.dispose();
-     Navigator.push(
-         context,
-         PageTransition(
-             type: PageTransitionType.fade, child: LoadDetailsPage(this.isMilePage,tractorData,this.dashboardData)));
+//     Navigator.push(
+//         context,
+//         PageTransition(
+//             type: PageTransitionType.fade, child: LoadDetailsPage(this.isMilePage,tractorData,this.dashboardData)));
    }
 }

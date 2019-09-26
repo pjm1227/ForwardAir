@@ -111,7 +111,6 @@ class DrillDownBloc extends Bloc<DrillDownEvents,DrillDownState> {
       data.tractors.sort((a, b) =>
           a.totalLoadsPercent.compareTo(b.totalLoadsPercent));
     }
-
     return data;
   }
 
