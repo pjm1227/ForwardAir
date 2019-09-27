@@ -15,9 +15,9 @@ class ShimmerState extends LoadStates {}
 class ErrorState extends LoadStates {}
 
 class SuccessState extends LoadStates {
-  final LoadChartData loadChartData;
+  final dynamic loadChartData;
   final TractorData tractorData;
 
-  SuccessState({ this.loadChartData, this.tractorData})
+  SuccessState({this.loadChartData, this.tractorData})
       : super([loadChartData, tractorData]);
 }

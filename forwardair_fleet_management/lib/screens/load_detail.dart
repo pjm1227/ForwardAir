@@ -8,6 +8,7 @@ import 'package:forwardair_fleet_management/blocs/states/load_details_states.dar
 import 'package:forwardair_fleet_management/components/shimmer/list_shimmer.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 
 import 'package:forwardair_fleet_management/models/loadDetails/load_detail_model.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
@@ -18,8 +19,9 @@ class LoadDetailsPage extends StatefulWidget {
   bool isMilePage;
   Tractor tractorData;
   Dashboard_DB_Model dashboardData;
+  PageName pageName;
 
-  LoadDetailsPage(this.isMilePage, this.tractorData, this.dashboardData);
+  LoadDetailsPage(pageName,this.tractorData, this.dashboardData);
 
   @override
   _LoadDetailsPageState createState() => _LoadDetailsPageState(

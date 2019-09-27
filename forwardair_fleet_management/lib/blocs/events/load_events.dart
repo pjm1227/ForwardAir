@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -12,10 +13,10 @@ class LoadingEvent extends LoadEvents {}
 class GetTractorDataEvent extends LoadEvents {
   final String weekStart, weekEnd;
   final int month, year;
-  final bool isMiles;
+  final PageName pageName;
 
   GetTractorDataEvent(
-      {@required this.isMiles,
+      {@required this.pageName,
       @required this.weekStart,
       @required this.weekEnd,
       @required this.month,

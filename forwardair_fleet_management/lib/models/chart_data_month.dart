@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-ChartDataMonth chartDatMonthFromJson(String str) =>
+ChartDataMonth chartDataMonthFromJson(String str) =>
     ChartDataMonth.fromJson(json.decode(str));
 
 String chartDatMonthToJson(ChartDataMonth data) => json.encode(data.toJson());

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/components/shimmer/dashboard_shimmer.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:page_transition/page_transition.dart';
@@ -13,7 +14,6 @@ import 'package:forwardair_fleet_management/utility/callandmailservice.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
-import 'package:forwardair_fleet_management/screens/drill_down_screen.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 
 import 'load_screen.dart';
@@ -228,7 +228,7 @@ class DashboardState extends State<DashboardPage> {
                 break;
             }
           } else if (state is DrillDownPageState) {
-            navigateToDrillDownPage(state.isMilePage);
+            navigateToDrillDownPage(state.pageName);
           }
         },
         child: BlocBuilder<DashboardBloc, dynamic>(
@@ -548,7 +548,9 @@ class DashboardState extends State<DashboardPage> {
         ),
         onTap: () {
           _dashboardBloc.dispatch(DrillDownPageEvent(
-              isMilePage: aTitle == Constants.TEXT_TOTAL_LOADS ? false : true));
+              pageName: aTitle == Constants.TEXT_TOTAL_LOADS
+                  ? PageName.LOAD_PAGE
+                  : PageName.MILES_PAGE));
         },
       ),
     );
@@ -1008,12 +1010,12 @@ class DashboardState extends State<DashboardPage> {
   }
 
   //To navigate to Drill Down
-  void navigateToDrillDownPage(bool isMiles) {
+  void navigateToDrillDownPage(PageName pageName) {
     Navigator.push(
         context,
         PageTransition(
             type: PageTransitionType.fade,
             child: LoadPage(
-                isLoadPage: isMiles, dashboardData: _dashboardDataModel)));
+                pageName: pageName, dashboardData: _dashboardDataModel)));
   }
 }

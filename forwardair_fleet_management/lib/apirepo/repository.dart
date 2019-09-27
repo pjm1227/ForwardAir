@@ -29,7 +29,7 @@ class Repository {
    * This method called Chart API
    */
   Future<dynamic> makeChartDataRequest(String body, String token) =>
-      _apiProvider.requestInPost(EndPoints.DRILL_DATA_URL, token, body);
+      _apiProvider.requestInPost(EndPoints.CHART_DATA_URL, token, body);
 
   /*
   This method is called when user request for load/mile details

@@ -28,6 +28,7 @@ dependencies:
   intl:
   pie_chart: ^1.2.0
   shimmer:
+  charts_flutter:
 
 dev_dependencies:
   flutter_test:

@@ -2,34 +2,36 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forwardair_fleet_management/components/load_list_widget.dart';
 import 'package:forwardair_fleet_management/components/pager_widget.dart';
 import 'package:forwardair_fleet_management/components/pie_chart_widget.dart';
 import 'package:forwardair_fleet_management/components/shimmer/load_page_shimmer.dart';
+import 'package:forwardair_fleet_management/components/stacked_bar_chart.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
+import 'package:forwardair_fleet_management/models/chart_data_weeks.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/load.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
-import 'package:page_transition/page_transition.dart';
-import 'load_detail.dart';
 
 class LoadPage extends StatefulWidget {
   //True if coming from Load Page
-  final bool isLoadPage;
+  final PageName pageName;
   final Dashboard_DB_Model dashboardData;
 
-  const LoadPage({Key key, this.isLoadPage, this.dashboardData})
+  const LoadPage({Key key, this.pageName, this.dashboardData})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return LoadScreen(isLoadPage, dashboardData);
+    return LoadScreen(pageName, dashboardData);
   }
 }
 
 class LoadScreen extends State<LoadPage> {
-  final bool isLoadPage;
+  final PageName pageName;
   final Dashboard_DB_Model dashboardData;
   final loadBloc = LoadBloc();
   final _controller = new PageController();
@@ -44,31 +46,31 @@ class LoadScreen extends State<LoadPage> {
       colorList: AppColors.colorListPieChart,
       dataMap: dataMap,
     ),
-    new ConstrainedBox(
-      constraints: const BoxConstraints.expand(),
-      child:
-          new FlutterLogo(style: FlutterLogoStyle.stacked, colors: Colors.red),
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: StackedBarChart(null),
     ),
   ];
 
-  LoadScreen(this.isLoadPage, this.dashboardData);
+  LoadScreen(this.pageName, this.dashboardData);
 
   @override
   void initState() {
+    print("Page Name is : $pageName");
     //Call Api For Tractor data and Chart data
     //Check condition i.e for week data or month data
     if (dashboardData != null &&
         (dashboardData.dashboardPeriod ==
             Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH)) {
       loadBloc.dispatch(GetTractorDataEvent(
-          isMiles: isLoadPage,
           month: dashboardData.month,
           year: int.parse(dashboardData.year),
           weekEnd: null,
-          weekStart: null));
+          weekStart: null,
+          pageName: pageName));
     } else {
       loadBloc.dispatch(GetTractorDataEvent(
-          isMiles: isLoadPage,
+          pageName: pageName,
           month: 0,
           year: 0,
           weekEnd: dashboardData.weekEnd,
@@ -98,7 +100,7 @@ class LoadScreen extends State<LoadPage> {
         centerTitle: false,
         iconTheme: IconThemeData(color: AppColors.colorWhite),
         title: TextWidget(
-          text: !isLoadPage ? 'Load' : 'Miles',
+          text: pageName == PageName.LOAD_PAGE ? 'Load' : 'Miles',
           colorText: AppColors.colorWhite,
           textType: TextType.TEXT_LARGE,
         ),
@@ -106,10 +108,16 @@ class LoadScreen extends State<LoadPage> {
       body: BlocListener<LoadBloc, LoadStates>(
         listener: (context, state) {
           if (state is SuccessState) {
+            if (state.loadChartData is ChartDataWeeks) {
+              print('Count Weeks ${state.loadChartData.days.length}');
+            } else {
+              print('Count Month ${state.loadChartData.weeks.length}');
+            }
+
             var subList = state.tractorData.tractors.length > 10
                 ? state.tractorData.tractors.sublist(0, 10)
                 : state.tractorData.tractors;
-            if (isLoadPage) {
+            if (pageName == PageName.LOAD_PAGE) {
               subList.forEach((v) => dataMap.putIfAbsent(
                   "${v.tractorId}", () => v.totalLoadsPercent));
             } else {
@@ -140,6 +148,7 @@ class LoadScreen extends State<LoadPage> {
     );
   }
 
+  //Initial Widget
   Widget _initialWidget(TractorData tractorData) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -182,9 +191,13 @@ class LoadScreen extends State<LoadPage> {
             ),
             //Widget to show Header for sort by options
             _sortByHeader(),
-            _listView(tractorData.tractors.length > 10
-                ? tractorData.tractors.sublist(0, 10)
-                : tractorData.tractors),
+
+            LoadListViewWidget(
+                tractorList: tractorData.tractors.length > 10
+                    ? tractorData.tractors.sublist(0, 10)
+                    : tractorData.tractors,
+                pageName: null,
+                dashboardData: dashboardData),
             //Widget for Other Text
             Container(
               width: MediaQuery.of(context).size.width,
@@ -198,9 +211,13 @@ class LoadScreen extends State<LoadPage> {
                 ),
               ),
             ),
-            _listView(tractorData.tractors.length > 10
-                ? tractorData.tractors.sublist(10, tractorData.tractors.length)
-                : tractorData.tractors),
+            LoadListViewWidget(
+                dashboardData: dashboardData,
+                pageName: null,
+                tractorList: tractorData.tractors.length > 10
+                    ? tractorData.tractors
+                        .sublist(10, tractorData.tractors.length)
+                    : tractorData.tractors),
           ],
         ),
       ),
@@ -244,7 +261,7 @@ class LoadScreen extends State<LoadPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 4.0),
                         child: TextWidget(
-                          text: !isLoadPage
+                          text: pageName == PageName.LOAD_PAGE
                               ? '${dashboardData.totalLoads}'
                               : '${dashboardData.totalMiles}',
                           textAlign: TextAlign.center,
@@ -412,7 +429,7 @@ class LoadScreen extends State<LoadPage> {
 
   //empty and load percentage for top rows
   String _calculateEmptyPercentage() {
-    if (!isLoadPage) {
+    if (pageName == PageName.MILES_PAGE) {
       return ((dashboardData.emptyMiles * 100) / dashboardData.totalMiles)
               .toStringAsFixed(2) +
           '%';
@@ -425,7 +442,7 @@ class LoadScreen extends State<LoadPage> {
 
   //empty and load percentage for top rows
   String _calculateLoadPercentage() {
-    if (!isLoadPage) {
+    if (pageName == PageName.MILES_PAGE) {
       return ((dashboardData.loadedMiles * 100) / dashboardData.totalMiles)
               .toStringAsFixed(2) +
           '%';
@@ -434,100 +451,6 @@ class LoadScreen extends State<LoadPage> {
               .toStringAsFixed(2) +
           '%';
     }
-  }
-
-  //This widget return a list view for tractor details
-  Widget _listView(List<Tractor> modelData) {
-    print(modelData.length);
-    return Container(
-      color: AppColors.colorWhite,
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: modelData.length,
-        itemBuilder: (context, index) {
-          // var post = modelData[index];
-          return InkWell(
-            child: Padding(
-              padding: EdgeInsets.only(left: 4.0, right: 4.0),
-              child: Card(
-                child: Container(
-                  height: 65,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                          flex: 7,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    ClipOval(
-                                      child: Container(
-                                        color: AppColors.colorDOT,
-                                        height: 8.0,
-                                        width: 8.0,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: TextWidget(
-                                        text:
-                                            'Tractor ID :  ${modelData[index].tractorId}',
-                                        textType: TextType.TEXT_MEDIUM,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16.0, top: 8.0),
-                                  child: TextWidget(
-                                    textType: TextType.TEXT_MEDIUM,
-                                    text: !isLoadPage
-                                        ? 'Contribution(%) :  ${modelData[index].totalLoadsPercent}'
-                                        : 'Contribution(%) :  ${modelData[index].totalMilesPercent}',
-                                  ),
-                                )
-                              ],
-                            ),
-                          )),
-                      Expanded(
-                          flex: 3,
-                          child: Container(
-                            height: 65,
-                            color: AppColors.colorListItem,
-                            child: Center(
-                              child: TextWidget(
-                                text: !isLoadPage
-                                    ? '${modelData[index].totalLoads}'
-                                    : '${modelData[index].totalMiles}',
-                                colorText: AppColors.colorWhite,
-                                textType: TextType.TEXT_MEDIUM,
-                                isBold: true,
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.fade,
-                      child: LoadDetailsPage(
-                          isLoadPage, modelData[index], dashboardData)));
-            },
-          );
-        },
-      ),
-    );
   }
 
   //This method show the bottom options for sorting

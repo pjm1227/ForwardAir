@@ -1,8 +1,9 @@
 import 'package:forwardair_fleet_management/apirepo/repository.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 import 'package:forwardair_fleet_management/models/chart_data_month.dart';
+import 'package:forwardair_fleet_management/models/chart_data_weeks.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/models/error_model.dart';
-import 'package:forwardair_fleet_management/models/load_chart_data.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/load_request.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
@@ -71,14 +72,27 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
             } else {
               try {
                 //Now We have chart Data and Tractor data insert them into DB
-                var chartDataModel = chartDatMonthFromJson(chartResult);
+                //Here we will check If chart data is for Month or week,
+                //Convert chart data model according to week or month
+                var chartDataModel;
+                if (chartDataMonthFromJson(chartResult).weeks != null) {
+                  //Convert into chart month model
+                  chartDataModel = chartDataMonthFromJson(chartResult);
+                } else {
+                  //Convert into Chart Weeks model
+                  chartDataModel = chartDataWeeksFromJson(chartResult);
+                }
+                //Now we have chart data, return success state with chart data model
+                // and tractor data
                 yield SuccessState(
-                  tractorData: sortingData(event.isMiles, tractorModel),
+                  tractorData: sortingData(event.pageName, tractorModel),
+                  loadChartData: chartDataModel,
                 );
-                print('Data Found For second API');
+                print(" Chart Data Found");
+                // Handle type error
               } catch (_) {
+                print("Exception found in chart API");
                 yield ErrorState();
-                print("db Exception in Second API");
               }
             }
           } catch (_) {
@@ -95,8 +109,9 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
     }
   }
 
-  TractorData sortingData(bool isMiles, TractorData tractorModel) {
-    if (isMiles) {
+  //This method sort Tractors data according to miles and loads
+  TractorData sortingData(PageName pageName, TractorData tractorModel) {
+    if (pageName == PageName.MILES_PAGE) {
       tractorModel.tractors
           .sort((a, b) => b.totalMiles.compareTo(a.totalMiles));
     } else {
