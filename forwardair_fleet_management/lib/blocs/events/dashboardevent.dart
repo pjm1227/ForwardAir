@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:meta/meta.dart';
 
 //This class handle an events for Dashboard Page
@@ -25,14 +26,15 @@ class QuickContactTapsOnCallEvent extends DashboardEvents {
 
   QuickContactTapsOnCallEvent({@required this.selectedIndex}) : super([]);
 }
+
 class ApplyFilterEvent extends DashboardEvents {
   final String selectedDashboardPeriod;
+
   ApplyFilterEvent({@required this.selectedDashboardPeriod}) : super([]);
 }
 
-
 class DrillDownPageEvent extends DashboardEvents {
-  final bool isMilePage;
+  final PageName pageName;
 
-  DrillDownPageEvent({@required this.isMilePage}) : super([]);
+  DrillDownPageEvent({@required this.pageName}) : super([pageName]);
 }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:meta/meta.dart';
 
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
@@ -18,48 +19,48 @@ class DashboardError extends DashboardState {}
 class DashboardLoaded extends DashboardState {
   final Dashboard_DB_Model dashboardData;
 
-  DashboardLoaded({
-    this.dashboardData
-  }) : super([dashboardData]);
-
+  DashboardLoaded({this.dashboardData}) : super([dashboardData]);
 }
 
 //It will handle bottom Sheet actions
 class OpenQuickContactsState extends DashboardState {
   final Dashboard_DB_Model dashboardData;
 
-  OpenQuickContactsState({
-    this.dashboardData
-  }) : super([dashboardData]);
-
+  OpenQuickContactsState({this.dashboardData}) : super([dashboardData]);
 }
 
 //it will handle the navigation to drillDown page
 
 class DrillDownPageState extends DashboardState {
-  final bool isMilePage;
+  final PageName pageName;
   final Dashboard_DB_Model dashboardData;
 
-  DrillDownPageState({@required this.isMilePage, @required this.dashboardData}) : super([isMilePage, dashboardData]);
-
-
+  DrillDownPageState({@required this.pageName, @required this.dashboardData})
+      : super([pageName, dashboardData]);
 }
 
 //It will handle bottom Sheet actions
 class QuickContactsMailState extends DashboardState {
   final Dashboard_DB_Model dashboardData;
   final int selectedIndex;
-  QuickContactsMailState({@required this.selectedIndex, @required this.dashboardData}) : super([selectedIndex, dashboardData]);
+
+  QuickContactsMailState(
+      {@required this.selectedIndex, @required this.dashboardData})
+      : super([selectedIndex, dashboardData]);
 }
 
 //It will handle bottom Sheet actions
 class QuickContactsCallState extends DashboardState {
   final Dashboard_DB_Model dashboardData;
   final int selectedIndex;
-  QuickContactsCallState({@required this.selectedIndex, @required this.dashboardData}) : super([selectedIndex, dashboardData]);
+
+  QuickContactsCallState(
+      {@required this.selectedIndex, @required this.dashboardData})
+      : super([selectedIndex, dashboardData]);
 }
 
 class ApplyFilterState extends DashboardState {
   final Dashboard_DB_Model aModel;
+
   ApplyFilterState({@required this.aModel}) : super([aModel]);
 }

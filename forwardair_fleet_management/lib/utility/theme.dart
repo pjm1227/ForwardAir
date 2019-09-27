@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'colors.dart';
+
 /*This class is used to customization for app theme.
 * */
 final ThemeData customThemeData = new ThemeData(
@@ -36,5 +38,9 @@ ThemeData basicTheme() {
 //     accentColor: CustomColors.blue[600],
 //      primaryColor: CustomColors.blue[900],
 //      primaryColorDark: Colors.red,
-      appBarTheme: AppBarTheme(color: CustomColors.blue[900]));
+      appBarTheme: AppBarTheme(
+          color: CustomColors.blue[900],
+          brightness: Brightness.light,
+          iconTheme: IconThemeData(color: Colors.white),
+          textTheme: TextTheme(title: TextStyle(color: AppColors.colorWhite))));
 }

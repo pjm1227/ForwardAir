@@ -1,16 +1,21 @@
+// To parse this JSON data, do
+//
+//     final tractorData = tractorDataFromJson(jsonString);
+
 import 'dart:convert';
 
+TractorData tractorDataFromJson(String str) => TractorData.fromJson(json.decode(str));
 
-DrillDownModel drillDownModelFromJson(String str) =>
-    DrillDownModel.fromJson(json.decode(str));
-class DrillDownModel{
+String tractorDataToJson(TractorData data) => json.encode(data.toJson());
+
+class TractorData {
   String companyCd;
   String contractorCd;
   String weekStart;
   String weekEnd;
-  List<Tractors> tractors;
+  List<Tractor> tractors;
 
-  DrillDownModel({
+  TractorData({
     this.companyCd,
     this.contractorCd,
     this.weekStart,
@@ -18,30 +23,24 @@ class DrillDownModel{
     this.tractors,
   });
 
-  factory DrillDownModel.fromJson(Map<String, dynamic> json) => DrillDownModel(
+  factory TractorData.fromJson(Map<String, dynamic> json) => TractorData(
     companyCd: json["companyCd"] == null ? null : json["companyCd"],
     contractorCd: json["contractorCd"] == null ? null : json["contractorCd"],
     weekStart: json["weekStart"] == null ? null : json["weekStart"],
     weekEnd: json["weekEnd"] == null ? null : json["weekEnd"],
-      tractors: json["tractors"] == null
-          ? null
-          : List<Tractors>.from(
-          json["tractors"].map((x) => Tractors.fromJson(x)))
+    tractors: json["tractors"] == null ? null : List<Tractor>.from(json["tractors"].map((x) => Tractor.fromJson(x))),
   );
-
 
   Map<String, dynamic> toJson() => {
     "companyCd": companyCd == null ? null : companyCd,
     "contractorCd": contractorCd == null ? null : contractorCd,
     "weekStart": weekStart == null ? null : weekStart,
     "weekEnd": weekEnd == null ? null : weekEnd,
-    "tractors": tractors == null
-        ? null
-        : List<dynamic>.from(tractors.map((x) => x.toJson())),
+    "tractors": tractors == null ? null : List<dynamic>.from(tractors.map((x) => x.toJson())),
   };
 }
 
-class Tractors{
+class Tractor {
   String tractorId;
   int totalMiles;
   int loadedMiles;
@@ -58,7 +57,7 @@ class Tractors{
   double totalGallonsPercent;
   double totalFuelCostPercent;
 
-  Tractors({
+  Tractor({
     this.tractorId,
     this.totalMiles,
     this.loadedMiles,
@@ -73,10 +72,10 @@ class Tractors{
     this.totalLoadsPercent,
     this.totalNetPercent,
     this.totalGallonsPercent,
-    this.totalFuelCostPercent
+    this.totalFuelCostPercent,
   });
 
-  factory Tractors.fromJson(Map<String, dynamic> json) => Tractors(
+  factory Tractor.fromJson(Map<String, dynamic> json) => Tractor(
     tractorId: json["tractorId"] == null ? null : json["tractorId"],
     totalMiles: json["totalMiles"] == null ? null : json["totalMiles"],
     loadedMiles: json["loadedMiles"] == null ? null : json["loadedMiles"],
@@ -84,14 +83,14 @@ class Tractors{
     totalLoads: json["totalLoads"] == null ? null : json["totalLoads"],
     loadedLoads: json["loadedLoads"] == null ? null : json["loadedLoads"],
     emptyLoads: json["emptyLoads"] == null ? null : json["emptyLoads"],
-    totalTractorGallons: json["totalTractorGallons"] == null ? null : json["totalTractorGallons"],
-    totalFuelCost: json["totalFuelCost"] == null ? null : json["totalFuelCost"],
-    totalNet: json["totalNet"] == null ? null : json["totalNet"],
-    totalMilesPercent: json["totalMilesPercent"] == null ? null : json["totalMilesPercent"],
-    totalLoadsPercent: json["totalLoadsPercent"] == null ? null : json["totalLoadsPercent"],
+    totalTractorGallons: json["totalTractorGallons"] == null ? null : json["totalTractorGallons"].toDouble(),
+    totalFuelCost: json["totalFuelCost"] == null ? null : json["totalFuelCost"].toDouble(),
+    totalNet: json["totalNet"] == null ? null : json["totalNet"].toDouble(),
+    totalMilesPercent: json["totalMilesPercent"] == null ? null : json["totalMilesPercent"].toDouble(),
+    totalLoadsPercent: json["totalLoadsPercent"] == null ? null : json["totalLoadsPercent"].toDouble(),
     totalNetPercent: json["totalNetPercent"] == null ? null : json["totalNetPercent"],
-    totalGallonsPercent: json["totalGallonsPercent"] == null ? null : json["totalGallonsPercent"],
-    totalFuelCostPercent: json["totalFuelCostPercent"] == null ? null : json["totalFuelCostPercent"],
+    totalGallonsPercent: json["totalGallonsPercent"] == null ? null : json["totalGallonsPercent"].toDouble(),
+    totalFuelCostPercent: json["totalFuelCostPercent"] == null ? null : json["totalFuelCostPercent"].toDouble(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -111,6 +110,4 @@ class Tractors{
     "totalGallonsPercent": totalGallonsPercent == null ? null : totalGallonsPercent,
     "totalFuelCostPercent": totalFuelCostPercent == null ? null : totalFuelCostPercent,
   };
-
-
 }

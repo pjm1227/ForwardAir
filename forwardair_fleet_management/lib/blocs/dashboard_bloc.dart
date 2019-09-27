@@ -66,8 +66,8 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
         yield DashboardError();
       } else {
         //If filter not applied
-         var selectedModel = applyFilterInaDashboard(posts);
-         yield DashboardLoaded(dashboardData: selectedModel);
+        var selectedModel = applyFilterInaDashboard(posts);
+        yield DashboardLoaded(dashboardData: selectedModel);
       }
     }
     //Open Qucik Contact Sheet
@@ -80,31 +80,34 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     else if (event is QuickContactTapsOnMailEvent) {
       final posts = await fetchDataFromDB();
       var selectedModel = applyFilterInaDashboard(posts);
-      yield QuickContactsMailState(selectedIndex: event.selectedIndex, dashboardData: selectedModel);
-
+      yield QuickContactsMailState(
+          selectedIndex: event.selectedIndex, dashboardData: selectedModel);
     }
     //To make a call from Quick Contact Sheet
     else if (event is QuickContactTapsOnCallEvent) {
       final posts = await fetchDataFromDB();
       var selectedModel = applyFilterInaDashboard(posts);
-      yield QuickContactsCallState(selectedIndex: event.selectedIndex, dashboardData: selectedModel);
+      yield QuickContactsCallState(
+          selectedIndex: event.selectedIndex, dashboardData: selectedModel);
     }
     //Apply Filter
     else if (event is ApplyFilterEvent) {
       final dashboardList = await fetchDataFromDB();
       _selectedPeriodTypeInFilter = event.selectedDashboardPeriod;
       final selectedModel = applyFilterInaDashboard(dashboardList);
-      yield ApplyFilterState(aModel:selectedModel);
-    }
-
-    else if(event is DrillDownPageEvent){
+      yield ApplyFilterState(aModel: selectedModel);
+    } else if (event is DrillDownPageEvent) {
       final posts = await fetchDataFromDB();
       var selectedModel = applyFilterInaDashboard(posts);
-      yield DrillDownPageState(isMilePage: event.isMilePage,dashboardData: selectedModel);
+      yield DashboardLoaded(dashboardData: selectedModel);
+      yield DrillDownPageState(
+          pageName: event.pageName, dashboardData: selectedModel);
+      yield DrillDownPageState(pageName: event.pageName,dashboardData: selectedModel);
     }
   }
 
-  Dashboard_DB_Model applyFilterInaDashboard( List<Dashboard_DB_Model> dashboardList) {
+  Dashboard_DB_Model applyFilterInaDashboard(
+      List<Dashboard_DB_Model> dashboardList) {
     if (_selectedPeriodTypeInFilter == '') {
       _selectedPeriodTypeInFilter = Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH;
     }
@@ -180,7 +183,6 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       return dashboardItemsFromDB;
     }
   }
-
 
   //This method will return the Filter Title of a Period
   String convertPeriodToTitle(String periodType) {

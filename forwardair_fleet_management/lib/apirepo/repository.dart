@@ -5,28 +5,36 @@ import 'api_methods.dart';
 //This class is responsible to send required parameters to make API call and
 // return back result to bloc
 class Repository {
-  final apiProvider = ApiMethods();
+  ApiMethods _apiProvider = ApiMethods();
 
   /*
   This method is called when user request for login
    */
   Future<dynamic> makeLoginRequest(String body) =>
-      apiProvider.requestInPost(EndPoints.LOGIN_URL, null, body);
+      _apiProvider.requestInPost(EndPoints.LOGIN_URL, null, body);
 
   /*
   This method is called when user request for dashboard
    */
   Future<dynamic> makeDashboardRequest(String token) =>
-      apiProvider.requestInPost(EndPoints.DASHBOARD_URL, token, null);
+      _apiProvider.requestInPost(EndPoints.DASHBOARD_URL, token, null);
 
+  /*
+   * This method called DrillDown API
+   */
+  Future<dynamic> makeDrillDataRequest(String body, String token) =>
+      _apiProvider.requestInPost(EndPoints.DRILL_DATA_URL, token, body);
 
-  Future<dynamic> makeDrillDataRequest(String body,String token) =>
-      apiProvider.requestInPost(EndPoints.DRILL_DATA_URL, token, body);
+  /*
+   * This method called Chart API
+   */
+  Future<dynamic> makeChartDataRequest(String body, String token) =>
+      _apiProvider.requestInPost(EndPoints.CHART_DATA_URL, token, body);
 
   /*
   This method is called when user request for load/mile details
    */
 
-  Future<dynamic> makeLoadDetailRequest(String body,String token) =>
-      apiProvider.requestInPost(EndPoints.LOAD_DETAIL_URL, token, body);
+  Future<dynamic> makeLoadDetailRequest(String body, String token) =>
+      _apiProvider.requestInPost(EndPoints.LOAD_DETAIL_URL, token, body);
 }

@@ -104,9 +104,8 @@ class TermsConditions extends StatelessWidget {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextWidget(
-                text: Constants.TERMS_AND_CONDITIONS,
-                textType: TextType.TEXT_SMALL,
+              child: Text(
+                Constants.TERMS_AND_CONDITIONS,
               ),
             ),
           ),
