@@ -61,6 +61,6 @@ class QuickContactsCallState extends DashboardState {
 
 class ApplyFilterState extends DashboardState {
   final Dashboard_DB_Model aModel;
-
-  ApplyFilterState({@required this.aModel}) : super([aModel]);
+  final int selectedIndex;
+  ApplyFilterState({@required this.aModel, @required this.selectedIndex}) : super([aModel]);
 }

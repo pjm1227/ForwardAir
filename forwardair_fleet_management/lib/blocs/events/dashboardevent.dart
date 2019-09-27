@@ -29,8 +29,8 @@ class QuickContactTapsOnCallEvent extends DashboardEvents {
 
 class ApplyFilterEvent extends DashboardEvents {
   final String selectedDashboardPeriod;
-
-  ApplyFilterEvent({@required this.selectedDashboardPeriod}) : super([]);
+  final int selectedIndex;
+  ApplyFilterEvent({@required this.selectedDashboardPeriod, @required this.selectedIndex}) : super([]);
 }
 
 class DrillDownPageEvent extends DashboardEvents {

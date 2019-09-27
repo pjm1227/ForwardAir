@@ -5,7 +5,8 @@ import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
 import 'package:forwardair_fleet_management/blocs/states/dashboardstate.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/dashboard_request.dart';
-import 'package:forwardair_fleet_management/screens/dashboard_page.dart' as prefix0;
+import 'package:forwardair_fleet_management/screens/dashboard_page.dart'
+    as prefix0;
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/databasemanager/dashboard_table_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
@@ -95,14 +96,18 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       final dashboardList = await fetchDataFromDB();
       _selectedPeriodTypeInFilter = event.selectedDashboardPeriod;
       final selectedModel = applyFilterInaDashboard(dashboardList);
-      yield ApplyFilterState(aModel: selectedModel);
-    } else if (event is DrillDownPageEvent) {
+      yield ApplyFilterState(
+          selectedIndex: event.selectedIndex, aModel: selectedModel);
+    }
+    //Drill Down Page
+    else if (event is DrillDownPageEvent) {
       final posts = await fetchDataFromDB();
       var selectedModel = applyFilterInaDashboard(posts);
       yield DashboardLoaded(dashboardData: selectedModel);
       yield DrillDownPageState(
           pageName: event.pageName, dashboardData: selectedModel);
-      yield DrillDownPageState(pageName: event.pageName,dashboardData: selectedModel);
+      yield DrillDownPageState(
+          pageName: event.pageName, dashboardData: selectedModel);
     }
   }
 

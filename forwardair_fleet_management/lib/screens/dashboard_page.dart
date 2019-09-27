@@ -35,6 +35,8 @@ class DashboardState extends State<DashboardPage> {
 
   //To make a call and send mail
   var _service = CallsAndMailService();
+  //Selected Index in Filter
+  int _selectedIndex = 3;
 
   //Pull to refresh
   final RefreshController _refreshController =
@@ -112,6 +114,7 @@ class DashboardState extends State<DashboardPage> {
     } //ApplyFilter State
     else if (state is ApplyFilterState) {
       _dashboardDataModel = state.aModel;
+      _selectedIndex = state.selectedIndex;
       _dashboardBloc.isAPICalling = false;
       return _listViewWidget();
     } else {
@@ -405,11 +408,12 @@ class DashboardState extends State<DashboardPage> {
       Constants.TEXT_THISMONTH,
       Constants.TEXT_CANCEL
     ];
+
     //Text Style of the Cancel Text
     final _cancelText = TextWidget(
       text: Constants.TEXT_CANCEL,
       textType: TextType.TEXT_MEDIUM,
-      colorText: AppColors.colorRed,
+      colorText: AppColors.colorBlack,
       textAlign: TextAlign.center,
     );
     //This Returns bottom sheet
@@ -426,7 +430,7 @@ class DashboardState extends State<DashboardPage> {
                     height: 44,
                     child: ListTile(
                       title: index != 4
-                          ? _weekFilterWidget(weekFilterOptions[index])
+                          ? _weekFilterWidget(weekFilterOptions[index], index)
                           : _cancelText,
                       onTap: () {
                         if (index == 4) {
@@ -440,6 +444,7 @@ class DashboardState extends State<DashboardPage> {
                           print('Send to Bloc');
                           print(selectedPeriodText);
                           _dashboardBloc.dispatch(ApplyFilterEvent(
+                              selectedIndex: index,
                               selectedDashboardPeriod: selectedPeriodText));
                         }
                       },
@@ -451,7 +456,7 @@ class DashboardState extends State<DashboardPage> {
   }
 
   //Text of the Filter
-  Widget _weekFilterWidget(String title) {
+  Widget _weekFilterWidget(String title, int index) {
     return Container(
       height: 40,
       alignment: Alignment.center,
@@ -459,7 +464,8 @@ class DashboardState extends State<DashboardPage> {
         textOverFlow: TextOverflow.ellipsis,
         text: title,
         textType: TextType.TEXT_MEDIUM,
-        colorText: AppColors.colorBlack,
+        colorText:
+            _selectedIndex == index ? AppColors.colorRed : AppColors.colorBlack,
       ),
     );
   }
@@ -749,7 +755,7 @@ class DashboardState extends State<DashboardPage> {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: TextWidget(
                         textOverFlow: TextOverflow.ellipsis,
-                        text: '\$' +aSubTitle,
+                        text: '\$' + aSubTitle,
                         colorText: AppColors.darkColorBlue,
                         textType: TextType.TEXT_MEDIUM,
                         isBold: true,
@@ -760,7 +766,7 @@ class DashboardState extends State<DashboardPage> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.only(top:3, bottom: 2),
+                            padding: EdgeInsets.only(top: 3, bottom: 2),
                             height: 30,
                             width: 30,
                             child: Image.asset(
@@ -776,8 +782,8 @@ class DashboardState extends State<DashboardPage> {
                     Constants.TEXT_GROSS_COMPENSATION,
                     '\$' + grossCompensation,
                     true),
-                grossCompensationAndDeductionsWiget(
-                    Constants.TEXT_DEDUCTIONS, '-\$' + deductions.replaceAll(RegExp('-'), ''), false),
+                grossCompensationAndDeductionsWiget(Constants.TEXT_DEDUCTIONS,
+                    '-\$' + deductions.replaceAll(RegExp('-'), ''), false),
               ],
             ),
           ),
