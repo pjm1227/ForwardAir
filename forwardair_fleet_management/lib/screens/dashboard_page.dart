@@ -376,6 +376,7 @@ class DashboardState extends State<DashboardPage> {
                 height: 30,
                 child: Image.asset('images/ic_calendar.png')),
             leading: TextWidget(
+                textOverFlow: TextOverflow.ellipsis,
                 text: aFilterTitle,
                 textType: TextType.TEXT_MEDIUM,
                 isBold: true,
@@ -450,6 +451,7 @@ class DashboardState extends State<DashboardPage> {
       height: 40,
       alignment: Alignment.center,
       child: TextWidget(
+        textOverFlow: TextOverflow.ellipsis,
         text: title,
         textType: TextType.TEXT_MEDIUM,
         colorText: AppColors.colorBlack,
@@ -498,6 +500,7 @@ class DashboardState extends State<DashboardPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: TextWidget(
+                        textOverFlow: TextOverflow.ellipsis,
                         text: aTitle,
                         textType: TextType.TEXT_SMALL,
                         colorText: AppColors.colorBlue,
@@ -516,6 +519,7 @@ class DashboardState extends State<DashboardPage> {
                       child: Container(
                         padding: EdgeInsets.only(right: 10),
                         child: TextWidget(
+                          textOverFlow: TextOverflow.ellipsis,
                           text: aSubTitle,
                           textType: TextType.TEXT_MEDIUM,
                           colorText: AppColors.darkColorBlue,
@@ -601,6 +605,7 @@ class DashboardState extends State<DashboardPage> {
                                     top: 5,
                                   ),
                                   child: TextWidget(
+                                    textOverFlow: TextOverflow.ellipsis,
                                     text: totalGallons,
                                     textType: TextType.TEXT_MEDIUM,
                                     colorText: AppColors.darkColorBlue,
@@ -611,6 +616,7 @@ class DashboardState extends State<DashboardPage> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 5.0),
                                 child: TextWidget(
+                                    textOverFlow: TextOverflow.ellipsis,
                                     text: Constants.TEXT_TOTAL_GALLONS,
                                     colorText: AppColors.colorTotalGallons),
                               ),
@@ -647,7 +653,8 @@ class DashboardState extends State<DashboardPage> {
                                   padding:
                                       const EdgeInsets.only(top: 5, right: 10),
                                   child: TextWidget(
-                                    text: totalFuelAmount + '\$',
+                                    textOverFlow: TextOverflow.ellipsis,
+                                    text: '\$' + totalFuelAmount,
                                     textType: TextType.TEXT_MEDIUM,
                                     colorText: AppColors.darkColorBlue,
                                     isBold: true,
@@ -657,6 +664,7 @@ class DashboardState extends State<DashboardPage> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 5.0),
                                 child: TextWidget(
+                                    textOverFlow: TextOverflow.ellipsis,
                                     text: Constants.TEXT_TOTAL_FUEL_AMOUNT,
                                     colorText: AppColors.colorTotalGallons),
                               ),
@@ -720,6 +728,7 @@ class DashboardState extends State<DashboardPage> {
                 Row(
                   children: <Widget>[
                     TextWidget(
+                      textOverFlow: TextOverflow.ellipsis,
                       text: aTitle,
                       textType: TextType.TEXT_SMALL,
                       colorText: AppColors.colorBlue,
@@ -732,7 +741,8 @@ class DashboardState extends State<DashboardPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: TextWidget(
-                        text: aSubTitle + '\$',
+                        textOverFlow: TextOverflow.ellipsis,
+                        text: '\$' +aSubTitle,
                         colorText: AppColors.darkColorBlue,
                         textType: TextType.TEXT_MEDIUM,
                         isBold: true,
@@ -743,6 +753,7 @@ class DashboardState extends State<DashboardPage> {
                       child: Column(
                         children: <Widget>[
                           Container(
+                            padding: EdgeInsets.only(top:3, bottom: 2),
                             height: 30,
                             width: 30,
                             child: Image.asset(
@@ -756,10 +767,10 @@ class DashboardState extends State<DashboardPage> {
                 ),
                 grossCompensationAndDeductionsWiget(
                     Constants.TEXT_GROSS_COMPENSATION,
-                    grossCompensation + '\$',
+                    '\$' + grossCompensation,
                     true),
                 grossCompensationAndDeductionsWiget(
-                    Constants.TEXT_DEDUCTIONS, deductions + '\$', false),
+                    Constants.TEXT_DEDUCTIONS, '-\$' + deductions.replaceAll(RegExp('-'), ''), false),
               ],
             ),
           ),
@@ -787,6 +798,7 @@ class DashboardState extends State<DashboardPage> {
                 children: <Widget>[
                   Expanded(
                     child: TextWidget(
+                      textOverFlow: TextOverflow.ellipsis,
                       textAlign: TextAlign.left,
                       text: title,
                       isBold: true,
@@ -795,6 +807,7 @@ class DashboardState extends State<DashboardPage> {
                   ),
                   Expanded(
                     child: TextWidget(
+                        textOverFlow: TextOverflow.ellipsis,
                         text: sTitle,
                         textAlign: TextAlign.right,
                         isBold: true,
@@ -866,6 +879,7 @@ class DashboardState extends State<DashboardPage> {
                           title: Padding(
                             padding: const EdgeInsets.only(top: 10.0),
                             child: TextWidget(
+                              textOverFlow: TextOverflow.ellipsis,
                               text: quickContactList[index],
                               textType: TextType.TEXT_NORMAL,
                               colorText: AppColors.lightBlack,
@@ -883,6 +897,7 @@ class DashboardState extends State<DashboardPage> {
                                         top: 5,
                                       ),
                                       child: TextWidget(
+                                        textOverFlow: TextOverflow.ellipsis,
                                         text: _quickContactEmails[index],
                                         colorText: AppColors.lightBlack,
                                         textType: TextType.TEXT_XSMALL,
@@ -899,6 +914,7 @@ class DashboardState extends State<DashboardPage> {
                                       padding:
                                           EdgeInsets.only(top: 5, bottom: 5),
                                       child: TextWidget(
+                                        textOverFlow: TextOverflow.ellipsis,
                                         text: _quickContactPhoneNumbers[index],
                                         colorText: AppColors.lightBlack,
                                         textType: TextType.TEXT_XSMALL,

@@ -36,7 +36,7 @@ class DashboardManager {
   //To Delete all items in db
   Future<int> deleteAll() async {
     Database db = await DatabaseHelper.instance.database;
-    var result = db.rawDelete("Delete from DashboardTable");
+    var result = db.rawDelete("Delete from $tableName");
     return result;
   }
 

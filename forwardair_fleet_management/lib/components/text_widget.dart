@@ -27,6 +27,8 @@ class TextWidget extends StatelessWidget {
 
   final int maxLines;
 
+  final TextOverflow textOverFlow;
+
   const TextWidget(
       {Key key,
       this.text,
@@ -35,7 +37,8 @@ class TextWidget extends StatelessWidget {
       this.isBold,
       this.textType,
       this.textAlign,
-      this.maxLines})
+      this.maxLines,
+      this.textOverFlow})
       : super(key: key);
 
   @override
@@ -46,7 +49,7 @@ class TextWidget extends StatelessWidget {
             : EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
         child: Text(
           text,
-          overflow: TextOverflow.ellipsis,
+          overflow: textOverFlow != null ? textOverFlow : null,
           textAlign: textAlign != null ? textAlign : null,
           maxLines: this.maxLines != null ? this.maxLines : null,
           style: TextStyle(

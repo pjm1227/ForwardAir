@@ -116,14 +116,16 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
     //Check for user group and user role
     if (loginModel.userDetails.userGroups.length > 0) {
       //Here is the list of User Roles
-      var userRoles = loginModel.userDetails.userGroups[0].userRoles;
-      //Insert User Roles into Table now
-      var userRolesManager = UserRoleManager();
-      userRoles.forEach((k) async {
-        var userRoleModel = UserRole(roleNm: k.roleNm);
-        await userRolesManager.insertUserRole(userRoleModel.toMap());
-        print("User Role inserted.");
-      });
+      for (UserGroup userGroup in loginModel.userDetails.userGroups) {
+        var userRoles = userGroup.userRoles;
+        //Insert User Roles into Table now
+        var userRolesManager = UserRoleManager();
+        userRoles.forEach((k) async {
+          var userRoleModel = UserRole(roleNm: k.roleNm);
+          await userRolesManager.insertUserRole(userRoleModel.toMap());
+          print("User Role inserted.");
+        });
+      }
     }
     return 0;
   }

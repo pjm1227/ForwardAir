@@ -47,7 +47,7 @@ class Constants {
   static const String TEXT_FLEET_TRACKER = 'Fleet Tracker';
   static const String TEXT_SETTLEMENTS = 'Settlement';
   static const String TEXT_REFERRAL_PROGRAM = 'Referral Program';
-  static const String TEXT_NOTIFICATION_OF_UNAVALIABILITY = 'Notification of unavailability';
+  static const String TEXT_NOTIFICATION_OF_UNAVALIABILITY = 'Unavailability';
   static const String TEXT_COMPANY_NEWS = 'Company News';
   static const String TEXT_PROFILE = 'Profile';
   static const String TEXT_SETTINGS = 'Settings';
@@ -57,10 +57,31 @@ class Constants {
   static const String TEXT_REPORT_INCIDENTOROTHER = 'Report Incident/Other';
   static const String TEXT_VIEW_HISTORY = 'View History';
   static const String TEXT_FLEET_OWNER = 'Fleet Owner';
-  static const String TEXT_FLEET_OWNER_DRIVER = 'Fleet Owner Driver';
-  static const String TEXT_DRIVER_FOR_FLEET = 'Driver for Fleet';
+  static const String TEXT_FLEET_OWNER_DRIVER = 'Fleet Owner/Driver';
+  static const String TEXT_DRIVER_FOR_FLEET = 'Driver';
   static const String TEXT_OWNER_OPERATOR = 'Owner Operator';
   static const String TEXT_COMPANY_DRIVER = 'Company Driver';
+  static const String TEXT_FO_TYPE = 'FO';
+  static const String TEXT_FOD_TYPE = 'FOD';
+  static const String TEXT_FD_TYPE = 'FD';
+  static const String TEXT_OO_TYPE = 'OO';
+  static const String TEXT_CD_TYPE = 'CD';
+  static const String TEXT_SIDE_MENU_TITLE = 'title';
+  static const String TEXT_UNSELECTED_ICON = 'unselectedIcon';
+  static const String TEXT_SELECTED_ICON = 'selectedIcon';
+  static const String TEXT_ID = 'id';
+  static const String TEXT_SAFETY_AND_INCIDENT_EXPENDED_TITLE = 'title';
+  //Roles
+  static const String TEXT_APP_USER_ROLE = 'APP_USER';
+  static const String TEXT_DASHBOARD_ROLE = 'DASHBOARD';
+  static const String TEXT_COMPANY_NEWS_ROLE = 'COMPANY_NEWS';
+  static const String TEXT_SETTLEMENTS_VIEW_ROLE = 'SETTLEMENTS_VIEW';
+  static const String TEXT_SAFETY_REPORTING_ROLE = 'SAFETY_REPORTING';
+  static const String TEST_SAFETY_REPORT_VIEW_ROLE = 'SAFETY_REPORT_VIEW';
+  static const String TEXT_BREAKDOWN_REPORTING_ROLE = 'BREAKDOWN_REPORTING';
+  static const String TEXT_BREAKDOWN_REPORT_VIEW_ROLE = 'BREAKDOWN_REPORT_VIEW';
+  static const String TEST_UNAVAILABILITY_VIEW_ROLE = 'UNAVAILABILITY_VIEW';
+  static const String TEST_FLEET_TRACKER_ROLE = 'FLEET_TRACKER';
   //Dashboard
   static const String TEXT_NET_CONPENSATION = 'Net Compensation';
   static const String TEXT_QUICK_CONTACT = 'QUICK CONTACT';

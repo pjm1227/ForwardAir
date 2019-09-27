@@ -28,53 +28,10 @@ class _HomePageState extends State<HomePage> {
   GlobalKey _scaffold = GlobalKey();
   //SideMenu Bloc
   SideMenuBloc _sideMenuBloc = SideMenuBloc();
-  //Text Items in drawer Menu
-  List _drawerMenuItems = [
-    Constants.TEXT_SAFETY_INCIDENTS,
-    Constants.TEXT_DASHBOARD,
-    // Constants.TEXT_NOTIFICATION,
-    Constants.TEXT_MODULES,
-    Constants.TEXT_FLEET_TRACKER,
-    Constants.TEXT_SETTLEMENTS,
-    //  Constants.TEXT_REFERRAL_PROGRAM,
-    Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY,
-    Constants.TEXT_COMPANY_NEWS,
-    Constants.TEXT_PROFILE,
-    Constants.TEXT_SETTINGS,
-    Constants.TEXT_LOGOUT
-  ];
-  //Image Items in drawer Menu
-  List _imageNames = [
-    'images/ic_safety&incident.png',
-    'images/ic_dashboard.png',
-    //'images/ic_notification.png',
-    'images/ic_notification.png',
-    'images/ic_fleet_tracker.png',
-    'images/ic_settlement.png',
-    //'images/ic_referral_program.png',
-    'images/ic_notification_unavailability.png',
-    'images/ic_company_news.png',
-    'images/ic_profile.png',
-    'images/ic_settings.png',
-    'images/ic_logout.png'
-  ];
-  //Selected Image Items in drawer Menu
-  List _selectedItemImages = [
-    'images/ic_safety&incident_active.png',
-    'images/ic_dashboard_active.png',
-    'images/ic_notification.png',
-    //'images/ic_notification_active.png',
-    'images/ic_fleet_tracker_active.png',
-    'images/ic_settings_active.png',
-    //'images/ic_referral_program_active.png',
-    'images/ic_notification_unavailability_active.png',
-    'images/ic_company_news_active.png',
-    'images/ic_profile_active.png',
-    'images/ic_settings_active.png',
-    'images/ic_logout_active.png'
-  ];
+
+
   //Selected index
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   //Expand Flag
   bool expandFlag = false;
   //Expanded List index
@@ -90,36 +47,25 @@ class _HomePageState extends State<HomePage> {
   //To Dispose the SideMenu Bloc
   @override
   void dispose() {
+    _sideMenuBloc.drawerMenuItems = [];
+    _sideMenuBloc.expandedSafetyItems = [];
     _sideMenuBloc.dispose();
     super.dispose();
   }
 
   //To display versionNumber
-  Text _versionNumberWidget() {
-    return Text(
-      Constants.TEXT_VERSION_NUMBER + _sideMenuBloc.versionNumer,
-      style: TextStyle(
-          fontWeight: FontWeight.normal,
-          fontFamily: Constants.FONT_FAMILY_ROBOTO,
-          fontSize: 10,
-          color: AppColors.colorRed),
+  Widget _versionNumberWidget() {
+    var versionString =
+        _sideMenuBloc.versionNumer != null ? _sideMenuBloc.versionNumer : '';
+    return TextWidget(
+      text: Constants.TEXT_VERSION_NUMBER + versionString,
+      colorText: AppColors.colorRed,
+      textType: TextType.TEXT_XSMALL,
     );
   }
 
   //To display report list versionNumber
   _buildRowExpandedRows(int index) {
-    String title = '';
-    switch (index) {
-      case 0:
-        title = Constants.TEXT_REPORT_ACCIDENT;
-        break;
-      case 1:
-        title = Constants.TEXT_REPORT_BREAKDOWN;
-        break;
-      case 2:
-        title = Constants.TEXT_VIEW_HISTORY;
-        break;
-    }
     return Container(
       padding: EdgeInsets.only(left: 47),
       height: 40,
@@ -127,15 +73,12 @@ class _HomePageState extends State<HomePage> {
         color: Colors.transparent,
         child: new ListTile(
           leading: Container(
-            child: Text(title,
-                style: new TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: _expandedListIndex == index
-                      ? FontWeight.w600
-                      : FontWeight.normal,
-                  fontFamily: Constants.FONT_FAMILY_ROBOTO,
-                  color: Colors.black,
-                )),
+            child: TextWidget(
+              text: _sideMenuBloc.expandedSafetyItems[index][Constants.TEXT_SAFETY_AND_INCIDENT_EXPENDED_TITLE],
+              textType: TextType.TEXT_SMALL,
+              isBold: _expandedListIndex == index ? true : false,
+              colorText: AppColors.colorBlack,
+            ),
           ),
           onTap: () {
             _sideMenuBloc.dispatch(SafetyIncidentsEvent(selectedIndex: index));
@@ -147,11 +90,6 @@ class _HomePageState extends State<HomePage> {
 
   //To display SAFETY AND ACCIDENT widget
   Widget _safetyAndAccidentsExpandableWidget(int index) {
-    final _titleStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
-        color: AppColors.colorBlack);
     return new Container(
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -187,13 +125,22 @@ class _HomePageState extends State<HomePage> {
                                 width: 24,
                                 height: 24,
                                 child: Image.asset(_selectedIndex == index
-                                    ? _selectedItemImages[index]
-                                    : _imageNames[index])),
+                                        ? (_sideMenuBloc.drawerMenuItems[index][
+                                            Constants
+                                                .TEXT_SELECTED_ICON]) //_sideMenuBloc._selectedItemImages[index]
+                                        : (_sideMenuBloc.drawerMenuItems[index][
+                                            Constants
+                                                .TEXT_UNSELECTED_ICON]) // _imageNames[index]
+                                    )),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0),
-                            child: Text(_drawerMenuItems[index],
-                                style: _titleStyle),
+                            child: TextWidget(
+                              text: _sideMenuBloc.drawerMenuItems[index]
+                                  [Constants.TEXT_SIDE_MENU_TITLE], //[index],
+                              colorText: AppColors.colorBlack,
+                              textType: TextType.TEXT_MEDIUM,
+                            ),
                           ),
                         ],
                       ),
@@ -205,6 +152,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           ExpandableContainer(
+            expandedHeight: _sideMenuBloc.expandedSafetyItems.length == 1 ? 50 : 130,
             expanded: expandFlag,
             child: new ListView.builder(
               shrinkWrap: true,
@@ -212,7 +160,7 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (BuildContext context, int index) {
                 return new Container(child: _buildRowExpandedRows(index));
               },
-              itemCount: 3,
+              itemCount: _sideMenuBloc.expandedSafetyItems.length,
             ),
           ),
         ],
@@ -220,138 +168,159 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  //To Display the items inside ListView
-  Widget _buildRow(int index) {
-    final _titleStyle = TextStyle(
-        fontFamily: Constants.FONT_FAMILY_ROBOTO,
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
-        color: AppColors.colorBlack);
-
-    //For Safety and Incidents
-    if (index == 0) {
-      return _safetyAndAccidentsExpandableWidget(index);
-    }
-    //For Modules
-    else if (index == 2) {
-      //3) {
-      return Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(left: 13),
-            height: 45,
-            color: Colors.white,
-            child: ListTile(
-              title: TextWidget(
-                text: _drawerMenuItems[index],
-                colorText: AppColors.colorGrey,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-    //Release 1: For Notification and Company News
-    //Recent: For Dashboard and Company News
-    else if (index == 1 || index == 6) {
-      //(index == 2 || index == 8) {
-      return Column(
-        children: <Widget>[
-          Container(
-            height: 45,
-            color: _selectedIndex != null && _selectedIndex == index
-                ? AppColors.redColorWithTwentyOpacity
-                : Colors.white,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.grey[200])),
-              ),
-              child: Material(
-                child: InkWell(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          width: 5,
-                          color:
-                              _selectedIndex != null && _selectedIndex == index
-                                  ? AppColors.colorRed
-                                  : Colors.white,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
-                          child: SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: Image.asset(_selectedIndex == index
-                                  ? _selectedItemImages[index]
-                                  : _imageNames[index])),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
-                          child:
-                              Text(_drawerMenuItems[index], style: _titleStyle),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      expandFlag = false;
-                      _expandedListIndex = 0;
-                      _sideMenuBloc.dispatch(NavigationEvent(
-                          selectedIndex: index, expandFlag: false));
-                    }),
-                color: Colors.transparent,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-    //For the other items
-    else {
-      return Container(
-        height: 45,
-        child: Container(
+  _buildWidgetForDashboardAndCompanyNews(
+    int index,
+  ) {
+    return Column(
+      children: <Widget>[
+        Container(
+          height: 45,
           color: _selectedIndex != null && _selectedIndex == index
               ? AppColors.redColorWithTwentyOpacity
               : Colors.white,
-          child: Material(
-            child: InkWell(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: 5,
-                      color: _selectedIndex != null && _selectedIndex == index
-                          ? AppColors.colorRed
-                          : Colors.white,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Image.asset(_selectedIndex == index
-                              ? _selectedItemImages[index]
-                              : _imageNames[index])),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child: Text(_drawerMenuItems[index], style: _titleStyle),
-                    ),
-                  ],
-                ),
-                onTap: () {
-                  expandFlag = false;
-                  _expandedListIndex = 0;
-                  _sideMenuBloc.dispatch(
-                      NavigationEvent(selectedIndex: index, expandFlag: false));
-                }),
-            color: Colors.transparent,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.grey[200])),
+            ),
+            child: Material(
+              child: InkWell(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: 5,
+                        color: _selectedIndex != null && _selectedIndex == index
+                            ? AppColors.colorRed
+                            : Colors.white,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: Image.asset(_selectedIndex == index
+                                    ? _sideMenuBloc.drawerMenuItems[index][Constants
+                                        .TEXT_SELECTED_ICON] //_selectedItemImages[index]
+                                    : _sideMenuBloc.drawerMenuItems[index][Constants
+                                        .TEXT_UNSELECTED_ICON] //_imageNames[index]
+                                )),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: TextWidget(
+                            text: _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE],  //_drawerMenuItems[index],
+                            colorText: AppColors.colorBlack,
+                            textType: TextType.TEXT_MEDIUM,
+                          )),
+                    ],
+                  ),
+                  onTap: () {
+                    expandFlag = false;
+                    _expandedListIndex = 0;
+                    _sideMenuBloc.dispatch(NavigationEvent(
+                        selectedIndex: index, expandFlag: false));
+                  }),
+              color: Colors.transparent,
+            ),
           ),
         ),
-      );
+      ],
+    );
+  }
+
+  //To Display the items inside ListView
+  Widget _buildRow(int index) {
+
+    final _menuTitle = _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE];
+
+    if (_menuTitle == Constants.TEXT_SAFETY_INCIDENTS) {
+      return _safetyAndAccidentsExpandableWidget(index);
     }
+
+    else if (_menuTitle == Constants.TEXT_DASHBOARD || _menuTitle == Constants.TEXT_COMPANY_NEWS) {
+      return _buildWidgetForDashboardAndCompanyNews(index);
+    }
+
+    else if (_menuTitle == Constants.TEXT_MODULES) {
+      return _moduleWidget(index);
+    }
+
+    else if (_menuTitle == Constants.TEXT_FLEET_TRACKER ||
+             _menuTitle == Constants.TEXT_SETTLEMENTS ||
+             _menuTitle == Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY ||
+             _menuTitle == Constants.TEXT_PROFILE ||
+             _menuTitle == Constants.TEXT_SETTINGS ||
+             _menuTitle == Constants.TEXT_LOGOUT) {
+      return _otherMenuWidget(index);
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _moduleWidget(int index) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(left: 13),
+          height: 45,
+          color: Colors.white,
+          child: ListTile(
+            title: TextWidget(
+              text: _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE],//_drawerMenuItems[index],
+              colorText: AppColors.colorGrey,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _otherMenuWidget(int index) {
+    return Container(
+      height: 45,
+      child: Container(
+        color: _selectedIndex != null && _selectedIndex == index
+            ? AppColors.redColorWithTwentyOpacity
+            : Colors.white,
+        child: Material(
+          child: InkWell(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width: 5,
+                    color: _selectedIndex != null && _selectedIndex == index
+                        ? AppColors.colorRed
+                        : Colors.white,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Image.asset(_selectedIndex == index
+                            ? _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SELECTED_ICON] //_selectedItemImages[index]
+                            :  _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_UNSELECTED_ICON])), //_imageNames[index])),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: TextWidget(
+                        text: _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE],//_drawerMenuItems[index],
+                        colorText: AppColors.colorBlack,
+                        textType: TextType.TEXT_MEDIUM,
+                      )),
+                ],
+              ),
+              onTap: () {
+                expandFlag = false;
+                _expandedListIndex = 0;
+                _sideMenuBloc.dispatch(
+                    NavigationEvent(selectedIndex: index, expandFlag: false));
+              }),
+          color: Colors.transparent,
+        ),
+      ),
+    );
   }
 
   //Scaffold Widget
@@ -407,15 +376,16 @@ class _HomePageState extends State<HomePage> {
                   if (state is NavigationState) {
                     final index =
                         state.selectedIndex == null ? 0 : state.selectedIndex;
-                    switch (index) {
-                      case 0:
+                    String _menuTitle = _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE];
+                    switch (_menuTitle) { //(index) {
+                      case Constants.TEXT_SAFETY_INCIDENTS:
                         break;
-                      case 1:
+                      case Constants.TEXT_DASHBOARD:
                         {
                           Navigator.pop(context);
                         }
                         break;
-                      case 9: //11:
+                      case Constants.TEXT_LOGOUT: //11:
                         {
                           //Log out
                           _sideMenuBloc.dispatch(LogoutEvent());
@@ -486,13 +456,10 @@ class _HomePageState extends State<HomePage> {
                                 leading: SizedBox(
                                   height: 50,
                                   width: 50,
-                                  child: new CircleAvatar(
-                                      child: Image.asset(
-                                          'images/ic_profile_pic.png')),
                                 ),
                                 //User Name Text
                                 title: Container(
-                                    padding: EdgeInsets.only(bottom: 10),
+                                    padding: EdgeInsets.only(bottom: 10, right:8),
                                     child: TextWidget(
                                       text: _sideMenuBloc.userDetails != null
                                           ? _sideMenuBloc
@@ -504,7 +471,7 @@ class _HomePageState extends State<HomePage> {
                                           : 'User Name',
                                       isBold: true,
                                       colorText: AppColors.colorWhite,
-                                      textType: TextType.TEXT_MEDIUM,
+                                      textType: TextType.TEXT_SMALL,
                                     )),
                                 //User Role Text
                                 subtitle: Container(
@@ -519,7 +486,7 @@ class _HomePageState extends State<HomePage> {
                                                         .userDetails.usertype)
                                         : '',
                                     colorText: AppColors.colorWhite,
-                                    textType: TextType.TEXT_MEDIUM,
+                                    textType: TextType.TEXT_SMALL,
                                   ),
                                 ),
                               ),
@@ -532,7 +499,7 @@ class _HomePageState extends State<HomePage> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) => _buildRow(index),
-                          itemCount: _drawerMenuItems.length,
+                          itemCount: _sideMenuBloc.drawerMenuItems.length,
                         ),
                       ],
                     );
