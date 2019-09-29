@@ -110,7 +110,7 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
           }
           //If state is success then show data in list
           if (state is SuccessState) {
-            if (state.loadDetailsModel != null) {
+            if (state.loadDetailsModel.loadDetails != null) {
               return Stack(
                 children: <Widget>[
                   // Background widget for overlapping of list widget
@@ -146,6 +146,10 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
                 ],
               );
             }
+            else
+              {
+                return NoResultFoundWidget();
+              }
           }
           return ListViewShimmer(
             listLength: 10,

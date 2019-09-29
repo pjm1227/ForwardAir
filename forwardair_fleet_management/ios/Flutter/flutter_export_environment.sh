@@ -6,6 +6,6 @@ export "FLUTTER_TARGET=/Users/Akki/Desktop/WorkSpaces/FlutterWorkspace/FleetOwne
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "FLUTTER_FRAMEWORK_DIR=/Users/Akki/Documents/Flutter_SDK/flutter/bin/cache/artifacts/engine/ios"
-export "FLUTTER_BUILD_NAME=1.1.1"
+export "FLUTTER_BUILD_NAME=1.2.0"
 export "FLUTTER_BUILD_NUMBER=1"
 export "TRACK_WIDGET_CREATION=true"

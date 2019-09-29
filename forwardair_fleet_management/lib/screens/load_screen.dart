@@ -243,7 +243,7 @@ class LoadScreen extends State<LoadPage> {
                 tractorList: tractorData.tractors.length > 10
                     ? tractorData.tractors
                         .sublist(10, tractorData.tractors.length)
-                    : null),
+                    : tractorData.tractors),
           ],
         ),
       ),
@@ -567,31 +567,36 @@ class LoadScreen extends State<LoadPage> {
       //Here data belongs to weeks
       var weekData = chartData.days;
       //Create chart data model for empty data, loaded data and Total
-      weekData.forEach((item) {
-        var chartModelLoaded = ChartDataModel(
-            name: weekList[count] +
-                '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: pageName == PageName.LOAD_PAGE
-                ? item.loadedLoads
-                : item.loadedMiles);
-        var chartModelEmpty = ChartDataModel(
-            name: weekList[count] +
-                '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: pageName == PageName.LOAD_PAGE
-                ? item.emptyLoads
-                : item.emptyMiles);
-        var chartModelTotal = ChartDataModel(
-            name: weekList[count] +
-                '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: pageName == PageName.LOAD_PAGE
-                ? item.totalLoads
-                : item.totalMiles);
-        //Add data models into respective list
-        loadedDataList.add(chartModelLoaded);
-        emptyDataList.add(chartModelEmpty);
-        totalDataList.add(chartModelTotal);
-        count++;
-      });
+      if(weekData!=null) {
+        weekData.forEach((item) {
+          var chartModelLoaded = ChartDataModel(
+              name: weekList[count] +
+                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item
+                      .totalMiles}',
+              value: pageName == PageName.LOAD_PAGE
+                  ? item.loadedLoads
+                  : item.loadedMiles);
+          var chartModelEmpty = ChartDataModel(
+              name: weekList[count] +
+                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item
+                      .totalMiles}',
+              value: pageName == PageName.LOAD_PAGE
+                  ? item.emptyLoads
+                  : item.emptyMiles);
+          var chartModelTotal = ChartDataModel(
+              name: weekList[count] +
+                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item
+                      .totalMiles}',
+              value: pageName == PageName.LOAD_PAGE
+                  ? item.totalLoads
+                  : item.totalMiles);
+          //Add data models into respective list
+          loadedDataList.add(chartModelLoaded);
+          emptyDataList.add(chartModelEmpty);
+          totalDataList.add(chartModelTotal);
+          count++;
+        });
+      }
       //Check if chart data is for month
     } else if (chartData is ChartDataMonth) {
       //Here data belongs to weeks

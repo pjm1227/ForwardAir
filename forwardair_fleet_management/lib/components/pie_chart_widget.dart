@@ -15,7 +15,7 @@ class PieChartWidget extends StatelessWidget {
     var map = Map<String, double>();
     map["a"] = 100.0;
     return PieChart(
-      dataMap: dataMap != null ? dataMap : map,
+      dataMap: dataMap.length > 0 ? dataMap : map,
       chartValuesColor: Colors.transparent,
       animationDuration: Duration(milliseconds: 600),
       chartLegendSpacing: 0.0,
