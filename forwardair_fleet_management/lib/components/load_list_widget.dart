@@ -24,6 +24,7 @@ class LoadListViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Page name in load list $pageName");
     return Container(
       color: AppColors.colorWhite,
       child: ListView.builder(
@@ -51,7 +52,13 @@ class LoadListViewWidget extends StatelessWidget {
                                   children: <Widget>[
                                     ClipOval(
                                       child: Container(
-                                        color: AppColors.colorDOT,
+                                        color: pageName == PageName.LOAD_PAGE &&
+                                                tractorList[index].emptyLoads ==
+                                                    0
+                                            ? AppColors.colorRed
+                                            : tractorList[index].emptyMiles == 0
+                                                ? AppColors.colorRed
+                                                : AppColors.colorDOT,
                                         height: 8.0,
                                         width: 8.0,
                                       ),

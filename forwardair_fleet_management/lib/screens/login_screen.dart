@@ -156,7 +156,7 @@ class LoginState extends State<LoginPage> {
                           },
                           controller: _textControllerEmail,
                           decoration: new InputDecoration(
-                            labelText: "User Email",
+                            labelText: "User Name",
                             fillColor: Colors.white,
                             border: new OutlineInputBorder(
                               borderRadius: new BorderRadius.circular(0.0),

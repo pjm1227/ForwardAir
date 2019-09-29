@@ -32,11 +32,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginStates> {
   Stream<LoginStates> _validation(String userName, String userPassword) async* {
     if (userName.isEmpty) {
       yield LoginInitialState();
-      yield FormErrorState(errorMessage: Constants.ERROR_ENTER_EMAIL);
-    } else if (!_isValidEmail(userName)) {
+      yield FormErrorState(errorMessage: Constants.ERROR_ENTER_NAME);
+    }/* else if (!_isValidEmail(userName)) {
       yield LoginInitialState();
       yield FormErrorState(errorMessage: Constants.ERROR_ENTER_VALID_EMAIL);
-    } else if (userPassword.isEmpty) {
+    } */else if (userPassword.isEmpty) {
       yield LoginInitialState();
       yield FormErrorState(errorMessage: Constants.ERROR_ENTER_PASSWORD);
     } else {

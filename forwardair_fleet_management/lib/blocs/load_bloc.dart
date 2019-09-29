@@ -6,6 +6,7 @@ import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/models/error_model.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/load_request.dart';
+import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
 import 'barrels/load.dart';
@@ -23,6 +24,37 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
       //fetching load data so show shimmer effect while we get data from API
       yield ShimmerState();
       yield* _makeApiCall(event);
+    }
+
+    if (event is SortHighToLowEvent) {
+      //Sort data model in high to low
+      // And return Sort state
+      yield ShimmerState();
+      yield SortState(
+          tractorData: sortHighToLow(event.pageName, event.tractorData));
+    }
+    if (event is SortLowToHighEvent) {
+      //Sort data model in low to high
+      // And return Sort state
+      yield ShimmerState();
+      yield SortState(
+          tractorData: sortLowToHigh(event.pageName, event.tractorData));
+    }
+    if (event is SortAscendingTractorIDEvent) {
+      //Sort data model in Ascending order using Tractor Id
+      // And return Sort state
+      yield ShimmerState();
+      yield SortState(
+          tractorData:
+              sortAscendingTractorId(event.pageName, event.tractorData));
+    }
+    if (event is SortDescendingTractorIDEvent) {
+      //Sort data model Descending order using Tractor Id
+      // And return Sort state
+      yield ShimmerState();
+      yield SortState(
+          tractorData:
+              sortDescendingTractorId(event.pageName, event.tractorData));
     }
   }
 
@@ -54,7 +86,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
         //If it's TractorModel then insert data into DB else show error message
         if (result is ErrorModel) {
           //Show some error
-          yield ErrorState();
+          yield ErrorState(errorMessage: result.errorMessage);
         } else {
           try {
             //Data found for Tractors
@@ -68,7 +100,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
             //Check if result is an instance of ChartDataModel or ErrorModel
             //If it's ChartDataModel then insert data into DB else show error message
             if (chartResult is ErrorModel) {
-              yield ErrorState();
+              yield ErrorState(errorMessage: result.errorMessage);
             } else {
               try {
                 //Now We have chart Data and Tractor data insert them into DB
@@ -85,40 +117,61 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
                 //Now we have chart data, return success state with chart data model
                 // and tractor data
                 yield SuccessState(
-                  tractorData: sortingData(event.pageName, tractorModel),
+                  tractorData: sortHighToLow(event.pageName, tractorModel),
                   loadChartData: chartDataModel,
                 );
                 print(" Chart Data Found");
                 // Handle type error
               } catch (_) {
                 print("Exception found in chart API");
-                yield ErrorState();
+                yield ErrorState(errorMessage: result.errorMessage);
               }
             }
           } catch (_) {
-            yield ErrorState();
+            yield ErrorState(errorMessage: result.errorMessage);
             print("db Exception");
           }
         }
       } else {
-        yield ErrorState();
+        yield ErrorState(errorMessage: Constants.SOMETHING_WRONG);
       }
     } else {
       //No internet connection, So fetch Data from DB
-      yield ErrorState();
+      yield ErrorState(errorMessage: Constants.NO_INTERNET_FOUND);
     }
   }
 
-  //This method sort Tractors data according to miles and loads
-  TractorData sortingData(PageName pageName, TractorData tractorModel) {
-    if (pageName == PageName.MILES_PAGE) {
-      tractorModel.tractors
-          .sort((a, b) => b.totalMiles.compareTo(a.totalMiles));
-    } else {
-      tractorModel.tractors
-          .sort((a, b) => b.totalLoads.compareTo(a.totalLoads));
-    }
+  //This method sort Tractors data High to low
+  TractorData sortHighToLow(PageName pageName, TractorData tractorModel) {
+    tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
+        ? b.totalLoads.compareTo(a.totalLoads)
+        : b.totalMiles.compareTo(a.totalMiles));
+    return tractorModel;
+  }
 
+  //This method sort Tractors data low to high
+  TractorData sortLowToHigh(PageName pageName, TractorData tractorModel) {
+    tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
+        ? a.totalLoads.compareTo(b.totalLoads)
+        : a.totalMiles.compareTo(b.totalMiles));
+    return tractorModel;
+  }
+
+  //This method sort Tractors data in ascending tractor id
+  TractorData sortAscendingTractorId(
+      PageName pageName, TractorData tractorModel) {
+    tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
+        ? b.tractorId.compareTo(a.tractorId)
+        : b.tractorId.compareTo(a.tractorId));
+    return tractorModel;
+  }
+
+  //This method sort Tractors data according to miles and loads
+  TractorData sortDescendingTractorId(
+      PageName pageName, TractorData tractorModel) {
+    tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
+        ? a.tractorId.compareTo(b.tractorId)
+        : a.tractorId.compareTo(b.tractorId));
     return tractorModel;
   }
 

@@ -12,7 +12,11 @@ class InitialState extends LoadStates {}
 
 class ShimmerState extends LoadStates {}
 
-class ErrorState extends LoadStates {}
+class ErrorState extends LoadStates {
+  final String errorMessage;
+
+  ErrorState({@required this.errorMessage});
+}
 
 class SuccessState extends LoadStates {
   final dynamic loadChartData;
@@ -20,4 +24,10 @@ class SuccessState extends LoadStates {
 
   SuccessState({this.loadChartData, this.tractorData})
       : super([loadChartData, tractorData]);
+}
+
+class SortState extends LoadStates {
+  final TractorData tractorData;
+
+  SortState({this.tractorData}) : super([tractorData]);
 }

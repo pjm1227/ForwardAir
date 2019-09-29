@@ -34,6 +34,9 @@ class AppColors {
     Color.fromRGBO(255, 127, 0, 1),
     Color.fromRGBO(166, 206, 227, 1),
     Color.fromRGBO(178, 223, 138, 1),
+    Color.fromRGBO(45, 135, 151, 1),
     Color.fromRGBO(253, 191, 111, 1),
+    Color.fromRGBO(140, 234, 255, 1),
+    Colors.white,
   ];
 }

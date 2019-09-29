@@ -51,7 +51,7 @@ class Utils {
   }
 
   //Decimals to whole number
-  String formatDecimalToWholeNumber(dynamic decimalNumber) {
+ static  String formatDecimalToWholeNumber(dynamic decimalNumber) {
     final formatter = new NumberFormat("#,###");
     String formattedNumber = formatter.format(decimalNumber);
     return formattedNumber;

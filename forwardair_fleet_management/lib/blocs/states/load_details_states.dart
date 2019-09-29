@@ -10,9 +10,9 @@ abstract class LoadDetailState extends Equatable {
 class InitialState extends LoadDetailState {}
 
 //It will handle Error state for Dashboard page
-class LoadDataError extends LoadDetailState {
+class DetailsErrorState extends LoadDetailState {
   final String errorMessage;
-  LoadDataError({@required this.errorMessage}) : super([errorMessage]);
+  DetailsErrorState({@required this.errorMessage}) : super([errorMessage]);
 
 }
 
@@ -20,11 +20,11 @@ class LoadDataError extends LoadDetailState {
 
 
 //It will handle Loaded state for Dashboard page
-class LoadDataLoaded extends LoadDetailState {
-  final LoadDetailModel loadDetails;
+class SuccessState extends LoadDetailState {
+  final LoadDetailModel loadDetailsModel;
 
-  LoadDataLoaded({
-    this.loadDetails
-  }) : super([loadDetails]);
+  SuccessState({
+    this.loadDetailsModel
+  }) : super([loadDetailsModel]);
 
 }

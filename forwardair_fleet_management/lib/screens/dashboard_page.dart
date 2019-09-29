@@ -142,20 +142,20 @@ class DashboardState extends State<DashboardPage> {
         if (index == 1) {
           return _buildWidgetTotalLoadsAndMiles(
               _dashboardDataModel.totalLoads != null
-                  ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalLoads)}'
+                  ? '${Utils.formatDecimalToWholeNumber(_dashboardDataModel.totalLoads)}'
                   : 'NA',
               _dashboardDataModel.totalMiles != null
-                  ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalMiles)}'
+                  ? '${Utils.formatDecimalToWholeNumber(_dashboardDataModel.totalMiles)}'
                   : 'NA');
         }
         //Fuel widget
         else if (index == 2) {
           return _buildFuelWidget(
               _dashboardDataModel.totalTractorGallons != null
-                  ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalTractorGallons)}'
+                  ? '${Utils.formatDecimalToWholeNumber(_dashboardDataModel.totalTractorGallons)}'
                   : 'NA',
               _dashboardDataModel.totalFuelCost != null
-                  ? '${Utils().formatDecimalToWholeNumber(_dashboardDataModel.totalFuelCost)}'
+                  ? '${Utils.formatDecimalToWholeNumber(_dashboardDataModel.totalFuelCost)}'
                   : 'NA');
         }
         //NetCompensation and Deductions Widget

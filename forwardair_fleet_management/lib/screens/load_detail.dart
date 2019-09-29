@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forwardair_fleet_management/blocs/events/load_detail_events.dart';
-import 'package:forwardair_fleet_management/blocs/load_detail_bloc.dart';
-import 'package:forwardair_fleet_management/blocs/states/load_details_states.dart';
+import 'package:forwardair_fleet_management/blocs/barrels/load_details.dart';
+import 'package:forwardair_fleet_management/components/no_internet_connection.dart';
+import 'package:forwardair_fleet_management/components/no_result_found.dart';
 import 'package:forwardair_fleet_management/components/shimmer/list_shimmer.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
@@ -13,469 +13,469 @@ import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/models/loadDetails/load_detail_model.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
+import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
 class LoadDetailsPage extends StatefulWidget {
-  bool isMilePage;
-  Tractor tractorData;
-  Dashboard_DB_Model dashboardData;
-  PageName pageName;
+  //Tractor data model
+  final Tractor tractorData;
 
-  LoadDetailsPage(pageName,this.tractorData, this.dashboardData);
+  //Dashboard data model
+  final Dashboard_DB_Model dashboardData;
+
+  // Page name
+  final PageName pageName;
+
+  LoadDetailsPage(this.pageName, this.tractorData, this.dashboardData);
 
   @override
   _LoadDetailsPageState createState() => _LoadDetailsPageState(
-      this.isMilePage, this.tractorData, this.dashboardData);
+      this.pageName, this.tractorData, this.dashboardData);
 }
 
 class _LoadDetailsPageState extends State<LoadDetailsPage> {
-  bool isMilePage;
+  //page Name
+  PageName pageName;
+
+  //tractor data model
   Tractor tractorData;
+
+  //Dashboard data model
   Dashboard_DB_Model dashboardData;
-  LoadDetailBloc _loadBloc = LoadDetailBloc();
 
-  _LoadDetailsPageState(this.isMilePage, this.tractorData, this.dashboardData);
+  //Bloc object
+  LoadDetailBloc _loadDetailsBloc = LoadDetailBloc();
 
-  LoadDetailModel loadDetailsData;
+  _LoadDetailsPageState(this.pageName, this.tractorData, this.dashboardData);
+
+  @override
+  void initState() {
+    //Call Api For Tractor data and Chart data
+    //Check condition i.e for week data or month data
+    if (dashboardData != null &&
+        (dashboardData.dashboardPeriod ==
+            Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH)) {
+      _loadDetailsBloc.dispatch(FetchTractorDataEvent(
+          pageName: pageName,
+          tractorId: tractorData.tractorId,
+          month: dashboardData.month,
+          year: int.parse(dashboardData.year),
+          weekEnd: null,
+          weekStart: null));
+    } else {
+      _loadDetailsBloc.dispatch(FetchTractorDataEvent(
+          tractorId: tractorData.tractorId,
+          pageName: pageName,
+          month: 0,
+          year: 0,
+          weekEnd: dashboardData.weekEnd,
+          weekStart: dashboardData.weekStart));
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (dashboardData.weekStart != null) {
-      _loadBloc.dispatch(FetchLoadDetailsEvent(
-          weekStart: dashboardData.weekStart,
-          weekEnd: dashboardData.weekEnd,
-          month: 0,
-          year: "",
-          tractorId: tractorData.tractorId));
-    } else {
-      _loadBloc.dispatch(FetchLoadDetailsEvent(
-          weekStart: dashboardData.weekStart,
-          weekEnd: dashboardData.weekEnd,
-          month: dashboardData.month,
-          year: dashboardData.year,
-          tractorId: tractorData.tractorId));
-    }
-
     if (Platform.isAndroid) {
-      return SafeArea(child: scaffoldWidget());
+      return SafeArea(child: _initialWidget());
     } else {
-      return scaffoldWidget();
+      return _initialWidget();
     }
   }
 
-  Widget scaffoldWidget() {
+  //Initial widget
+  Widget _initialWidget() {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: AppColors.colorWhite),
+        centerTitle: false,
+        title: TextWidget(
+          text: pageName == PageName.MILES_PAGE
+              ? "Tractor ID Miles"
+              : "Tractor ID Loads",
+          colorText: AppColors.colorWhite,
+          textType: TextType.TEXT_LARGE,
+        ),
+      ),
       backgroundColor: AppColors.colorDashboard_Bg,
       body: BlocBuilder<LoadDetailBloc, dynamic>(
-        bloc: _loadBloc,
+        bloc: _loadDetailsBloc,
         builder: (context, state) {
-          print('${state}');
-          if (state is LoadDataError) {
-            return Center(
-              child: Text('Failed to fetch details'),
-            );
-          } else if (state is LoadDataLoaded) {
-//            _refreshController.refreshCompleted();
-            print('Entering to the UI part');
-            if (state.loadDetails != null) {
-              loadDetailsData = state.loadDetails;
+          if (state is DetailsErrorState) {
+            if (state.errorMessage == Constants.NO_INTERNET_FOUND) {
+              return NoInternetFoundWidget();
+            } else {
+              return NoResultFoundWidget();
             }
-            return Scaffold(
-                appBar: AppBar(
-                  centerTitle: false,
-                  backgroundColor: Color.fromRGBO(15, 43, 52, 1),
-                  title: TextWidget(
-                    text: isMilePage ? "Tractor ID Miles" : "Tractor ID Loads",
-                    colorText: Color.fromRGBO(255, 255, 255, 1),
-                    textType: TextType.TEXT_MEDIUM,
-                    isBold: true,
-                  ),
-                  leading: InkWell(
-                    child: Icon(Icons.arrow_back, color: Colors.white),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                body: SafeArea(
-                  child: Stack(
+          }
+          //If state is success then show data in list
+          if (state is SuccessState) {
+            if (state.loadDetailsModel != null) {
+              return Stack(
+                children: <Widget>[
+                  // Background widget for overlapping of list widget
+                  new Column(
                     children: <Widget>[
-                      // The containers in the background
-                      new Column(
-                        children: <Widget>[
-                          new Container(
-                            height: MediaQuery.of(context).size.height * .18,
-                            color: Color.fromRGBO(15, 43, 52, 1),
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 10),
-                              child: rectangleWidget(),
-                            ),
-                          ),
-                        ],
-                      ),
-
                       new Container(
-                        alignment: Alignment.topCenter,
-                        padding: new EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * .12,
+                        height: MediaQuery.of(context).size.height * .18,
+                        color: AppColors.colorAppBar,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: _topWidget(),
                         ),
-                        child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: loadDetailsData.loadDetails.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return getCard(loadDetailsData.loadDetails[index]);
-                          },
-                        ),
-                      )
+                      ),
                     ],
                   ),
-                ));
+                  //This container return a list view with overlapping the background widget
+                  new Container(
+                    alignment: Alignment.topCenter,
+                    padding: new EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * .12,
+                    ),
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: state.loadDetailsModel.loadDetails.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _listItem(
+                            state.loadDetailsModel.loadDetails[index]);
+                      },
+                    ),
+                  )
+                ],
+              );
+            }
           }
-
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Color.fromRGBO(15, 43, 52, 1),
-              title: TextWidget(
-                text: isMilePage ? "Tractor ID Miles" : "Tractor ID Loads",
-                colorText: Color.fromRGBO(255, 255, 255, 1),
-                textType: TextType.TEXT_MEDIUM,
-                isBold: true,
-              ),
-              leading: InkWell(
-                child: Icon(Icons.arrow_back, color: Colors.white),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            body: Center(
-              child: ListViewShimmer(
-                listLength: 12,
-              ),
-            ),
+          return ListViewShimmer(
+            listLength: 10,
           );
         },
       ),
     );
   }
 
-  Widget getCard(Loads loadData) {
-    return Card(
-      elevation: 4.0,
-      margin: new EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(100.0)),
-        child: getListtile(loadData),
-      ),
-    );
-  }
-
-  Widget getListtile(Loads loadData) {
-    String miles;
-    Color dot = (loadData.loadedMiles != 0)
-        ? Color.fromRGBO(45, 135, 151, 1)
-        : Color.fromRGBO(207, 29, 43, 1);
-    if (isMilePage) {
-      miles = loadData.loadedMiles == 0
-          ? '(${Utils().formatDecimalToWholeNumber(loadData.emptyMiles)}mi)'
-          : '(${Utils().formatDecimalToWholeNumber(loadData.loadedMiles)}mi)';
-    } else {
-      miles = '';
-    }
-
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-
-      title: Padding(
-          padding: EdgeInsets.fromLTRB(10, 5, 0, 10),
-          child: Row(children: <Widget>[
-            ClipOval(
-              child: Container(
-                color: dot,
-                height: 10.0,
-                width: 10.0,
-              ),
-            ),
-            Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                  "Order No. ${loadData.orderNbr}",
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Color.fromRGBO(118, 119, 120, 1),
-                      fontFamily: 'Roboto'),
-                )),
-          ])),
-
-      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-      subtitle: Column(
+  //Widget to set TOTAL, EMPTY and LOADED Data
+  Widget _topWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          Row(children: <Widget>[
+            Expanded(
+              flex: 3,
+              child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: TextWidget(
-                      text: loadData.originCity != null
-                          ? '${loadData.originCity},${loadData.originSt}'
-                          : 'NA',
-                      colorText: Color.fromRGBO(23, 87, 99, 1),
-                      textType: TextType.TEXT_SMALL,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ClipOval(
+                        child: Container(
+                          color: Colors.white,
+                          height: 8.0,
+                          width: 8.0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextWidget(
+                          text: pageName == PageName.LOAD_PAGE
+                              ? '${Utils.formatDecimalToWholeNumber(tractorData.totalLoads)}'
+                              : '${Utils.formatDecimalToWholeNumber(tractorData.totalMiles)}',
+                          textAlign: TextAlign.center,
+                          colorText: AppColors.colorWhite,
+                          textType: TextType.TEXT_MEDIUM,
+                          isBold: true,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0, left: 10),
-                    child: TextWidget(
-                      text: Utils.formatDateFromString(loadData.dispatchDt),
-                      colorText: Color.fromRGBO(118, 119, 120, 1),
-                      textType: TextType.TEXT_NORMAL,
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextWidget(
+                        text: 'TOTAL',
+                        colorText: AppColors.colorWhite,
+                      ),
                     ),
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 0, left: 8, right: 8.0, bottom: 24),
-                child: Icon(Icons.arrow_forward),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.08,
+                child: VerticalDivider(
+                  color: AppColors.colorWhite,
+                ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Expanded(
+              flex: 2,
+              child: Column(
+                //crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          TextWidget(
-                            text: '${loadData.destCity},${loadData.destSt}',
-                            colorText: Color.fromRGBO(23, 87, 99, 1),
-                            textType: TextType.TEXT_SMALL,
-                          ),
-                        ],
+                      ClipOval(
+                        child: Container(
+                          color: Colors.red,
+                          height: 8.0,
+                          width: 8.0,
+                        ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
-                            child: TextWidget(
-                              text: miles,
-                              colorText: Color.fromRGBO(0, 0, 0, 1),
-                              textType: TextType.TEXT_SMALL,
-                              isBold: true,
-                            ),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextWidget(
+                          text: pageName == PageName.MILES_PAGE
+                              ? "${Utils.formatDecimalToWholeNumber(tractorData.emptyMiles)}"
+                              : '${Utils.formatDecimalToWholeNumber(tractorData.emptyLoads)}',
+                          textAlign: TextAlign.center,
+                          colorText: AppColors.colorWhite,
+                          textType: TextType.TEXT_MEDIUM,
+                          isBold: true,
+                          maxLines: 1,
+                        ),
                       ),
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextWidget(
+                      text: 'EMPTY',
+                      colorText: AppColors.colorWhite,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.08,
+                child: VerticalDivider(
+                  color: AppColors.colorWhite,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Column(
+                //crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ClipOval(
+                        child: Container(
+                          color: AppColors.colorDOT,
+                          height: 8.0,
+                          width: 8.0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: TextWidget(
+                          text: pageName == PageName.MILES_PAGE
+                              ? "${Utils.formatDecimalToWholeNumber(tractorData.loadedMiles)}"
+                              : '${Utils.formatDecimalToWholeNumber(tractorData.loadedLoads)}',
+                          textAlign: TextAlign.center,
+                          colorText: AppColors.colorWhite,
+                          textType: TextType.TEXT_MEDIUM,
+                          isBold: true,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextWidget(
+                      text: 'LOADED',
+                      colorText: AppColors.colorWhite,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  //This widget return the list items widget
+  Widget _listItem(Loads loadData) {
+    return Card(
+        elevation: 4.0,
+        margin: new EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            //Row widget to show dot and order number
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  ClipOval(
+                    child: Container(
+                      color: loadData.loadedMiles == 0
+                          ? AppColors.colorRed
+                          : AppColors.colorDOT,
+                      height: 8.0,
+                      width: 8.0,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: TextWidget(
+                      text: 'Order No. ${loadData.orderNbr}',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //Widget for Show origin city to destination city
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: pageName == PageName.LOAD_PAGE
+                  ? Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 3,
+                          child: TextWidget(
+                            textOverFlow: TextOverflow.ellipsis,
+                            colorText: AppColors.colorAppBar,
+                            textType: TextType.TEXT_MEDIUM,
+                            text: loadData.originCity != null
+                                ? loadData.originCity
+                                : 'N/A',
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 8.0, right: 8.0),
+                            child: Icon(
+                              Icons.arrow_forward,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: TextWidget(
+                            colorText: AppColors.colorAppBar,
+                            textOverFlow: TextOverflow.ellipsis,
+                            textType: TextType.TEXT_MEDIUM,
+                            text: loadData.destCity.isNotEmpty
+                                ? loadData.destCity
+                                : 'N/A',
+                          ),
+                        ),
+                      ],
+                    )
+                  : _showMiles(loadData),
+            ),
+            //Widget for Set up dates
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 4,
                     child: TextWidget(
                       text: loadData.settlementPaidDt != null
                           ? Utils.formatDateFromString(
                               loadData.settlementPaidDt)
                           : "N/A",
-                      colorText: Color.fromRGBO(118, 119, 120, 1),
-                      textType: TextType.TEXT_NORMAL,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 6,
+                    child: TextWidget(
+                      text: loadData.settlementFinalDt != null
+                          ? Utils.formatDateFromString(
+                              loadData.settlementFinalDt)
+                          : "N/A",
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
-          Divider(
-            color: Colors.black38,
-            height: 16,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: TextWidget(
-                    text: "Driver Details",
-                    textAlign: TextAlign.start,
-                    colorText: Color.fromRGBO(118, 119, 120, 1),
-                    textType: TextType.TEXT_NORMAL),
+            ),
+            //Divider
+            Divider(
+              color: AppColors.colorGrey,
+            ),
+            // Driver details Widget
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextWidget(text: 'Driver Details'),
+            ),
+            //Driver name widget
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextWidget(
+                text: loadData.driver1FirstName.isNotEmpty
+                    ? '${loadData.driver1FirstName} ${loadData.driver1LastName} from ${loadData.driverOriginCity},${loadData.driverOriginSt}'
+                    : 'N/A',
               ),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
-                child: TextWidget(
-                    text: loadData.driver2Id == null
-                        ? '${loadData.driver1FirstName} ${loadData.driver1LastName} from ${loadData.driverOriginCity},${loadData.driverOriginSt}'
-                        : "${loadData.driver1FirstName} ${loadData.driver1LastName}, ${loadData.driver2FirstName} ${loadData.driver2LastName}  from ${loadData.driverOriginCity},${loadData.driverOriginSt}",
-                    textAlign: TextAlign.start,
-                    colorText: Color.fromRGBO(0, 0, 0, 1),
-                    textType: TextType.TEXT_XSMALL),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+            ),
+          ],
+        ));
   }
 
-  Container rectangleWidget() {
-    return new Container(
-      height: 80.0,
-      color: Color.fromRGBO(15, 43, 52, 1),
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Center(
-                child: Row(
-                  children: <Widget>[
-                    ClipOval(
-                      child: Container(
-                        color: Colors.white,
-                        height: 12.0,
-                        width: 12.0,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 6.0),
-                      child: TextWidget(
-                        text: isMilePage
-                            ? "${Utils().formatDecimalToWholeNumber(tractorData.totalMiles)}"
-                            : '${Utils().formatDecimalToWholeNumber(tractorData.totalLoads)}',
-                        colorText: Color.fromRGBO(255, 255, 255, 1),
-                        textType: TextType.TEXT_MEDIUM,
-                        isBold: true,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Text('TOTAL',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w500,
-                        color: Color.fromRGBO(255, 255, 255, 1))),
-              )
-            ],
+//This widget is used to show miles in braces
+  Widget _showMiles(Loads loadData) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          flex: 3,
+          child: TextWidget(
+            textOverFlow: TextOverflow.ellipsis,
+            colorText: AppColors.colorAppBar,
+            textType: TextType.TEXT_MEDIUM,
+            text: loadData.originCity != null ? loadData.originCity : 'N/A',
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 0, bottom: 70),
-                child: VerticalDivider(
-                  color: Color.fromRGBO(213, 213, 213, 1),
-                ),
-              )
-            ],
+        ),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: Icon(
+              Icons.arrow_forward,
+              size: 14,
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                child: Row(
-                  children: <Widget>[
-                    ClipOval(
-                      child: Container(
-                        color: Colors.red,
-                        height: 10.0,
-                        width: 10.0,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 6.0),
-                      child: TextWidget(
-                        text: isMilePage
-                            ? "${Utils().formatDecimalToWholeNumber(tractorData.emptyMiles)}"
-                            : '${Utils().formatDecimalToWholeNumber(tractorData.emptyLoads)}',
-                        colorText: Color.fromRGBO(255, 255, 255, 1),
-                        textType: TextType.TEXT_MEDIUM,
-                        isBold: true,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Text('EMPTY',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w500,
-                        color: Color.fromRGBO(255, 255, 255, 1))),
-              )
-            ],
+        ),
+        Expanded(
+          flex: 3,
+          child: TextWidget(
+            colorText: AppColors.colorAppBar,
+            textOverFlow: TextOverflow.ellipsis,
+            textType: TextType.TEXT_MEDIUM,
+            text: loadData.destCity.isNotEmpty ? loadData.destCity : 'N/A',
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 0, bottom: 70),
-                child: VerticalDivider(
-                  color: Color.fromRGBO(213, 213, 213, 1),
-                ),
-              )
-            ],
+        ),
+        Expanded(
+          flex: 3,
+          child: Container(
+            child: TextWidget(
+              textOverFlow: TextOverflow.ellipsis,
+              text: pageName == PageName.MILES_PAGE
+                  ? '(${Utils.formatDecimalToWholeNumber(loadData.loadedMiles)}mi)'
+                  : '',
+              colorText: AppColors.colorBlack,
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                child: Row(
-                  children: <Widget>[
-                    ClipOval(
-                      child: Container(
-                        color: Colors.blue,
-                        height: 12.0,
-                        width: 12.0,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 6.0),
-                      child: TextWidget(
-                        text: isMilePage
-                            ? "${Utils().formatDecimalToWholeNumber(tractorData.loadedMiles)}"
-                            : '${Utils().formatDecimalToWholeNumber(tractorData.loadedLoads)}',
-                        colorText: Color.fromRGBO(255, 255, 255, 1),
-                        textType: TextType.TEXT_MEDIUM,
-                        isBold: true,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Text('LOADED',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w500,
-                        color: Color.fromRGBO(255, 255, 255, 1))),
-              )
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
