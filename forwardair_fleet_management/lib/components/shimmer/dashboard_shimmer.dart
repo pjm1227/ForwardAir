@@ -101,7 +101,7 @@ class DashBoardShimmer extends StatelessWidget {
   //This returns Holder of TotalLoadsAndMiles Widget
   _buildWidgetTotalLoadsAndMiles() {
     return Container(
-      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+      padding: EdgeInsets.only(left: 5.0, right: 5.0),
       child:
           new Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         _totalLoadsAndMilesWidget(),

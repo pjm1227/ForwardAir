@@ -251,7 +251,7 @@ class DashboardState extends State<DashboardPage> {
         ),
       ),
       //Quick Contacts
-      bottomNavigationBar: _bottomNavigationBarWidget(),
+      bottomNavigationBar:  _bottomNavigationBarWidget(),
     );
   }
 
@@ -667,7 +667,7 @@ class DashboardState extends State<DashboardPage> {
                                       const EdgeInsets.only(top: 5, right: 10),
                                   child: TextWidget(
                                     textOverFlow: TextOverflow.ellipsis,
-                                    text: '\$' + totalFuelAmount,
+                                    text:  _appendDollarSymbol(totalFuelAmount),//'\$' + totalFuelAmount,
                                     textType: TextType.TEXT_MEDIUM,
                                     colorText: AppColors.darkColorBlue,
                                     isBold: true,
@@ -709,6 +709,16 @@ class DashboardState extends State<DashboardPage> {
             )),
       ),
     );
+  }
+
+  String _appendDollarSymbol(String value) {
+     String textWithDollar = '';
+     if (value != 'NA') {
+       textWithDollar = '\$' + value;
+     } else {
+       textWithDollar = 'NA';
+     }
+     return textWithDollar;
   }
 
   //This returns NetCompensationWidget Widget
@@ -755,7 +765,7 @@ class DashboardState extends State<DashboardPage> {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: TextWidget(
                         textOverFlow: TextOverflow.ellipsis,
-                        text: '\$' + aSubTitle,
+                        text: _appendDollarSymbol(aSubTitle), //'\$' + aSubTitle,
                         colorText: AppColors.darkColorBlue,
                         textType: TextType.TEXT_MEDIUM,
                         isBold: true,
@@ -780,16 +790,26 @@ class DashboardState extends State<DashboardPage> {
                 ),
                 grossCompensationAndDeductionsWiget(
                     Constants.TEXT_GROSS_COMPENSATION,
-                    '\$' + grossCompensation,
+                     _appendDollarSymbol(grossCompensation),  //'\$' + grossCompensation,
                     true),
                 grossCompensationAndDeductionsWiget(Constants.TEXT_DEDUCTIONS,
-                    '-\$' + deductions.replaceAll(RegExp('-'), ''), false),
+                    addDollarAfterMinusSign(deductions), false),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  String addDollarAfterMinusSign(String deductions) {
+    String deduction = '';
+    if (deductions != 'NA') {
+      deduction = '-\$' + deductions.replaceAll(RegExp('-'), '');
+    } else {
+      deduction = 'NA';
+    }
+     return deduction;
   }
 
   //This returns Gross Compensation And Deductions Wiget
