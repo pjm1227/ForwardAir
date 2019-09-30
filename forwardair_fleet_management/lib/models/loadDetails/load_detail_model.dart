@@ -6,8 +6,8 @@ LoadDetailModel loadDetailModelFromJson(String str) =>
 class LoadDetailModel{
   String companyCd;
   String contractorCd;
-  String weekStart;
-  String weekEnd;
+  int weekStart;
+  int weekEnd;
   String year;
   int month;
   List<Loads> loadDetails;

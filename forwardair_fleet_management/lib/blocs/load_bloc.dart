@@ -160,18 +160,16 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
   //This method sort Tractors data in ascending tractor id
   TractorData sortAscendingTractorId(
       PageName pageName, TractorData tractorModel) {
-    tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
-        ? b.tractorId.compareTo(a.tractorId)
-        : b.tractorId.compareTo(a.tractorId));
+    tractorModel.tractors.sort(
+        (a, b) => int.parse(a.tractorId).compareTo(int.parse(b.tractorId)));
     return tractorModel;
   }
 
   //This method sort Tractors data according to miles and loads
   TractorData sortDescendingTractorId(
       PageName pageName, TractorData tractorModel) {
-    tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
-        ? a.tractorId.compareTo(b.tractorId)
-        : a.tractorId.compareTo(b.tractorId));
+    tractorModel.tractors.sort(
+        (a, b) => int.parse(b.tractorId).compareTo(int.parse(a.tractorId)));
     return tractorModel;
   }
 

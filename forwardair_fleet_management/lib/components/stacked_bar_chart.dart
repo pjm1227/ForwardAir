@@ -13,7 +13,7 @@ class StackedBarChart extends StatelessWidget {
     return new charts.BarChart(
       seriesList,
       animate: animate,
-      barGroupingType: charts.BarGroupingType.grouped,
+      barGroupingType: charts.BarGroupingType.stacked,
       domainAxis: new charts.OrdinalAxisSpec(
           renderSpec: new charts.SmallTickRendererSpec(
         minimumPaddingBetweenLabelsPx: 0,

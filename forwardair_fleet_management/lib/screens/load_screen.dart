@@ -162,7 +162,11 @@ class LoadScreen extends State<LoadPage> {
               }
 
               if (state is SuccessState) {
-                return _initialWidget(state.tractorData);
+                if (state.tractorData.tractors != null) {
+                  return _initialWidget(state.tractorData);
+                } else {
+                  return NoResultFoundWidget();
+                }
               }
               if (state is SortState) {
                 return _initialWidget(state.tractorData);
@@ -191,6 +195,7 @@ class LoadScreen extends State<LoadPage> {
             Container(
               height: 220,
               child: PageView.builder(
+                pageSnapping: false,
                 itemCount: 2,
                 physics: new AlwaysScrollableScrollPhysics(),
                 controller: _controller,
@@ -515,6 +520,7 @@ class LoadScreen extends State<LoadPage> {
                   onTap: () {
                     setState(() {
                       _topContribution = sortFilterOptions[index];
+                      // _controller.jumpTo(1);
                     });
                     if (index == 0) {
                       loadBloc.dispatch(SortHighToLowEvent(
@@ -567,26 +573,23 @@ class LoadScreen extends State<LoadPage> {
       //Here data belongs to weeks
       var weekData = chartData.days;
       //Create chart data model for empty data, loaded data and Total
-      if(weekData!=null) {
+      if (weekData != null) {
         weekData.forEach((item) {
           var chartModelLoaded = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item
-                      .totalMiles}',
+                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
               value: pageName == PageName.LOAD_PAGE
                   ? item.loadedLoads
                   : item.loadedMiles);
           var chartModelEmpty = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item
-                      .totalMiles}',
+                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
               value: pageName == PageName.LOAD_PAGE
                   ? item.emptyLoads
                   : item.emptyMiles);
           var chartModelTotal = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item
-                      .totalMiles}',
+                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
               value: pageName == PageName.LOAD_PAGE
                   ? item.totalLoads
                   : item.totalMiles);
@@ -626,7 +629,7 @@ class LoadScreen extends State<LoadPage> {
       id: 'Empty',
       domainFn: (ChartDataModel chartData, _) => chartData.name,
       measureFn: (ChartDataModel chartData, _) => chartData.value,
-      colorFn: (_, __) => charts.MaterialPalette.white,
+      colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
       data: emptyDataList,
     );
     var loadedChartData = charts.Series<ChartDataModel, String>(
@@ -636,17 +639,17 @@ class LoadScreen extends State<LoadPage> {
       colorFn: (_, __) => charts.MaterialPalette.teal.shadeDefault,
       data: loadedDataList,
     );
-    var totalChartData = charts.Series<ChartDataModel, String>(
+/*  var totalChartData = charts.Series<ChartDataModel, String>(
       id: 'Total',
       domainFn: (ChartDataModel chartData, _) => chartData.name,
       measureFn: (ChartDataModel chartData, _) => chartData.value,
-      colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+      colorFn: (_, __) => charts.MaterialPalette.white,
       data: totalDataList,
-    );
+    );*/
 //Add final model data in series list to show chart
-    seriesList.add(emptyChartData);
     seriesList.add(loadedChartData);
-    seriesList.add(totalChartData);
+    seriesList.add(emptyChartData);
+    //seriesList.add(totalChartData);
   }
 
   //This method is used to set data in pie chart
