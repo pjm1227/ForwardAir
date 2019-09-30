@@ -106,6 +106,9 @@ class Constants {
   static const String TEXT_DASHBOARD_PERIOD_LAST_WEEK = "L";
   static const String TEXT_NO_RESULTS_FOUND = 'No Results Found.';
   //Quick Contact Details
+  static const String TEXT_QC_DISPATCH_MAIL_SUBJECT = 'Note for Dispatch Team.';
+  static const String TEXT_QC_SAFETY_MAIL_SUBJECT = 'Reporting a safety incident.';
+  static const String TEXT_QC_DRIVER_RELATIONS_MAIL_SUBJECT = 'Note for Driver Relations.';
   //1. Dispatch
   static const String TEXT_DISPATCH_QUCKCONTACT_EMAIL = 'FA_dispatch@forwardair.com';
   static const String TEXT_DISPATCH_PHONENUMBER =  '800-497-5012';

@@ -198,17 +198,17 @@ class DashboardState extends State<DashboardPage> {
             switch (state.selectedIndex) {
               case 0:
                 {
-                  _service.sendEmail(_quickContactEmails[0]);
+                  _service.sendEmail(_quickContactEmails[0], Constants.TEXT_QC_DISPATCH_MAIL_SUBJECT);
                 }
                 break;
               case 1:
                 {
-                  _service.sendEmail(_quickContactEmails[1]);
+                  _service.sendEmail(_quickContactEmails[1], Constants.TEXT_QC_SAFETY_MAIL_SUBJECT);
                 }
                 break;
               case 2:
                 {
-                  _service.sendEmail(_quickContactEmails[2]);
+                  _service.sendEmail(_quickContactEmails[2], Constants.TEXT_QC_DRIVER_RELATIONS_MAIL_SUBJECT);
                 }
                 break;
             }
