@@ -5,7 +5,7 @@ class RoundShimmer extends StatelessWidget{
   Widget build(BuildContext context) {
     return  Container(
       child: Shimmer.fromColors(
-        baseColor: Colors.grey[300],
+        baseColor: Colors.grey[400],
         highlightColor: Colors.grey[100],
         enabled: true,
         child:Column(

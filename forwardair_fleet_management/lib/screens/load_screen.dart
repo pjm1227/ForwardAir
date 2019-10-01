@@ -63,7 +63,7 @@ class LoadScreen extends State<LoadPage> {
   static Map<String, double> dataMap = Map<String, double>();
 
   //Text for top contribution
-  String _topContribution = 'Top Contribution';
+  String _topContribution = Constants.TEXT_HIGHTOLOW;
 
   List<Widget> _pages = <Widget>[
     PieChartWidget(
@@ -142,7 +142,7 @@ class LoadScreen extends State<LoadPage> {
           }
           if (state is SortState) {
             //Create Pie chart
-            createPieChart(state.tractorData);
+            //  createPieChart(state.tractorData);
           }
         },
         bloc: loadBloc,
@@ -195,7 +195,6 @@ class LoadScreen extends State<LoadPage> {
             Container(
               height: 220,
               child: PageView.builder(
-                pageSnapping: false,
                 itemCount: 2,
                 physics: new AlwaysScrollableScrollPhysics(),
                 controller: _controller,
@@ -438,19 +437,19 @@ class LoadScreen extends State<LoadPage> {
                   text: _topContribution,
                   isBold: true,
                 ),
-                Row(
-                  children: <Widget>[
-                    InkWell(
-                      child: TextWidget(
+                InkWell(
+                  child: Row(
+                    children: <Widget>[
+                      TextWidget(
                         text: 'Sort By',
                         textType: TextType.TEXT_MEDIUM,
                       ),
-                      onTap: () {
-                        _sortByOptionsWidget(tractorData);
-                      },
-                    ),
-                    Icon(Icons.arrow_drop_down)
-                  ],
+                      Icon(Icons.arrow_drop_down)
+                    ],
+                  ),
+                  onTap: () {
+                    _sortByOptionsWidget(tractorData);
+                  },
                 )
               ]),
         ),
@@ -506,16 +505,27 @@ class LoadScreen extends State<LoadPage> {
               itemCount: sortFilterOptions.length,
               itemBuilder: (context, index) {
                 return InkWell(
-                  child: TextWidget(
-                    textType: TextType.TEXT_MEDIUM,
-                    colorText: _topContribution == sortFilterOptions[index]
-                        ? AppColors.colorAppBar
-                        : null,
-                    isBold: _topContribution == sortFilterOptions[index]
-                        ? true
-                        : false,
-                    padding: EdgeInsets.all(8.0),
-                    text: sortFilterOptions[index],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      TextWidget(
+                        textType: TextType.TEXT_MEDIUM,
+                        colorText: _topContribution == sortFilterOptions[index]
+                            ? AppColors.colorRed
+                            : null,
+                        padding: EdgeInsets.only(left:12.0, top: 8.0,bottom: 8.0),
+                        text: sortFilterOptions[index],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12.0),
+                        child: Icon(
+                          _topContribution == sortFilterOptions[index]
+                              ? Icons.done
+                              : null,
+                          color: AppColors.colorRed,
+                        ),
+                      )
+                    ],
                   ),
                   onTap: () {
                     setState(() {
@@ -587,16 +597,16 @@ class LoadScreen extends State<LoadPage> {
               value: pageName == PageName.LOAD_PAGE
                   ? item.emptyLoads
                   : item.emptyMiles);
-          var chartModelTotal = ChartDataModel(
+         /* var chartModelTotal = ChartDataModel(
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
               value: pageName == PageName.LOAD_PAGE
                   ? item.totalLoads
-                  : item.totalMiles);
+                  : item.totalMiles);*/
           //Add data models into respective list
           loadedDataList.add(chartModelLoaded);
           emptyDataList.add(chartModelEmpty);
-          totalDataList.add(chartModelTotal);
+         // totalDataList.add(chartModelTotal);
           count++;
         });
       }
@@ -609,19 +619,19 @@ class LoadScreen extends State<LoadPage> {
         var chartModelLoaded = ChartDataModel(
             name: 'Week ${count + 1}' +
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: item.loadedLoads);
+            value: pageName == PageName.LOAD_PAGE ? item.loadedLoads : item.loadedMiles);
         var chartModelEmpty = ChartDataModel(
             name: 'Week ${count + 1}' +
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: item.emptyLoads);
-        var chartModelTotal = ChartDataModel(
-            name: 'Week ${count + 1}' +
+            value: pageName == PageName.LOAD_PAGE ? item.emptyLoads : item.emptyMiles);
+       /* var chartModelTotal = ChartDataModel(
+            name: 'Week ${count + 1}'
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: item.totalLoads);
+            value: item.totalLoads);*/
         //Add data models into respective list
         loadedDataList.add(chartModelLoaded);
         emptyDataList.add(chartModelEmpty);
-        totalDataList.add(chartModelTotal);
+       // totalDataList.add(chartModelTotal);
         count++;
       });
     }
