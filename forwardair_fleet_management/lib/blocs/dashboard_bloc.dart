@@ -75,19 +75,22 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     else if (event is OpenQuickContactsEvent) {
       final posts = await fetchDataFromDB();
       var selectedModel = applyFilterInaDashboard(posts);
+      yield DashboardLoaded(dashboardData: selectedModel);
       yield OpenQuickContactsState(dashboardData: selectedModel);
     }
     //To send a mail from Quick Contact Sheet
     else if (event is QuickContactTapsOnMailEvent) {
       final posts = await fetchDataFromDB();
       var selectedModel = applyFilterInaDashboard(posts);
+      yield DashboardLoaded(dashboardData: selectedModel);
       yield QuickContactsMailState(
-          selectedIndex: event.selectedIndex, dashboardData: selectedModel);
+            selectedIndex: event.selectedIndex, dashboardData: selectedModel);
     }
     //To make a call from Quick Contact Sheet
     else if (event is QuickContactTapsOnCallEvent) {
       final posts = await fetchDataFromDB();
       var selectedModel = applyFilterInaDashboard(posts);
+      yield DashboardLoaded(dashboardData: selectedModel);
       yield QuickContactsCallState(
           selectedIndex: event.selectedIndex, dashboardData: selectedModel);
     }

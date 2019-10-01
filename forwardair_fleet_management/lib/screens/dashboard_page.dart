@@ -194,7 +194,8 @@ class DashboardState extends State<DashboardPage> {
           print('Dashboard State in Listner $state');
           if (state is OpenQuickContactsState) {
             _buildBottomSheet(context);
-          } else if (state is QuickContactsMailState) {
+          }
+          else if (state is QuickContactsMailState) {
             switch (state.selectedIndex) {
               case 0:
                 {
@@ -240,6 +241,7 @@ class DashboardState extends State<DashboardPage> {
         child: BlocBuilder<DashboardBloc, dynamic>(
           bloc: _dashboardBloc,
           builder: (context, state) {
+            print('Dashboard State in Build $state');
             //Pull Refresh Option
             return SmartRefresher(
                 controller: _refreshController,
@@ -545,7 +547,7 @@ class DashboardState extends State<DashboardPage> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(top: 5.0),
+                      padding: EdgeInsets.only(top: 5.0,right: 5),
                       height: 35,
                       width: 35,
                       child: aTitle == Constants.TEXT_TOTAL_LOADS
@@ -702,7 +704,7 @@ class DashboardState extends State<DashboardPage> {
                             width: 30,
                             child: Image(
                                 image: AssetImage('images/img_fuel.png'),
-                                fit: BoxFit.fitHeight),
+                                ),
                           ),
                         ),
                       )
@@ -777,13 +779,13 @@ class DashboardState extends State<DashboardPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 2),
+                      padding: const EdgeInsets.only(right: 5),
                       child: Column(
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.only(top: 3, bottom: 2),
-                            height: 30,
-                            width: 30,
+                            height: 32,
+                            width: 35,
                             child: Image.asset(
                               'images/img_net.png',
                             ),
