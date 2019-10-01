@@ -126,4 +126,5 @@ class Constants {
   static const String TEXT_ASCENDING = 'Ascending Tractor ID';
   static const String TEXT_DESCENDING = 'Descending Tractor ID';
   static const String TEXT_LOWTOHIGH = 'Contribution:Low to High';
+  static const String TEXT_BACK = 'Back';
 }

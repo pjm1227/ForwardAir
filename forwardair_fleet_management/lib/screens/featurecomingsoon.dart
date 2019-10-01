@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:forwardair_fleet_management/components/text_widget.dart';
+import 'package:forwardair_fleet_management/utility/colors.dart';
+import 'package:forwardair_fleet_management/utility/constants.dart';
 
 /*
   Feature coming soon page to display statics data fro Future screens.
@@ -26,32 +29,16 @@ class NewFeatureState extends State<FeaturesComingSoonPage> {
   }
 
   Widget scaffoldWidget() {
-    TextStyle styleRC = TextStyle(
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.bold,
-        fontSize: 20,
-        color: Colors.black);
-    TextStyle substyleRC = TextStyle(
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.normal,
-        fontSize: 16,
-        color: Colors.black);
-    final _appBarStyle = TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-        color: Colors.white);
 
     return Scaffold(
       appBar: new AppBar(
-
-        iconTheme: new IconThemeData(color: Colors.white),
-        centerTitle: false,
-        title: new Text(
-          "Back",
-           style: _appBarStyle,
+        title: TextWidget(
+          text: Constants.TEXT_BACK,
+          colorText: AppColors.colorWhite,
+          textType: TextType.TEXT_LARGE,
         ),
-         backgroundColor: Color.fromRGBO(15, 43, 52, 1),
+        iconTheme: new IconThemeData(color: AppColors.colorWhite),
+        centerTitle: false,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,8 +46,7 @@ class NewFeatureState extends State<FeaturesComingSoonPage> {
         children: <Widget>[
           Center(
             child: Container(
-                // color: Colors.greenAccent,
-                height: MediaQuery.of(context).size.height * .35,
+                height: MediaQuery.of(context).size.height * .20,
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image:
@@ -69,9 +55,9 @@ class NewFeatureState extends State<FeaturesComingSoonPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 12.0, bottom: 12),
-            child: Text('Features Coming Soon!', style: styleRC),
+            child: TextWidget(text:'Features Coming Soon!', colorText: AppColors.colorBlack, textType: TextType.TEXT_MEDIUM,isBold: true,),
           ),
-          Text('We will be notify shortly!', style: substyleRC),
+          TextWidget(text:'We will be notify shortly!', colorText: AppColors.colorBlack, textType: TextType.TEXT_SMALL,),
         ],
       ),
     );
