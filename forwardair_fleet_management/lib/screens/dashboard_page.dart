@@ -198,17 +198,20 @@ class DashboardState extends State<DashboardPage> {
             switch (state.selectedIndex) {
               case 0:
                 {
-                  _service.sendEmail(_quickContactEmails[0], Constants.TEXT_QC_DISPATCH_MAIL_SUBJECT);
+                  _service.sendEmail(_quickContactEmails[0],
+                      Constants.TEXT_QC_DISPATCH_MAIL_SUBJECT);
                 }
                 break;
               case 1:
                 {
-                  _service.sendEmail(_quickContactEmails[1], Constants.TEXT_QC_SAFETY_MAIL_SUBJECT);
+                  _service.sendEmail(_quickContactEmails[1],
+                      Constants.TEXT_QC_SAFETY_MAIL_SUBJECT);
                 }
                 break;
               case 2:
                 {
-                  _service.sendEmail(_quickContactEmails[2], Constants.TEXT_QC_DRIVER_RELATIONS_MAIL_SUBJECT);
+                  _service.sendEmail(_quickContactEmails[2],
+                      Constants.TEXT_QC_DRIVER_RELATIONS_MAIL_SUBJECT);
                 }
                 break;
             }
@@ -251,7 +254,7 @@ class DashboardState extends State<DashboardPage> {
         ),
       ),
       //Quick Contacts
-      bottomNavigationBar:  _bottomNavigationBarWidget(),
+      bottomNavigationBar: _bottomNavigationBarWidget(),
     );
   }
 
@@ -339,23 +342,26 @@ class DashboardState extends State<DashboardPage> {
 
   //Open Quick Tap Handler
   Widget _handleTapEventForQuickContact() {
-    if (_dashboardBloc.isAPICalling == false) {
-      return InkWell(
-        onDoubleTap: () {},
-        child: redColorBottomBar(),
-        onTap: () {
-          //To show the Quick Contact Details
-          if (_dashboardBloc.isAPICalling == false) {
-            _dashboardBloc.dispatch(OpenQuickContactsEvent());
-          }
-        },
-      );
-    } else {
-      print('Ignoring Taps');
-      return IgnorePointer(
-        child: redColorBottomBar(),
-      );
-    }
+    //   if (_dashboardBloc.isAPICalling == false) {
+    return InkWell(
+      onDoubleTap: () {},
+      child: redColorBottomBar(),
+      onTap: () {
+        //To show the Quick Contact Details
+        if (_dashboardBloc.isAPICalling == false) {
+          _dashboardBloc.dispatch(OpenQuickContactsEvent());
+        } else {
+          print('Ignoring Taps');
+        }
+      },
+    );
+    //  }
+    //  else {
+    //   print('Ignoring Taps');
+//      return IgnorePointer(
+//        child: redColorBottomBar(),
+//      );
+    //  }
   }
 
   //This return the This week Filter widget
@@ -667,7 +673,8 @@ class DashboardState extends State<DashboardPage> {
                                       const EdgeInsets.only(top: 5, right: 10),
                                   child: TextWidget(
                                     textOverFlow: TextOverflow.ellipsis,
-                                    text:  _appendDollarSymbol(totalFuelAmount),//'\$' + totalFuelAmount,
+                                    text: _appendDollarSymbol(
+                                        totalFuelAmount), //'\$' + totalFuelAmount,
                                     textType: TextType.TEXT_MEDIUM,
                                     colorText: AppColors.darkColorBlue,
                                     isBold: true,
@@ -686,19 +693,16 @@ class DashboardState extends State<DashboardPage> {
                         ),
                       ),
                       Expanded(
-                        flex: 1,
+                        flex: 2,
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 12, top: 5),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                height: 35,
-                                width: 35,
-                                child: Image.asset(
-                                  'images/img_fuel.png',
-                                ),
-                              ),
-                            ],
+                          padding: const EdgeInsets.only(right: 0.0, top: 5),
+                          child: Container(
+                            padding: EdgeInsets.only(top: 5, left: 10),
+                            height: 30,
+                            width: 30,
+                            child: Image(
+                                image: AssetImage('images/img_fuel.png'),
+                                fit: BoxFit.fitHeight),
                           ),
                         ),
                       )
@@ -712,13 +716,13 @@ class DashboardState extends State<DashboardPage> {
   }
 
   String _appendDollarSymbol(String value) {
-     String textWithDollar = '';
-     if (value != 'NA') {
-       textWithDollar = '\$' + value;
-     } else {
-       textWithDollar = 'NA';
-     }
-     return textWithDollar;
+    String textWithDollar = '';
+    if (value != 'NA') {
+      textWithDollar = '\$' + value;
+    } else {
+      textWithDollar = 'NA';
+    }
+    return textWithDollar;
   }
 
   //This returns NetCompensationWidget Widget
@@ -765,7 +769,8 @@ class DashboardState extends State<DashboardPage> {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: TextWidget(
                         textOverFlow: TextOverflow.ellipsis,
-                        text: _appendDollarSymbol(aSubTitle), //'\$' + aSubTitle,
+                        text:
+                            _appendDollarSymbol(aSubTitle), //'\$' + aSubTitle,
                         colorText: AppColors.darkColorBlue,
                         textType: TextType.TEXT_MEDIUM,
                         isBold: true,
@@ -790,7 +795,8 @@ class DashboardState extends State<DashboardPage> {
                 ),
                 grossCompensationAndDeductionsWiget(
                     Constants.TEXT_GROSS_COMPENSATION,
-                     _appendDollarSymbol(grossCompensation),  //'\$' + grossCompensation,
+                    _appendDollarSymbol(
+                        grossCompensation), //'\$' + grossCompensation,
                     true),
                 grossCompensationAndDeductionsWiget(Constants.TEXT_DEDUCTIONS,
                     addDollarAfterMinusSign(deductions), false),
@@ -809,7 +815,7 @@ class DashboardState extends State<DashboardPage> {
     } else {
       deduction = 'NA';
     }
-     return deduction;
+    return deduction;
   }
 
   //This returns Gross Compensation And Deductions Wiget

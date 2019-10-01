@@ -29,7 +29,6 @@ class NewFeatureState extends State<FeaturesComingSoonPage> {
   }
 
   Widget scaffoldWidget() {
-
     return Scaffold(
       appBar: new AppBar(
         title: TextWidget(
@@ -55,9 +54,18 @@ class NewFeatureState extends State<FeaturesComingSoonPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 12.0, bottom: 12),
-            child: TextWidget(text:'Features Coming Soon!', colorText: AppColors.colorBlack, textType: TextType.TEXT_MEDIUM,isBold: true,),
+            child: TextWidget(
+              text: 'Features Coming Soon!',
+              colorText: AppColors.colorBlack,
+              textType: TextType.TEXT_MEDIUM,
+              isBold: true,
+            ),
           ),
-          TextWidget(text:'We will be notify shortly!', colorText: AppColors.colorBlack, textType: TextType.TEXT_SMALL,),
+          TextWidget(
+            text: 'We will be notify shortly!',
+            colorText: AppColors.colorBlack,
+            textType: TextType.TEXT_SMALL,
+          ),
         ],
       ),
     );
