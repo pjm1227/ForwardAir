@@ -1024,7 +1024,7 @@ class DashboardState extends State<DashboardPage> {
               height: 35,
               width: 35,
               child: Image(
-                  image: AssetImage('images/ic_mail_1.png'), fit: BoxFit.fill),
+                  image: AssetImage('images/ic_mail.png'), fit: BoxFit.fill),
             ),
           ),
           onTap: () {
@@ -1039,7 +1039,7 @@ class DashboardState extends State<DashboardPage> {
               height: 35,
               width: 35,
               child: Image(
-                  image: AssetImage('images/ic_call_1.png'), fit: BoxFit.fill),
+                  image: AssetImage('images/ic_call.png'), fit: BoxFit.fill),
             ),
           ),
           onTap: () {
