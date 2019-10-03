@@ -69,9 +69,21 @@ class LoadScreen extends State<LoadPage> {
   String _topContribution = Constants.TEXT_HIGHTOLOW;
 
   List<Widget> _pages = <Widget>[
-    PieChartWidget(
-      seriesListPieChart,
-      animate: true,
+    Column(
+      children: <Widget>[
+        SizedBox(
+          height: 10,
+        ),
+        Expanded(
+          child: PieChartWidget(
+            seriesListPieChart,
+            animate: true,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+      ],
     ),
     Padding(
       padding: const EdgeInsets.all(8.0),
@@ -609,7 +621,7 @@ class LoadScreen extends State<LoadPage> {
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.loadedLoads
-                  : item.loadedMiles );
+                  : item.loadedMiles);
           var chartModelEmpty = ChartDataModel(
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
@@ -640,13 +652,13 @@ class LoadScreen extends State<LoadPage> {
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.loadedLoads
-                : item.loadedMiles );
+                : item.loadedMiles);
         var chartModelEmpty = ChartDataModel(
             name: 'Week ${count + 1}' +
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.emptyLoads
-                : item.emptyMiles );
+                : item.emptyMiles);
         /* var chartModelTotal = ChartDataModel(
             name: 'Week ${count + 1}'
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
