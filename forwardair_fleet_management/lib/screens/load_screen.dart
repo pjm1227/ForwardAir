@@ -22,6 +22,8 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
+import '../test.dart';
+
 class LoadPage extends StatefulWidget {
   //True if coming from Load Page
   final PageName pageName;
@@ -56,24 +58,25 @@ class LoadScreen extends State<LoadPage> {
   static const _curve = Curves.ease;
 
   //List for Bar Chart
-  static List<charts.Series<ChartDataModel, String>> seriesList =
+  static List<charts.Series<ChartDataModel, String>> seriesListBarChart =
       List<charts.Series<ChartDataModel, String>>();
 
   //List for Pie Chart
-  static Map<String, double> dataMap = Map<String, double>();
+  static List<charts.Series<ChartDataModel, String>> seriesListPieChart =
+      List<charts.Series<ChartDataModel, String>>();
 
   //Text for top contribution
   String _topContribution = Constants.TEXT_HIGHTOLOW;
 
   List<Widget> _pages = <Widget>[
     PieChartWidget(
-      colorList: AppColors.colorListPieChart,
-      dataMap: dataMap,
+      seriesListPieChart,
+      animate: true,
     ),
     Padding(
       padding: const EdgeInsets.all(8.0),
       child: StackedBarChart(
-        seriesList: seriesList,
+        seriesList: seriesListBarChart,
         animate: true,
       ),
     ),
@@ -195,7 +198,7 @@ class LoadScreen extends State<LoadPage> {
             Container(
               height: 220,
               child: PageView.builder(
-                itemCount: 2,
+                itemCount: _pages.length,
                 physics: new AlwaysScrollableScrollPhysics(),
                 controller: _controller,
                 itemBuilder: (BuildContext context, int index) {
@@ -261,7 +264,22 @@ class LoadScreen extends State<LoadPage> {
       child: Column(
         children: <Widget>[
           TextWidget(
-            text: dashboardData.weekStart != null ? 'This Week' : 'This Month',
+            text: dashboardData.dashboardPeriod != null
+                ? dashboardData.dashboardPeriod ==
+                        Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH
+                    ? "This Month"
+                    : dashboardData.dashboardPeriod ==
+                            Constants.TEXT_DASHBOARD_PERIOD_LAST_WEEK
+                        ? "Last Week"
+                        : dashboardData.dashboardPeriod ==
+                                Constants.TEXT_DASHBOARD_PERIOD_THIS_WEEK
+                            ? "This Week"
+                            : dashboardData.dashboardPeriod ==
+                                    Constants
+                                        .TEXT_DASHBOARD_PREVIOUS_SETTLEMENT_PERIOD
+                                ? "Previous Settelement Period"
+                                : 'N/A'
+                : "N/A",
             colorText: AppColors.colorWhite,
             textType: TextType.TEXT_SMALL,
             //  padding: EdgeInsets.all(8.0),
@@ -513,7 +531,8 @@ class LoadScreen extends State<LoadPage> {
                         colorText: _topContribution == sortFilterOptions[index]
                             ? AppColors.colorRed
                             : null,
-                        padding: EdgeInsets.only(left:12.0, top: 8.0,bottom: 8.0),
+                        padding:
+                            EdgeInsets.only(left: 12.0, top: 8.0, bottom: 8.0),
                         text: sortFilterOptions[index],
                       ),
                       Padding(
@@ -559,7 +578,7 @@ class LoadScreen extends State<LoadPage> {
   //Type i.e weeks data or month data
   void createDataForBarChart(dynamic chartData) {
     //clear the list first
-    seriesList.clear();
+    seriesListBarChart.clear();
     //Create loaded data List
     var loadedDataList = List<ChartDataModel>();
     //Create Empty data List
@@ -589,15 +608,15 @@ class LoadScreen extends State<LoadPage> {
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
               value: pageName == PageName.LOAD_PAGE
-                  ? item.loadedLoads
-                  : item.loadedMiles);
+                  ? item.loadedLoads.toDouble()
+                  : item.loadedMiles.toDouble());
           var chartModelEmpty = ChartDataModel(
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
               value: pageName == PageName.LOAD_PAGE
-                  ? item.emptyLoads
-                  : item.emptyMiles);
-         /* var chartModelTotal = ChartDataModel(
+                  ? item.totalLoads.toDouble()
+                  : item.totalMiles.toDouble());
+          /* var chartModelTotal = ChartDataModel(
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
               value: pageName == PageName.LOAD_PAGE
@@ -606,7 +625,7 @@ class LoadScreen extends State<LoadPage> {
           //Add data models into respective list
           loadedDataList.add(chartModelLoaded);
           emptyDataList.add(chartModelEmpty);
-         // totalDataList.add(chartModelTotal);
+          // totalDataList.add(chartModelTotal);
           count++;
         });
       }
@@ -619,19 +638,23 @@ class LoadScreen extends State<LoadPage> {
         var chartModelLoaded = ChartDataModel(
             name: 'Week ${count + 1}' +
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: pageName == PageName.LOAD_PAGE ? item.loadedLoads : item.loadedMiles);
+            value: pageName == PageName.LOAD_PAGE
+                ? item.loadedLoads.toDouble()
+                : item.loadedMiles.toDouble());
         var chartModelEmpty = ChartDataModel(
             name: 'Week ${count + 1}' +
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: pageName == PageName.LOAD_PAGE ? item.emptyLoads : item.emptyMiles);
-       /* var chartModelTotal = ChartDataModel(
+            value: pageName == PageName.LOAD_PAGE
+                ? item.emptyLoads.toDouble()
+                : item.emptyMiles.toDouble());
+        /* var chartModelTotal = ChartDataModel(
             name: 'Week ${count + 1}'
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
             value: item.totalLoads);*/
         //Add data models into respective list
         loadedDataList.add(chartModelLoaded);
         emptyDataList.add(chartModelEmpty);
-       // totalDataList.add(chartModelTotal);
+        // totalDataList.add(chartModelTotal);
         count++;
       });
     }
@@ -657,8 +680,8 @@ class LoadScreen extends State<LoadPage> {
       data: totalDataList,
     );*/
 //Add final model data in series list to show chart
-    seriesList.add(loadedChartData);
-    seriesList.add(emptyChartData);
+    seriesListBarChart.add(loadedChartData);
+    seriesListBarChart.add(emptyChartData);
     //seriesList.add(totalChartData);
   }
 
@@ -669,15 +692,22 @@ class LoadScreen extends State<LoadPage> {
   void createPieChart(TractorData tractorData) {
     //Check if List have more then 10 data, then take a sublist if first 10 elements
     // And show them into pie chart
-    //first clear the dataMap
-    dataMap.clear();
+    //first clear the series List for pie chart
+    seriesListPieChart.clear();
+    //Create  data List
+    var dataList = List<ChartDataModel>();
     if (tractorData.tractors.length > 10) {
       var subTractorList = tractorData.tractors.sublist(0, 10);
-      subTractorList.forEach((v) => dataMap.putIfAbsent(
-          "${v.tractorId}",
-          () => pageName == PageName.LOAD_PAGE
-              ? v.totalLoadsPercent
-              : v.totalMilesPercent));
+
+      for (int i = 0; i < subTractorList.length; i++) {
+        var chartModel = ChartDataModel(
+            name: subTractorList[i].tractorId,
+            value: pageName == PageName.LOAD_PAGE
+                ? subTractorList[i].totalLoadsPercent
+                : subTractorList[i].totalMilesPercent,
+            color: AppColors.colorListPieChart[i]);
+        dataList.add(chartModel);
+      }
       //Now we have to show 11th division of pie chart, i.e the total percentage
       // of remaining items, So check first if we have items in list
       var remainingItemList =
@@ -691,14 +721,41 @@ class LoadScreen extends State<LoadPage> {
                 : item.totalMilesPercent);
       });
       //Add the sum of remaining loads in to data map list for pie chart
-      dataMap.putIfAbsent("sum", () => sum);
+      dataList.add(ChartDataModel(
+          value: num.parse(sum.toStringAsFixed(2)),
+          name: "11th",
+          color: charts.Color(r: 255, g: 255, b: 255)));
       //If list size if less then 10 then set the list data in chart
     } else {
-      tractorData.tractors.forEach((v) => dataMap.putIfAbsent(
-          "${v.tractorId}",
-          () => pageName == PageName.LOAD_PAGE
-              ? v.totalLoadsPercent
-              : v.totalMilesPercent));
+      //For loop to add tractor data into list for chart
+      for (int i = 0; i < tractorData.tractors.length; i++) {
+        var chartModel = ChartDataModel(
+            name: tractorData.tractors[i].tractorId,
+            value: pageName == PageName.LOAD_PAGE
+                ? tractorData.tractors[i].totalLoadsPercent
+                : tractorData.tractors[i].totalMilesPercent,
+            color: AppColors.colorListPieChart[i]);
+        dataList.add(chartModel);
+      }
     }
+
+    //Create pie chart basic properties here
+    var pieChart = charts.Series<ChartDataModel, String>(
+      id: 'TopContributor',
+      domainFn: (ChartDataModel sales, _) => sales.name,
+      measureFn: (ChartDataModel sales, _) => sales.value,
+      data: dataList,
+      // Set a label accessor to control the text of the arc label.
+      labelAccessorFn: (ChartDataModel row, _) => '${row.value}',
+      colorFn: (ChartDataModel clickData, _) => clickData.color,
+      insideLabelStyleAccessorFn: (_, __) =>
+          charts.TextStyleSpec(color: charts.Color(r: 255, g: 255, b: 255)),
+      outsideLabelStyleAccessorFn: (ChartDataModel sales, _) {
+        return new charts.TextStyleSpec(
+            color: charts.Color(r: 255, g: 255, b: 255));
+      },
+    );
+    //Add chart data into series list
+    seriesListPieChart.add(pieChart);
   }
 }

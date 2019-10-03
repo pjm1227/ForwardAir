@@ -1,8 +1,10 @@
 import 'package:meta/meta.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class ChartDataModel {
-  final int value;
+  final double value;
   final String name;
+  final charts.Color color;
 
-  ChartDataModel({@required this.value, @required this.name});
+  ChartDataModel({@required this.value, @required this.name, this.color});
 }

@@ -12,7 +12,7 @@ class InitialState extends ChartStates {}
 
 //It will handle the Accept state for the page
 class SelectState extends ChartStates {
-  final int total;
+  final double total;
 
   SelectState({@required this.total}) : super([total]);
 }

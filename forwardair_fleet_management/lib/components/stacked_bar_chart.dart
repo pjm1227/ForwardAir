@@ -20,7 +20,7 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 class StackedBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
-  int total = 0;
+  double total = 0;
   final chartBloc = ChartBloc();
 
   StackedBarChart({this.seriesList, this.animate});

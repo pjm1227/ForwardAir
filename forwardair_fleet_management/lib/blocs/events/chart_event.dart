@@ -9,7 +9,7 @@ abstract class ChartEvents extends Equatable {
 
 //Accept Event
 class SelectEvent extends ChartEvents {
-  final int total;
+  final double total;
 
   SelectEvent({@required this.total}) : assert(total != null);
 }
