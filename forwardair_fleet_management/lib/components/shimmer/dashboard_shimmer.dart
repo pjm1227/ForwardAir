@@ -261,19 +261,19 @@ class DashBoardShimmer extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 5.0, right: 10, left: 5),
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: 35,
-                            width: 0.5,
-                            color: Colors.grey,
-                          ),
-                        ],
-                      ),
-                    ),
+//                    Padding(
+////                      padding:
+////                          const EdgeInsets.only(top: 5.0, right: 10, left: 5),
+////                      child: Column(
+////                        children: <Widget>[
+////                          Container(
+////                            height: 35,
+////                            width: 0.5,
+////                            color: Colors.grey,
+////                          ),
+////                        ],
+////                      ),
+////                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0, right: 10),
                       child: Column(
@@ -448,13 +448,13 @@ class DashBoardShimmer extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Divider(
-                height: 0.5,
-                color: Colors.grey[400],
-              ),
-            )
+//            Padding(
+//              padding: const EdgeInsets.only(top: 8.0),
+//              child: Divider(
+//                height: 0.5,
+//                color: Colors.grey[400],
+//              ),
+//            )
           ],
         ),
       ),
