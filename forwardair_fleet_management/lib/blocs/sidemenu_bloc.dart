@@ -57,7 +57,7 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
     }
     //Logout Event
     if (event is LogoutEvent) {
-      await _logoutAction();
+     // await _logoutAction();
       yield LoggedOutState();
     }
   }
@@ -84,7 +84,7 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
   }
 
   //Log out
-  Future _logoutAction() async {
+  Future logoutAction() async {
     final userManager = UserManager();
     final termsManager = TermsManager();
     final userRoleManager = UserRoleManager();

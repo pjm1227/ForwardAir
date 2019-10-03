@@ -532,7 +532,8 @@ class _HomePageState extends State<HomePage> {
     );
     Widget continueButton = FlatButton(
       child: Text("Yes"),
-      onPressed: () {
+      onPressed: () async {
+        await _sideMenuBloc.logoutAction();
         navigateToLginPage();
       },
     );
