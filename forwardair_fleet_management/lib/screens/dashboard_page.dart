@@ -1019,7 +1019,7 @@ class DashboardState extends State<DashboardPage> {
       child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
         InkWell(
           child: Padding(
-            padding: const EdgeInsets.only(left: 5, right: 12.0),
+            padding: const EdgeInsets.only(left: 5, right: 10.0),
             child: SizedBox(
               height: 35,
               width: 35,
@@ -1027,6 +1027,7 @@ class DashboardState extends State<DashboardPage> {
                   image: AssetImage('images/ic_mail.png'), fit: BoxFit.fill),
             ),
           ),
+          onDoubleTap: () {},
           onTap: () {
             _dashboardBloc
                 .dispatch(QuickContactTapsOnMailEvent(selectedIndex: index));
@@ -1034,7 +1035,7 @@ class DashboardState extends State<DashboardPage> {
         ),
         InkWell(
           child: Padding(
-            padding: const EdgeInsets.only(right: 12.0),
+            padding: const EdgeInsets.only(left: 5, right: 5.0),
             child: SizedBox(
               height: 35,
               width: 35,
@@ -1042,6 +1043,7 @@ class DashboardState extends State<DashboardPage> {
                   image: AssetImage('images/ic_call.png'), fit: BoxFit.fill),
             ),
           ),
+          onDoubleTap: () {},
           onTap: () {
             _dashboardBloc
                 .dispatch(QuickContactTapsOnCallEvent(selectedIndex: index));
