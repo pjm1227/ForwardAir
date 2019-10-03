@@ -20,7 +20,7 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 class StackedBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
-  double total = 0;
+  double total = 0.0;
   final chartBloc = ChartBloc();
 
   StackedBarChart({this.seriesList, this.animate});
@@ -110,12 +110,12 @@ class StackedBarChart extends StatelessWidget {
     // Walk the selection updating the measures map, storing off the sales and
     // series name for each selection point.
     if (selectedDatum.isNotEmpty) {
-      total = 0;
+      total = 0.0;
       selectedDatum.forEach((item) {
         total = total + item.datum.value;
       });
       chartBloc.dispatch(SelectEvent(total: total));
-      print("SelectedDatum lenght is $total");
+      print("SelectedDatum total is $total");
     }
   }
 }

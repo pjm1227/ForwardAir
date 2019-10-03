@@ -614,8 +614,8 @@ class LoadScreen extends State<LoadPage> {
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
               value: pageName == PageName.LOAD_PAGE
-                  ? item.totalLoads.toDouble()
-                  : item.totalMiles.toDouble());
+                  ? item.emptyLoads.toDouble()
+                  : item.emptyMiles.toDouble());
           /* var chartModelTotal = ChartDataModel(
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
