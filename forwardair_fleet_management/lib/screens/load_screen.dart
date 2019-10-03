@@ -607,15 +607,15 @@ class LoadScreen extends State<LoadPage> {
           var chartModelLoaded = ChartDataModel(
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-              value: pageName == PageName.LOAD_PAGE
-                  ? item.loadedLoads.toDouble()
-                  : item.loadedMiles.toDouble());
+              loadsValue: pageName == PageName.LOAD_PAGE
+                  ? item.loadedLoads
+                  : item.loadedMiles );
           var chartModelEmpty = ChartDataModel(
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-              value: pageName == PageName.LOAD_PAGE
-                  ? item.emptyLoads.toDouble()
-                  : item.emptyMiles.toDouble());
+              loadsValue: pageName == PageName.LOAD_PAGE
+                  ? item.emptyLoads
+                  : item.emptyMiles);
           /* var chartModelTotal = ChartDataModel(
               name: weekList[count] +
                   '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
@@ -638,15 +638,15 @@ class LoadScreen extends State<LoadPage> {
         var chartModelLoaded = ChartDataModel(
             name: 'Week ${count + 1}' +
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: pageName == PageName.LOAD_PAGE
-                ? item.loadedLoads.toDouble()
-                : item.loadedMiles.toDouble());
+            loadsValue: pageName == PageName.LOAD_PAGE
+                ? item.loadedLoads
+                : item.loadedMiles );
         var chartModelEmpty = ChartDataModel(
             name: 'Week ${count + 1}' +
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: pageName == PageName.LOAD_PAGE
-                ? item.emptyLoads.toDouble()
-                : item.emptyMiles.toDouble());
+            loadsValue: pageName == PageName.LOAD_PAGE
+                ? item.emptyLoads
+                : item.emptyMiles );
         /* var chartModelTotal = ChartDataModel(
             name: 'Week ${count + 1}'
                 '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
@@ -661,14 +661,14 @@ class LoadScreen extends State<LoadPage> {
     var emptyChartData = charts.Series<ChartDataModel, String>(
       id: 'Empty',
       domainFn: (ChartDataModel chartData, _) => chartData.name,
-      measureFn: (ChartDataModel chartData, _) => chartData.value,
+      measureFn: (ChartDataModel chartData, _) => chartData.loadsValue,
       colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
       data: emptyDataList,
     );
     var loadedChartData = charts.Series<ChartDataModel, String>(
       id: 'Loaded',
       domainFn: (ChartDataModel chartData, _) => chartData.name,
-      measureFn: (ChartDataModel chartData, _) => chartData.value,
+      measureFn: (ChartDataModel chartData, _) => chartData.loadsValue,
       colorFn: (_, __) => charts.MaterialPalette.teal.shadeDefault,
       data: loadedDataList,
     );
