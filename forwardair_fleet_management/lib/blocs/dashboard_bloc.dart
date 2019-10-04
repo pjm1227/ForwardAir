@@ -1,12 +1,9 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
-import 'package:forwardair_fleet_management/blocs/states/dashboardstate.dart';
+
+import 'package:forwardair_fleet_management/blocs/barrels/dashboard.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/dashboard_request.dart';
-import 'package:forwardair_fleet_management/screens/dashboard_page.dart'
-    as prefix0;
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/databasemanager/dashboard_table_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
@@ -16,18 +13,16 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
 class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   //DB provider
   DashboardManager _dashboard_dbProvider = DashboardManager();
-
-  //Fetched Array From DB
+  //Fetched List From DB
   List<Dashboard_DB_Model> dashboardItemsFromDB = [];
-
   //For API Calling
   final apiManager = DashboardRequest();
-
   //Flag
   bool isAPICalling = false;
-
   //Filter Period Type
   String _selectedPeriodTypeInFilter = '';
+  //No Internet Connection
+  String noInternetText = '';
 
   //Initial State of the Dashboard
   @override
@@ -50,6 +45,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       }
       //Once screen gets loaded
       if (currentState is DashboardLoaded) {
+        noInternetText = '';
         final posts = await fetchDataFromDB();
         if (posts.length == 0) {
           yield DashboardError();
@@ -61,6 +57,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     }
     //Pull To Refresh Event
     else if (event is PullToRefreshDashboardEvent) {
+      noInternetText = '';
       final posts = await _fetchDashboardDetails();
       yield InitialState();
       if (posts.length == 0) {
@@ -84,7 +81,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       var selectedModel = applyFilterInaDashboard(posts);
       yield DashboardLoaded(dashboardData: selectedModel);
       yield QuickContactsMailState(
-            selectedIndex: event.selectedIndex, dashboardData: selectedModel);
+          selectedIndex: event.selectedIndex, dashboardData: selectedModel);
     }
     //To make a call from Quick Contact Sheet
     else if (event is QuickContactTapsOnCallEvent) {
@@ -130,7 +127,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   Future<List<Dashboard_DB_Model>> _fetchDashboardDetails() async {
     var userManager = UserManager();
     var userModel = await userManager.getData();
-    //Check for internet connection
+    //Check internet connection
     var isConnection = await Utils.isConnectionAvailable();
     if (isConnection) {
       // If device is in online
@@ -142,10 +139,8 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
             userModel.token != null ? userModel.token : '');
         final dashboardItems =
             Dashboard_DB_Model().dashboardDBModelFromJson(responseBody);
-        //final dashboardItems = await apiManager.loadDashboardDataFromServer(userModel.token != null ? userModel.token : '');
         //For success
         if (dashboardItems.length > 0) {
-          // await _dashboard_dbProvider.deleteAll();
           for (var index = 0; index < dashboardItems.length; index++) {
             Dashboard_DB_Model _apimodel = dashboardItems[index];
             //Check whether response data, exist in DB or not
@@ -159,31 +154,36 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
               _dashboard_dbProvider.insertIntoDashboardDB(_apimodel);
             }
           }
+          dashboardItemsFromDB = [];
           // Add Items to the List to populate the date into the UI
           dashboardItemsFromDB.addAll(dashboardItems);
           return dashboardItemsFromDB;
         }
       }
-      //To handle the exceptions
+      //If any Exception Occurs in API Call
       catch (_) {
-        //If any Exception Occurs in API Call
         dashboardItemsFromDB = await fetchDataFromDB();
         return dashboardItemsFromDB;
       }
     } else {
       // If device is in offline
       dashboardItemsFromDB = await fetchDataFromDB();
+      if (dashboardItemsFromDB.length == 0) {
+        noInternetText = Constants.NO_INTERNET_FOUND;
+      } else {
+        noInternetText = '';
+      }
       return dashboardItemsFromDB;
     }
   }
 
-  //This method to fetch from Dashboard DB
+  //To fetch data from DB
   Future<List<Dashboard_DB_Model>> fetchDataFromDB() async {
     //Fetching all from DB
     List<Dashboard_DB_Model> list =
         await _dashboard_dbProvider.fetchAllAndConvertMaplistToDashboardList();
     if (list.length > 0) {
-      // If data exist, assigning to teh List To update UI
+      // If data exist
       dashboardItemsFromDB = list;
       return dashboardItemsFromDB;
     } else {
@@ -192,7 +192,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     }
   }
 
-  //This method will return the Filter Title of a Period
+  //To return the Filter Title of a Period
   String convertPeriodToTitle(String periodType) {
     if (periodType == Constants.TEXT_DASHBOARD_PERIOD_THIS_WEEK) {
       return Constants.TEXT_THISWEEK;
@@ -206,7 +206,7 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     }
   }
 
-  //This method will return Filter Type of a Period
+  //To return Filter Type of a Period
   String convertTitleToPeriod(String periodType) {
     if (periodType == Constants.TEXT_THISWEEK) {
       return Constants.TEXT_DASHBOARD_PERIOD_THIS_WEEK;
@@ -217,5 +217,25 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     } else {
       return Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH;
     }
+  }
+
+  String addDollarAfterMinusSign(String deductions) {
+    String deduction = '';
+    if (deductions != 'NA') {
+      deduction = '-\$' + deductions.replaceAll(RegExp('-'), '');
+    } else {
+      deduction = 'NA';
+    }
+    return deduction;
+  }
+
+  String appendDollarSymbol(String value) {
+    String textWithDollar = '';
+    if (value != 'NA') {
+      textWithDollar = '\$' + value;
+    } else {
+      textWithDollar = 'NA';
+    }
+    return textWithDollar;
   }
 }

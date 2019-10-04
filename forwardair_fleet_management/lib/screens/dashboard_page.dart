@@ -1,11 +1,14 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forwardair_fleet_management/components/shimmer/dashboard_shimmer.dart';
-import 'package:forwardair_fleet_management/models/enums/page_names.dart';
-import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:page_transition/page_transition.dart';
 
+import 'package:forwardair_fleet_management/components/no_internet_connection.dart';
+import 'package:forwardair_fleet_management/components/no_result_found.dart';
+import 'package:forwardair_fleet_management/components/shimmer/dashboard_shimmer.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
+import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
 import 'package:forwardair_fleet_management/blocs/states/dashboardstate.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
@@ -15,7 +18,6 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
-
 import 'load_screen.dart';
 
 /*
@@ -32,12 +34,10 @@ class DashboardPage extends StatefulWidget {
 class DashboardState extends State<DashboardPage> {
   //Dashboard Bloc
   DashboardBloc _dashboardBloc = DashboardBloc();
-
   //To make a call and send mail
   var _service = CallsAndMailService();
   //Selected Index in Filter
   int _selectedIndex = 3;
-
   //Pull to refresh
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -52,33 +52,15 @@ class DashboardState extends State<DashboardPage> {
     Constants.TEXT_SAFETY_PHONENUMBER,
     Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER
   ];
+  //To handle Call button Tap in Quick contacts
+  bool _isTappable = false;
 
-  //To Dispose the DashboardBloc
+  //To Dispose
   @override
   void dispose() {
     _dashboardBloc.dispose();
     _refreshController.dispose();
     super.dispose();
-  }
-
-  Widget noResultsFoundWidget() {
-    _dashboardBloc.isAPICalling = false;
-    return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(bottom: 10),
-          child: Image(
-              image: AssetImage('images/img_no_result_found.png'),
-              fit: BoxFit.cover),
-        ),
-        TextWidget(
-          text: Constants.TEXT_NO_RESULTS_FOUND,
-          textType: TextType.TEXT_MEDIUM,
-        ),
-      ],
-    ));
   }
 
   //Child Widgets of the Refresh Controller
@@ -90,7 +72,13 @@ class DashboardState extends State<DashboardPage> {
       return Center(child: DashBoardShimmer());
     } else if (state is DashboardError) {
       //Error State
-      return noResultsFoundWidget();
+      if (_dashboardBloc.noInternetText != '') {
+        _dashboardBloc.isAPICalling = false;
+        return NoInternetFoundWidget();
+      } else {
+        _dashboardBloc.isAPICalling = false;
+        return NoResultFoundWidget();
+      }
     } // Success State
     else if (state is DashboardLoaded ||
         state is OpenQuickContactsState ||
@@ -105,11 +93,13 @@ class DashboardState extends State<DashboardPage> {
           return _listViewWidget();
         } else {
           //No Data Found
-          return noResultsFoundWidget();
+          _dashboardBloc.isAPICalling = false;
+          return NoResultFoundWidget();
         }
       } else {
         //No Data Found
-        return noResultsFoundWidget();
+        _dashboardBloc.isAPICalling = false;
+        return NoResultFoundWidget();
       }
     } //ApplyFilter State
     else if (state is ApplyFilterState) {
@@ -119,7 +109,8 @@ class DashboardState extends State<DashboardPage> {
       return _listViewWidget();
     } else {
       //No Data Found
-      return noResultsFoundWidget();
+      _dashboardBloc.isAPICalling = false;
+      return NoResultFoundWidget();
     }
   }
 
@@ -133,9 +124,6 @@ class DashboardState extends State<DashboardPage> {
         if (index == 0) {
           final filterPeriod = _dashboardBloc
               .convertPeriodToTitle(_dashboardDataModel.dashboardPeriod);
-          print(
-              ' Selected Period from model ${_dashboardDataModel.dashboardPeriod}');
-          print(' Selected Text $filterPeriod');
           return _buildThisWeekWidget(filterPeriod);
         }
         //Total loads and Total Miles widget
@@ -176,26 +164,23 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //This returns the Widget of Dashboard Page
+  //This returns Dashboard Page
   @override
   Widget build(BuildContext context) {
     //To fetch the data Initially
     _dashboardBloc.dispatch(FetchDashboardEvent());
-    //This returns the Dashboard Widget
     return Scaffold(
       backgroundColor: AppColors.colorDashboard_Bg,
-      //BlocBuilder
+      //BlocListener
       body: BlocListener<DashboardBloc, dynamic>(
         bloc: _dashboardBloc,
         condition: (previousState, currentState) {
           return true;
         },
         listener: (context, state) {
-          print('Dashboard State in Listner $state');
           if (state is OpenQuickContactsState) {
             _buildBottomSheet(context);
-          }
-          else if (state is QuickContactsMailState) {
+          } else if (state is QuickContactsMailState) {
             switch (state.selectedIndex) {
               case 0:
                 {
@@ -237,11 +222,23 @@ class DashboardState extends State<DashboardPage> {
           } else if (state is DrillDownPageState) {
             navigateToDrillDownPage(state.pageName);
           }
+
+          if (state is QuickContactsCallState) {
+            if (Platform.isIOS) {
+              print('delaying');
+              Future.delayed(const Duration(seconds: 1), () {
+                print('after 1 sec');
+                _isTappable = true;
+              });
+            } else {
+              _isTappable = true;
+            }
+          }
         },
+        //BlocBuilder
         child: BlocBuilder<DashboardBloc, dynamic>(
           bloc: _dashboardBloc,
           builder: (context, state) {
-            print('Dashboard State in Build $state');
             //Pull Refresh Option
             return SmartRefresher(
                 controller: _refreshController,
@@ -260,7 +257,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //Qucik Constacts Widget
+  //Quick Contacts Widget
   Widget _bottomNavigationBarWidget() {
     return BottomAppBar(
       elevation: 0,
@@ -344,26 +341,18 @@ class DashboardState extends State<DashboardPage> {
 
   //Open Quick Tap Handler
   Widget _handleTapEventForQuickContact() {
-    //   if (_dashboardBloc.isAPICalling == false) {
     return InkWell(
       onDoubleTap: () {},
       child: redColorBottomBar(),
       onTap: () {
-        //To show the Quick Contact Details
         if (_dashboardBloc.isAPICalling == false) {
+          _isTappable = true;
           _dashboardBloc.dispatch(OpenQuickContactsEvent());
         } else {
           print('Ignoring Taps');
         }
       },
     );
-    //  }
-    //  else {
-    //   print('Ignoring Taps');
-//      return IgnorePointer(
-//        child: redColorBottomBar(),
-//      );
-    //  }
   }
 
   //This return the This week Filter widget
@@ -398,7 +387,9 @@ class DashboardState extends State<DashboardPage> {
                 isBold: true,
                 colorText: AppColors.colorWhite),
             onTap: () {
-              _weekModalBottomSheet(context);
+              if (_dashboardBloc.isAPICalling == false) {
+                _weekModalBottomSheet(context);
+              }
             },
           ),
         ),
@@ -446,11 +437,8 @@ class DashboardState extends State<DashboardPage> {
                         } else {
                           //Selected Filter in  Bottom Sheet
                           Navigator.of(context).pop();
-                          print(weekFilterOptions[index]);
                           var selectedPeriodText = _dashboardBloc
                               .convertTitleToPeriod(weekFilterOptions[index]);
-                          print('Send to Bloc');
-                          print(selectedPeriodText);
                           _dashboardBloc.dispatch(ApplyFilterEvent(
                               selectedIndex: index,
                               selectedDashboardPeriod: selectedPeriodText));
@@ -547,7 +535,7 @@ class DashboardState extends State<DashboardPage> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(top: 5.0,right: 5),
+                      padding: EdgeInsets.only(top: 5.0, right: 5),
                       height: 35,
                       width: 35,
                       child: aTitle == Constants.TEXT_TOTAL_LOADS
@@ -675,7 +663,7 @@ class DashboardState extends State<DashboardPage> {
                                       const EdgeInsets.only(top: 5, right: 10),
                                   child: TextWidget(
                                     textOverFlow: TextOverflow.ellipsis,
-                                    text: _appendDollarSymbol(
+                                    text: _dashboardBloc.appendDollarSymbol(
                                         totalFuelAmount), //'\$' + totalFuelAmount,
                                     textType: TextType.TEXT_MEDIUM,
                                     colorText: AppColors.darkColorBlue,
@@ -703,8 +691,8 @@ class DashboardState extends State<DashboardPage> {
                             height: 30,
                             width: 30,
                             child: Image(
-                                image: AssetImage('images/img_fuel.png'),
-                                ),
+                              image: AssetImage('images/img_fuel.png'),
+                            ),
                           ),
                         ),
                       )
@@ -715,16 +703,6 @@ class DashboardState extends State<DashboardPage> {
             )),
       ),
     );
-  }
-
-  String _appendDollarSymbol(String value) {
-    String textWithDollar = '';
-    if (value != 'NA') {
-      textWithDollar = '\$' + value;
-    } else {
-      textWithDollar = 'NA';
-    }
-    return textWithDollar;
   }
 
   //This returns NetCompensationWidget Widget
@@ -771,8 +749,8 @@ class DashboardState extends State<DashboardPage> {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: TextWidget(
                         textOverFlow: TextOverflow.ellipsis,
-                        text:
-                            _appendDollarSymbol(aSubTitle), //'\$' + aSubTitle,
+                        text: _dashboardBloc
+                            .appendDollarSymbol(aSubTitle), //'\$' + aSubTitle,
                         colorText: AppColors.darkColorBlue,
                         textType: TextType.TEXT_MEDIUM,
                         isBold: true,
@@ -797,27 +775,17 @@ class DashboardState extends State<DashboardPage> {
                 ),
                 grossCompensationAndDeductionsWiget(
                     Constants.TEXT_GROSS_COMPENSATION,
-                    _appendDollarSymbol(
+                    _dashboardBloc.appendDollarSymbol(
                         grossCompensation), //'\$' + grossCompensation,
                     true),
                 grossCompensationAndDeductionsWiget(Constants.TEXT_DEDUCTIONS,
-                    addDollarAfterMinusSign(deductions), false),
+                    _dashboardBloc.addDollarAfterMinusSign(deductions), false),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  String addDollarAfterMinusSign(String deductions) {
-    String deduction = '';
-    if (deductions != 'NA') {
-      deduction = '-\$' + deductions.replaceAll(RegExp('-'), '');
-    } else {
-      deduction = 'NA';
-    }
-    return deduction;
   }
 
   //This returns Gross Compensation And Deductions Wiget
@@ -999,7 +967,6 @@ class DashboardState extends State<DashboardPage> {
         imageName = 'images/ic_driver_relations.png';
         break;
     }
-
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
@@ -1045,8 +1012,12 @@ class DashboardState extends State<DashboardPage> {
           ),
           onDoubleTap: () {},
           onTap: () {
-            _dashboardBloc
-                .dispatch(QuickContactTapsOnCallEvent(selectedIndex: index));
+            print('isTappable calue : $_isTappable');
+            if (_isTappable) {
+              _isTappable = false;
+              _dashboardBloc
+                  .dispatch(QuickContactTapsOnCallEvent(selectedIndex: index));
+            }
           },
         )
       ]),
