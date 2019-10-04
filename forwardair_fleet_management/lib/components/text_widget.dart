@@ -31,7 +31,7 @@ class TextWidget extends StatelessWidget {
 
   const TextWidget(
       {Key key,
-      this.text,
+      @required this.text,
       this.padding,
       this.colorText,
       this.isBold,

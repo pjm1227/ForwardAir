@@ -30,14 +30,27 @@ class AppColors {
     charts.Color(r: 227, g: 26, b: 28),
     charts.Color(r: 51, g: 120, b: 180),
     charts.Color(r: 251, g: 154, b: 153),
-    charts.Color(r: 255, g: 127, b: 0),
+    charts.Color(r: 128, g: 0, b: 128),
     charts.Color(r: 166, g: 206, b: 227),
     charts.Color(r: 178, g: 223, b: 138),
     charts.Color(r: 45, g: 135, b: 151),
     charts.Color(r: 253, g: 191, b: 111),
     charts.Color(r: 140, g: 234, b: 255),
-    charts.Color(r: 23, g: 87, b: 99),
+    charts.Color(r: 255, g: 127, b: 0),
     charts.Color(r: 255, g: 255, b: 255),
 
+  ];
+  //color list which is used for dots color
+  static const List<Color> colorListForDots = [
+    Color.fromRGBO(227, 26, 28, 1),
+    Color.fromRGBO(31, 120, 180, 1),
+    Color.fromRGBO(251, 154, 153, 1),
+    Color.fromRGBO(128, 0, 128, 1),
+    Color.fromRGBO(166, 206, 227, 1),
+    Color.fromRGBO(178, 223, 138, 1),
+    Color.fromRGBO(45, 135, 151, 1),
+    Color.fromRGBO(253, 191, 111, 1),
+    Color.fromRGBO(140, 234, 255, 1),
+    Color.fromRGBO(255, 127, 0, 1),
   ];
 }

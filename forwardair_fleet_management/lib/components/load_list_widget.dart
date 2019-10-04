@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
-import 'package:forwardair_fleet_management/screens/load_detail.dart';
+import 'package:forwardair_fleet_management/screens/tractor_load_detail.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
+import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'text_widget.dart';
@@ -11,7 +12,7 @@ import 'text_widget.dart';
 //This widget return a list view widget that can be use at Load Page and
 //Miles Page
 class LoadListViewWidget extends StatelessWidget {
-  final List<Tractor> tractorList;
+  final List<Map<Tractor, Color>> tractorList;
   final PageName pageName;
   final Dashboard_DB_Model dashboardData;
 
@@ -51,23 +52,34 @@ class LoadListViewWidget extends StatelessWidget {
                                 Row(
                                   children: <Widget>[
                                     ClipOval(
-                                      child: Container(
-                                        color: pageName == PageName.LOAD_PAGE &&
-                                                tractorList[index].emptyLoads ==
-                                                    0
-                                            ? AppColors.colorRed
-                                            : tractorList[index].emptyMiles == 0
-                                                ? AppColors.colorRed
-                                                : AppColors.colorDOT,
-                                        height: 8.0,
-                                        width: 8.0,
-                                      ),
+                                      child: tractorList[index].values.first ==
+                                              AppColors.colorWhite
+                                          ? new Container(
+                                              width: 8.0,
+                                              height: 8.0,
+                                              decoration: new BoxDecoration(
+                                                borderRadius: new BorderRadius
+                                                        .all(
+                                                    new Radius.circular(8.0)),
+                                                border: new Border.all(
+                                                  color: Colors.black,
+                                                  width: 1.0,
+                                                ),
+                                              ),
+                                            )
+                                          : Container(
+                                              color: tractorList[index]
+                                                  .values
+                                                  .first,
+                                              height: 8.0,
+                                              width: 8.0,
+                                            ),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: TextWidget(
                                         text:
-                                            'Tractor ID :  ${tractorList[index].tractorId}',
+                                            'Tractor ID :  ${tractorList[index].keys.first.tractorId}',
                                         textType: TextType.TEXT_MEDIUM,
                                       ),
                                     ),
@@ -79,8 +91,8 @@ class LoadListViewWidget extends StatelessWidget {
                                   child: TextWidget(
                                     textType: TextType.TEXT_MEDIUM,
                                     text: pageName == PageName.LOAD_PAGE
-                                        ? 'Contribution(%) :  ${tractorList[index].totalLoadsPercent}'
-                                        : 'Contribution(%) :  ${tractorList[index].totalMilesPercent}',
+                                        ? 'Contribution(%) :  ${tractorList[index].keys.first.totalLoadsPercent}'
+                                        : 'Contribution(%) :  ${tractorList[index].keys.first.totalMilesPercent}',
                                   ),
                                 )
                               ],
@@ -90,12 +102,12 @@ class LoadListViewWidget extends StatelessWidget {
                           flex: 3,
                           child: Container(
                             height: 65,
-                            color: AppColors.colorListItem,
+                            color: Colors.teal,
                             child: Center(
                               child: TextWidget(
                                 text: pageName == PageName.LOAD_PAGE
-                                    ? '${tractorList[index].totalLoads}'
-                                    : '${tractorList[index].totalMiles}',
+                                    ? '${Utils.formatDecimalToWholeNumber(tractorList[index].keys.first.totalLoads)}'
+                                    : '${Utils.formatDecimalToWholeNumber(tractorList[index].keys.first.totalMiles)}',
                                 colorText: AppColors.colorWhite,
                                 textType: TextType.TEXT_MEDIUM,
                                 isBold: true,
@@ -112,8 +124,8 @@ class LoadListViewWidget extends StatelessWidget {
                   context,
                   PageTransition(
                       type: PageTransitionType.fade,
-                      child: LoadDetailsPage(
-                          pageName, tractorList[index], dashboardData)));
+                      child: LoadDetailsPage(pageName,
+                          tractorList[index].keys.first, dashboardData)));
             },
           );
         },

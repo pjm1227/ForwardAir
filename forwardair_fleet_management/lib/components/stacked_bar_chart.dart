@@ -21,6 +21,8 @@ class StackedBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
   int total = 0;
+  int loaded = 0;
+  int empty = 0;
   final chartBloc = ChartBloc();
 
   StackedBarChart({this.seriesList, this.animate});
@@ -45,10 +47,33 @@ class StackedBarChart extends StatelessWidget {
   Widget _chartWidget() {
     return Column(
       children: <Widget>[
-        TextWidget(
-          text: total == 0 ? '' : 'Total : $total',
-          colorText: AppColors.colorWhite,
-        ),
+        Container(
+            child: total == 0
+                ? TextWidget(
+                    text: '* Please tap on bar to see information',
+                    colorText: Colors.red,
+                    textType: TextType.TEXT_XSMALL,
+                  )
+                : Padding(
+                    padding: EdgeInsets.only(left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TextWidget(
+                          text: "Total : $total",
+                          colorText: AppColors.colorWhite,
+                        ),
+                        TextWidget(
+                          text: "Loaded : $loaded",
+                          colorText: AppColors.colorWhite,
+                        ),
+                        TextWidget(
+                          text: 'Empty :$empty',
+                          colorText: AppColors.colorWhite,
+                        )
+                      ],
+                    ),
+                  )),
         Expanded(
           child: charts.BarChart(
             seriesList,
@@ -114,8 +139,10 @@ class StackedBarChart extends StatelessWidget {
       selectedDatum.forEach((item) {
         total = total + item.datum.loadsValue;
       });
+
+      loaded = selectedDatum[0] != null ? selectedDatum[0].datum.loadsValue : 0;
+      empty = selectedDatum[1] != null ? selectedDatum[1].datum.loadsValue : 0;
       chartBloc.dispatch(SelectEvent(total: total));
-      print("SelectedDatum lenght is $total");
     }
   }
 }

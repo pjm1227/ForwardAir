@@ -65,6 +65,9 @@ class LoadScreen extends State<LoadPage> {
   static List<charts.Series<ChartDataModel, String>> seriesListPieChart =
       List<charts.Series<ChartDataModel, String>>();
 
+  //List for List view
+  List<Map<Tractor, Color>> listTractorData = List<Map<Tractor, Color>>();
+
   //Text for top contribution
   String _topContribution = Constants.TEXT_HIGHTOLOW;
 
@@ -154,6 +157,8 @@ class LoadScreen extends State<LoadPage> {
             createDataForBarChart(state.loadChartData);
             //Create Pie chart
             createPieChart(state.tractorData);
+            loadBloc.dispatch(SortHighToLowEvent(
+                pageName: pageName, tractorData: listTractorData));
           }
           if (state is SortState) {
             //Create Pie chart
@@ -178,13 +183,13 @@ class LoadScreen extends State<LoadPage> {
 
               if (state is SuccessState) {
                 if (state.tractorData.tractors != null) {
-                  return _initialWidget(state.tractorData);
+                  return _initialWidget();
                 } else {
                   return NoResultFoundWidget();
                 }
               }
               if (state is SortState) {
-                return _initialWidget(state.tractorData);
+                return _initialWidget();
               }
               return LoadPageShimmer();
             }),
@@ -193,7 +198,7 @@ class LoadScreen extends State<LoadPage> {
   }
 
   //Initial Widget
-  Widget _initialWidget(TractorData tractorData) {
+  Widget _initialWidget() {
     var pager = new PageController();
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -235,34 +240,12 @@ class LoadScreen extends State<LoadPage> {
               ),
             ),
             //Widget to show Header for sort by options
-            _sortByHeader(tractorData),
-
+            _sortByHeader(),
+            //List View Widget
             LoadListViewWidget(
-                tractorList: tractorData.tractors.length > 10
-                    ? tractorData.tractors.sublist(0, 10)
-                    : tractorData.tractors,
+                tractorList: listTractorData,
                 pageName: pageName,
                 dashboardData: dashboardData),
-            //Widget for Other Text
-            Container(
-              width: MediaQuery.of(context).size.width,
-              color: AppColors.colorDashboard_Bg,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 12, bottom: 12),
-                child: TextWidget(
-                  text: 'Others',
-                  isBold: true,
-                  textType: TextType.TEXT_MEDIUM,
-                ),
-              ),
-            ),
-            LoadListViewWidget(
-                dashboardData: dashboardData,
-                pageName: pageName,
-                tractorList: tractorData.tractors.length > 10
-                    ? tractorData.tractors
-                        .sublist(10, tractorData.tractors.length)
-                    : tractorData.tractors),
           ],
         ),
       ),
@@ -453,7 +436,7 @@ class LoadScreen extends State<LoadPage> {
   }
 
   //This widget return the header widget for sort by options
-  Widget _sortByHeader(TractorData tractorData) {
+  Widget _sortByHeader() {
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: Container(
@@ -478,7 +461,7 @@ class LoadScreen extends State<LoadPage> {
                     ],
                   ),
                   onTap: () {
-                    _sortByOptionsWidget(tractorData);
+                    _sortByOptionsWidget();
                   },
                 )
               ]),
@@ -514,7 +497,7 @@ class LoadScreen extends State<LoadPage> {
   }
 
   //This method show the bottom options for sorting
-  _sortByOptionsWidget(TractorData tractorData) {
+  _sortByOptionsWidget() {
     //To Align a Text
     final centerTextAlign = TextAlign.center;
     //List of options in filter bottom sheet
@@ -565,18 +548,17 @@ class LoadScreen extends State<LoadPage> {
                     });
                     if (index == 0) {
                       loadBloc.dispatch(SortHighToLowEvent(
-                          pageName: pageName, tractorData: tractorData));
+                          pageName: pageName, tractorData: listTractorData));
                     } else if (index == 1) {
                       loadBloc.dispatch(SortLowToHighEvent(
-                          pageName: pageName, tractorData: tractorData));
+                          pageName: pageName, tractorData: listTractorData));
                     } else if (index == 2) {
                       loadBloc.dispatch(SortAscendingTractorIDEvent(
-                          pageName: pageName, tractorData: tractorData));
+                          pageName: pageName, tractorData: listTractorData));
                     } else {
                       loadBloc.dispatch(SortDescendingTractorIDEvent(
-                          pageName: pageName, tractorData: tractorData));
+                          pageName: pageName, tractorData: listTractorData));
                     }
-
                     Navigator.pop(context);
                   },
                 );
@@ -618,13 +600,13 @@ class LoadScreen extends State<LoadPage> {
         weekData.forEach((item) {
           var chartModelLoaded = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
+                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : Utils.formatDecimalToWholeNumber(item.totalMiles)}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.loadedLoads
                   : item.loadedMiles);
           var chartModelEmpty = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
+                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : Utils.formatDecimalToWholeNumber(item.totalMiles)}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.emptyLoads
                   : item.emptyMiles);
@@ -649,13 +631,13 @@ class LoadScreen extends State<LoadPage> {
       monthData.forEach((item) {
         var chartModelLoaded = ChartDataModel(
             name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
+                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : Utils.formatDecimalToWholeNumber(item.totalMiles)}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.loadedLoads
                 : item.loadedMiles);
         var chartModelEmpty = ChartDataModel(
             name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
+                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : Utils.formatDecimalToWholeNumber(item.totalMiles)}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.emptyLoads
                 : item.emptyMiles);
@@ -707,10 +689,9 @@ class LoadScreen extends State<LoadPage> {
     //first clear the series List for pie chart
     seriesListPieChart.clear();
     //Create  data List
-    var dataList = List<ChartDataModel>();
+    var chartDataList = List<ChartDataModel>();
     if (tractorData.tractors.length > 10) {
       var subTractorList = tractorData.tractors.sublist(0, 10);
-
       for (int i = 0; i < subTractorList.length; i++) {
         var chartModel = ChartDataModel(
             name: subTractorList[i].tractorId,
@@ -718,7 +699,13 @@ class LoadScreen extends State<LoadPage> {
                 ? subTractorList[i].totalLoadsPercent
                 : subTractorList[i].totalMilesPercent,
             color: AppColors.colorListPieChart[i]);
-        dataList.add(chartModel);
+        chartDataList.add(chartModel);
+        //Create a map object to map Tractor data with color code for dot
+        var mapOBJ = Map<Tractor, Color>();
+        mapOBJ.putIfAbsent(
+            subTractorList[i], () => AppColors.colorListForDots[i]);
+        //Add data in Tractor list to show in list view
+        listTractorData.add(mapOBJ);
       }
       //Now we have to show 11th division of pie chart, i.e the total percentage
       // of remaining items, So check first if we have items in list
@@ -733,10 +720,17 @@ class LoadScreen extends State<LoadPage> {
                 : item.totalMilesPercent);
       });
       //Add the sum of remaining loads in to data map list for pie chart
-      dataList.add(ChartDataModel(
+      chartDataList.add(ChartDataModel(
           value: num.parse(sum.toStringAsFixed(2)),
           name: "11th",
           color: charts.Color(r: 255, g: 255, b: 255)));
+      //Now Add remaining Items in Tractor list to show data data
+      remainingItemList.forEach((item) {
+        var mapOBJ = Map<Tractor, Color>();
+        mapOBJ.putIfAbsent(item, () => AppColors.colorWhite);
+        //Add data in Tractor list to show in list view
+        listTractorData.add(mapOBJ);
+      });
       //If list size if less then 10 then set the list data in chart
     } else {
       //For loop to add tractor data into list for chart
@@ -747,7 +741,13 @@ class LoadScreen extends State<LoadPage> {
                 ? tractorData.tractors[i].totalLoadsPercent
                 : tractorData.tractors[i].totalMilesPercent,
             color: AppColors.colorListPieChart[i]);
-        dataList.add(chartModel);
+        chartDataList.add(chartModel);
+        //Create a map object to map Tractor data with color code for dot
+        var mapOBJ = Map<Tractor, Color>();
+        mapOBJ.putIfAbsent(
+            tractorData.tractors[i], () => AppColors.colorListForDots[i]);
+        //Add data in Tractor list to show in list view
+        listTractorData.add(mapOBJ);
       }
     }
 
@@ -756,7 +756,7 @@ class LoadScreen extends State<LoadPage> {
       id: 'TopContributor',
       domainFn: (ChartDataModel sales, _) => sales.name,
       measureFn: (ChartDataModel sales, _) => sales.value,
-      data: dataList,
+      data: chartDataList,
       // Set a label accessor to control the text of the arc label.
       labelAccessorFn: (ChartDataModel row, _) => '${row.value}',
       colorFn: (ChartDataModel clickData, _) => clickData.color,

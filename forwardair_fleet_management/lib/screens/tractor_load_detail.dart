@@ -422,7 +422,7 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
             ),
             //Driver name widget
             Padding(
-              padding: const EdgeInsets.only(left:8.0, top: 4.0, bottom: 4.0),
+              padding: const EdgeInsets.only(left: 8.0, top: 4.0, bottom: 4.0),
               child: TextWidget(
                 text: loadData.driver1FirstName != null
                     ? '${loadData.driver1FirstName} ${loadData.driver1LastName} from ${loadData.driverOriginCity},${loadData.driverOriginSt}'
@@ -430,24 +430,33 @@ class _LoadDetailsPageState extends State<LoadDetailsPage> {
                 isBold: true,
               ),
             ),
-            Divider(
-              color: AppColors.colorGrey,
-            ),
-            // Driver details Widget
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: TextWidget(text: 'Co-Driver Details'),
-            ),
-            //Driver name widget
-            Padding(
-              padding: const EdgeInsets.only(left:8.0, top: 4.0, bottom: 4.0),
-              child: TextWidget(
-                text: loadData.driver2FirstName != null
-                    ? '${loadData.driver2FirstName} ${loadData.driver2LastName}'
-                    : 'N/A',
-                isBold: true,
-              ),
-            ),
+            Container(
+                child: loadData.driver2FirstName != null
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Divider(
+                            color: AppColors.colorGrey,
+                          ),
+                          // Driver details Widget
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: TextWidget(text: 'Co-Driver Details'),
+                          ),
+                          //Driver name widget
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0, top: 4.0, bottom: 4.0),
+                            child: TextWidget(
+                              text: loadData.driver2FirstName != null
+                                  ? '${loadData.driver2FirstName} ${loadData.driver2LastName}'
+                                  : 'N/A',
+                              isBold: true,
+                            ),
+                          )
+                        ],
+                      )
+                    : null)
           ],
         ));
   }

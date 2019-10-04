@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
 import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
@@ -28,7 +30,7 @@ class GetTractorDataEvent extends LoadEvents {
 class GetChartDataEvent extends LoadEvents {}
 
 class SortHighToLowEvent extends LoadEvents {
-  final TractorData tractorData;
+  final List<Map<Tractor, Color>> tractorData;
   final PageName pageName;
 
   SortHighToLowEvent({@required this.tractorData, @required this.pageName})
@@ -36,7 +38,7 @@ class SortHighToLowEvent extends LoadEvents {
 }
 
 class SortLowToHighEvent extends LoadEvents {
-  final TractorData tractorData;
+  final List<Map<Tractor, Color>> tractorData;
   final PageName pageName;
 
   SortLowToHighEvent({@required this.tractorData, @required this.pageName})
@@ -44,7 +46,7 @@ class SortLowToHighEvent extends LoadEvents {
 }
 
 class SortAscendingTractorIDEvent extends LoadEvents {
-  final TractorData tractorData;
+  final List<Map<Tractor, Color>> tractorData;
   final PageName pageName;
 
   SortAscendingTractorIDEvent(
@@ -53,7 +55,7 @@ class SortAscendingTractorIDEvent extends LoadEvents {
 }
 
 class SortDescendingTractorIDEvent extends LoadEvents {
-  final TractorData tractorData;
+  final List<Map<Tractor, Color>> tractorData;
   final PageName pageName;
 
   SortDescendingTractorIDEvent(
