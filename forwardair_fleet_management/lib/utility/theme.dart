@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'colors.dart';
@@ -8,7 +9,7 @@ final ThemeData customThemeData = new ThemeData(
   brightness: Brightness.light,
   primarySwatch: MaterialColor(CustomColors.blue[900].value, CustomColors.blue),
   primaryColor: CustomColors.blue[900],
-  primaryColorBrightness: Brightness.light,
+  primaryColorBrightness: Platform.isAndroid ? Brightness.light : Brightness.dark,
   accentColor: CustomColors.blue[600],
   accentColorBrightness: Brightness.light,
   primaryColorDark: Colors.red,
