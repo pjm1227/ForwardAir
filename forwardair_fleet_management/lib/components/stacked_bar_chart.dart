@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/chart.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
+import 'package:forwardair_fleet_management/utility/utils.dart';
+
 /*class StackedBarChart extends StatefulWidget {
   final List<charts.Series> seriesList;
   final bool animate;
@@ -60,15 +62,15 @@ class StackedBarChart extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         TextWidget(
-                          text: "Total : $total",
+                          text: "Total : ${Utils.formatDecimalToWholeNumber(total)}",
                           colorText: AppColors.colorWhite,
                         ),
                         TextWidget(
-                          text: "Loaded : $loaded",
+                          text: "Loaded : ${Utils.formatDecimalToWholeNumber(loaded)}",
                           colorText: AppColors.colorWhite,
                         ),
                         TextWidget(
-                          text: 'Empty :$empty',
+                          text: 'Empty : ${Utils.formatDecimalToWholeNumber(empty)}',
                           colorText: AppColors.colorWhite,
                         )
                       ],

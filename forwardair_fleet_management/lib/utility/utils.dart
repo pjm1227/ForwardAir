@@ -42,7 +42,6 @@ class Utils {
     return false;
   }
 
-
   //Number formatting
   String formatDecimalsNumber(double decimalNumber) {
     final formatter = new NumberFormat("#,###.00");
@@ -51,15 +50,19 @@ class Utils {
   }
 
   //Decimals to whole number
- static  String formatDecimalToWholeNumber(dynamic decimalNumber) {
+  static String formatDecimalToWholeNumber(dynamic decimalNumber) {
     final formatter = new NumberFormat("#,###");
     String formattedNumber = formatter.format(decimalNumber);
     return formattedNumber;
   }
 
-  static String formatDateFromString(String dateString){
-    String date='';
-    date=dateString.substring(0, 4)+'/'+dateString.substring(4, 6)+'/'+dateString.substring(6, 8);
+  static String formatDateFromString(String dateString) {
+    String date = '';
+    date = dateString.substring(0, 4) +
+        '/' +
+        dateString.substring(4, 6) +
+        '/' +
+        dateString.substring(6, 8);
     return date;
   }
 }
