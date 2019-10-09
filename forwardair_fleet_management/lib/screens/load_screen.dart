@@ -338,7 +338,7 @@ class LoadScreen extends State<LoadPage> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Column(
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -400,7 +400,7 @@ class LoadScreen extends State<LoadPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
+                        padding: const EdgeInsets.only(left: 4.0,right: 4.0),
                         child: TextWidget(
                           text: _calculateLoadPercentage(),
                           textAlign: TextAlign.center,
