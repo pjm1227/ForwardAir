@@ -29,7 +29,6 @@ class _HomePageState extends State<HomePage> {
   //SideMenu Bloc
   SideMenuBloc _sideMenuBloc = SideMenuBloc();
 
-
   //Selected index
   int _selectedIndex = 1;
   //Expand Flag
@@ -74,7 +73,8 @@ class _HomePageState extends State<HomePage> {
         child: new ListTile(
           leading: Container(
             child: TextWidget(
-              text: _sideMenuBloc.expandedSafetyItems[index][Constants.TEXT_SAFETY_AND_INCIDENT_EXPENDED_TITLE],
+              text: _sideMenuBloc.expandedSafetyItems[index]
+                  [Constants.TEXT_SAFETY_AND_INCIDENT_EXPENDED_TITLE],
               textType: TextType.TEXT_SMALL,
               isBold: _expandedListIndex == index ? true : false,
               colorText: AppColors.colorBlack,
@@ -152,9 +152,11 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           ExpandableContainer(
-            expandedHeight: _sideMenuBloc.expandedSafetyItems.length == 1 ? 50 : 130,
+            expandedHeight:
+                _sideMenuBloc.expandedSafetyItems.length == 1 ? 50 : 130,
             expanded: expandFlag,
             child: new ListView.builder(
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: ClampingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
@@ -208,7 +210,8 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                           padding: const EdgeInsets.only(left: 15.0),
                           child: TextWidget(
-                            text: _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE],  //_drawerMenuItems[index],
+                            text: _sideMenuBloc.drawerMenuItems[index][Constants
+                                .TEXT_SIDE_MENU_TITLE], //_drawerMenuItems[index],
                             colorText: AppColors.colorBlack,
                             textType: TextType.TEXT_MEDIUM,
                           )),
@@ -230,27 +233,22 @@ class _HomePageState extends State<HomePage> {
 
   //To Display the items inside ListView
   Widget _buildRow(int index) {
-
-    final _menuTitle = _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE];
+    final _menuTitle =
+        _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE];
 
     if (_menuTitle == Constants.TEXT_SAFETY_INCIDENTS) {
       return _safetyAndAccidentsExpandableWidget(index);
-    }
-
-    else if (_menuTitle == Constants.TEXT_DASHBOARD || _menuTitle == Constants.TEXT_COMPANY_NEWS) {
+    } else if (_menuTitle == Constants.TEXT_DASHBOARD ||
+        _menuTitle == Constants.TEXT_COMPANY_NEWS) {
       return _buildWidgetForDashboardAndCompanyNews(index);
-    }
-
-    else if (_menuTitle == Constants.TEXT_MODULES) {
+    } else if (_menuTitle == Constants.TEXT_MODULES) {
       return _moduleWidget(index);
-    }
-
-    else if (_menuTitle == Constants.TEXT_FLEET_TRACKER ||
-             _menuTitle == Constants.TEXT_SETTLEMENTS ||
-             _menuTitle == Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY ||
-             _menuTitle == Constants.TEXT_PROFILE ||
-             _menuTitle == Constants.TEXT_SETTINGS ||
-             _menuTitle == Constants.TEXT_LOGOUT) {
+    } else if (_menuTitle == Constants.TEXT_FLEET_TRACKER ||
+        _menuTitle == Constants.TEXT_SETTLEMENTS ||
+        _menuTitle == Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY ||
+        _menuTitle == Constants.TEXT_PROFILE ||
+        _menuTitle == Constants.TEXT_SETTINGS ||
+        _menuTitle == Constants.TEXT_LOGOUT) {
       return _otherMenuWidget(index);
     } else {
       return Container();
@@ -266,7 +264,8 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
           child: ListTile(
             title: TextWidget(
-              text: _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE],//_drawerMenuItems[index],
+              text: _sideMenuBloc.drawerMenuItems[index]
+                  [Constants.TEXT_SIDE_MENU_TITLE], //_drawerMenuItems[index],
               colorText: AppColors.colorGrey,
             ),
           ),
@@ -299,13 +298,16 @@ class _HomePageState extends State<HomePage> {
                         width: 24,
                         height: 24,
                         child: Image.asset(_selectedIndex == index
-                            ? _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SELECTED_ICON] //_selectedItemImages[index]
-                            :  _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_UNSELECTED_ICON])), //_imageNames[index])),
+                            ? _sideMenuBloc.drawerMenuItems[index][Constants
+                                .TEXT_SELECTED_ICON] //_selectedItemImages[index]
+                            : _sideMenuBloc.drawerMenuItems[index][Constants
+                                .TEXT_UNSELECTED_ICON])), //_imageNames[index])),
                   ),
                   Padding(
                       padding: const EdgeInsets.only(left: 15.0),
                       child: TextWidget(
-                        text: _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE],//_drawerMenuItems[index],
+                        text: _sideMenuBloc.drawerMenuItems[index][Constants
+                            .TEXT_SIDE_MENU_TITLE], //_drawerMenuItems[index],
                         colorText: AppColors.colorBlack,
                         textType: TextType.TEXT_MEDIUM,
                       )),
@@ -376,8 +378,10 @@ class _HomePageState extends State<HomePage> {
                   if (state is NavigationState) {
                     final index =
                         state.selectedIndex == null ? 0 : state.selectedIndex;
-                    String _menuTitle = _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE];
-                    switch (_menuTitle) { //(index) {
+                    String _menuTitle = _sideMenuBloc.drawerMenuItems[index]
+                        [Constants.TEXT_SIDE_MENU_TITLE];
+                    switch (_menuTitle) {
+                      //(index) {
                       case Constants.TEXT_SAFETY_INCIDENTS:
                         break;
                       case Constants.TEXT_DASHBOARD:
@@ -416,7 +420,7 @@ class _HomePageState extends State<HomePage> {
                       expandFlag =
                           state.expandFlag == null ? false : state.expandFlag;
                     }
-                    //Navigateion State
+                    //Navigation State
                     if (state is NavigationState) {
                       _selectedIndex =
                           state.selectedIndex == null ? 0 : state.selectedIndex;
@@ -429,70 +433,73 @@ class _HomePageState extends State<HomePage> {
 
                     //Returns Side Menu Options
                     return ListView(
+                      padding: Platform.isIOS ? EdgeInsets.all(0.0) : null,
                       children: <Widget>[
                         Stack(
-                          children: <Widget>[
-                            //Background Image of the Top Widget
-                            Container(
-                              height: 150,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image:
-                                      AssetImage("images/img_bg_top_login.png"),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                            //Version Number
-                            Positioned(
-                                bottom: 0,
-                                right: 10,
-                                child: _versionNumberWidget()),
-
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15.0),
-                              child: ListTile(
-                                //Profile Image
-                                leading: SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                ),
-                                //User Name Text
-                                title: Container(
-                                    padding: EdgeInsets.only(bottom: 10, right:8),
-                                    child: TextWidget(
-                                      text: _sideMenuBloc.userDetails != null
-                                          ? _sideMenuBloc
-                                                      .userDetails.fullName ==
-                                                  null
-                                              ? 'User Name'
-                                              : _sideMenuBloc
-                                                  .userDetails.fullName
-                                          : 'User Name',
-                                      isBold: true,
-                                      colorText: AppColors.colorWhite,
-                                      textType: TextType.TEXT_SMALL,
-                                    )),
-                                //User Role Text
-                                subtitle: Container(
-                                  child: TextWidget(
-                                    text: _sideMenuBloc.userDetails != null
-                                        ? _sideMenuBloc.userDetails.usertype ==
-                                                null
-                                            ? ''
-                                            : _sideMenuBloc
-                                                .convertUserTypeToText(
-                                                    _sideMenuBloc
-                                                        .userDetails.usertype)
-                                        : '',
-                                    colorText: AppColors.colorWhite,
-                                    textType: TextType.TEXT_SMALL,
+                            children: <Widget>[
+                              //Background Image of the Top Widget
+                              Container(
+                                height: 150 ,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image:
+                                        AssetImage("images/img_bg_top_login.png"),
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
+                              //Version Number
+                              Positioned(
+                                  bottom: 0,
+                                  right: 10,
+                                  child: _versionNumberWidget()),
+
+                              Padding(
+                                padding: EdgeInsets.only(left: 15,top: Platform.isIOS ? MediaQuery.of(context).padding.top : 15, right: 8),
+                                child: ListTile(
+//                                //Profile Image
+//                                leading: SizedBox(
+//                                  height: 50,
+//                                  width: 50,
+//                                ),
+                                  //User Name Text
+                                  title: Container(
+                                      padding:
+                                          EdgeInsets.only(bottom: 10, top: 12),
+                                      child: TextWidget(
+                                        text: _sideMenuBloc.userDetails != null
+                                            ? _sideMenuBloc
+                                                        .userDetails.fullName ==
+                                                    null
+                                                ? 'User Name'
+                                                : _sideMenuBloc
+                                                    .userDetails.fullName
+                                            : 'User Name',
+                                        isBold: true,
+                                        colorText: AppColors.colorWhite,
+                                        textType: TextType.TEXT_SMALL,
+                                      )),
+                                  //User Role Text
+                                  subtitle: Container(
+                                    child: TextWidget(
+                                      text: _sideMenuBloc.userDetails != null
+                                          ? _sideMenuBloc.userDetails.usertype ==
+                                                  null
+                                              ? ''
+                                              : _sideMenuBloc
+                                                  .convertUserTypeToText(
+                                                      _sideMenuBloc
+                                                          .userDetails.usertype)
+                                          : '',
+                                      colorText: AppColors.colorWhite,
+                                      textType: TextType.TEXT_SMALL,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
                         //Holder of the DrawerMenu
                         ListView.builder(
                           padding: EdgeInsets.only(top: 10),

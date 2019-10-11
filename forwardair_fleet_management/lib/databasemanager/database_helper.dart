@@ -34,7 +34,7 @@ class DatabaseHelper {
   final isUserLoggedIn = 'isUserLoggedIn';
 
   //Columns for Dashboard Table
-  String tableName = 'DashboardTable';
+  String dashboardTable = 'DashboardTable';
   String colId = 'id';
   String contractorCd = 'contractorCd';
   String weekStart = 'weekStart';
@@ -95,7 +95,7 @@ class DatabaseHelper {
          $faauthuserid TEXT, $usertype TEXT, $activetractors INTEGER,
          $isUserLoggedIn INTEGER NOT NULL)''');
     await db.execute(
-        """CREATE TABLE $tableName($colId INTEGER PRIMARY KEY AUTOINCREMENT, $companyCd TEXT, 
+        """CREATE TABLE $dashboardTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $companyCd TEXT, 
                     $contractorCd TEXT, $weekStart TEXT,$weekEnd TEXT, $month INTEGER, $year TEXT, 
                     $tractorCount INTEGER, $totalMiles INTEGER, $loadedMiles INTEGER, $emptyMiles INTEGER, 
                     $totalLoads INTEGER, $loadedLoads INTEGER, $emptyLoads INTEGER, $totalTractorGallons DOUBLE,

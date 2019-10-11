@@ -51,6 +51,7 @@ class UserDetails {
   int activetractors;
   bool isUserLoggedIn;
   List<UserGroup> userGroups;
+  List<String> userRoles;
 
   UserDetails({
     this.id,
@@ -72,6 +73,7 @@ class UserDetails {
     this.activetractors,
     this.isUserLoggedIn,
     this.userGroups,
+    this.userRoles,
   });
 
   Map<String, dynamic> toMap() {
@@ -144,6 +146,7 @@ class UserDetails {
             ? null
             : List<UserGroup>.from(
                 json["userGroups"].map((x) => UserGroup.fromJson(x))),
+        userRoles: List<String>.from(json["userRoles"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -165,6 +168,7 @@ class UserDetails {
         "userGroups": userGroups == null
             ? null
             : List<dynamic>.from(userGroups.map((x) => x.toJson())),
+         "userRoles": List<dynamic>.from(userRoles.map((x) => x)),
       };
 }
 

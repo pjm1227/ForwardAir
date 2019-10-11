@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:forwardair_fleet_management/databasemanager/dashboard_table_manager.dart';
+import 'package:forwardair_fleet_management/databasemanager/dashboard_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_role_manager.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:package_info/package_info.dart';
@@ -201,15 +201,16 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
           Constants.TEXT_VIEW_HISTORY,
     };
 
+    /* currently API is sending Unique data. So here no need to do the duplicate removal.
     var duplicateRoleList = [];
     for (UserRole aRole in userRoleList) {
       duplicateRoleList.add(aRole.roleNm);
     }
-
     var uniqueRolesList = Set<String>.from(duplicateRoleList).toList();
-
+     */
     drawerMenuItems.add(safetyIncidents);
-    for (String roleNm in uniqueRolesList) {
+    for (UserRole userRole in userRoleList) {
+      final roleNm =  userRole.roleNm;
       if (roleNm == Constants.TEXT_DASHBOARD_ROLE) {
         drawerMenuItems.add(dashboard);
         drawerMenuItems.add(module);

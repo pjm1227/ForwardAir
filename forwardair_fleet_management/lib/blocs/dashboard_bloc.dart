@@ -5,7 +5,7 @@ import 'package:forwardair_fleet_management/blocs/barrels/dashboard.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/dashboard_request.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
-import 'package:forwardair_fleet_management/databasemanager/dashboard_table_manager.dart';
+import 'package:forwardair_fleet_management/databasemanager/dashboard_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 import 'package:forwardair_fleet_management/apirepo/repository.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
