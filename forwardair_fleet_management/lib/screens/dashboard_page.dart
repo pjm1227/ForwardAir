@@ -580,8 +580,11 @@ class DashboardState extends State<DashboardPage> {
       ),
       child: Container(
         padding: EdgeInsets.only(left: 10, top: 5),
-        child: Material(
-            color: Colors.transparent,
+        child: InkWell(
+            onTap: () {
+              _dashboardBloc
+                  .dispatch(DrillDownPageEvent(pageName: PageName.FUEL_PAGE));
+            },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -728,8 +731,11 @@ class DashboardState extends State<DashboardPage> {
         padding: const EdgeInsets.only(top: 5.0),
         child: Container(
           padding: EdgeInsets.only(left: 10, top: 5, right: 5),
-          child: Material(
-            color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              _dashboardBloc.dispatch(
+                  DrillDownPageEvent(pageName: PageName.COMPENSATION_PAGE));
+            },
             child: Column(
               children: <Widget>[
                 Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forwardair_fleet_management/screens/settlement_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
@@ -389,6 +390,9 @@ class _HomePageState extends State<HomePage> {
                           Navigator.pop(context);
                         }
                         break;
+                      case Constants.TEXT_SETTLEMENTS:  {
+                         SettlementPage();
+                      } break;
                       case Constants.TEXT_LOGOUT: //11:
                         {
                           //Log out
