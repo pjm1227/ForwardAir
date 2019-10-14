@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-ChartDataMonth chartDataMonthFromJson(String str) => ChartDataMonth.fromJson(json.decode(str));
+ChartDataMonth chartDataMonthFromJson(String str) =>
+    ChartDataMonth.fromJson(json.decode(str));
 
 String chartDataMonthToJson(ChartDataMonth data) => json.encode(data.toJson());
 
@@ -24,20 +25,25 @@ class ChartDataMonth {
   });
 
   factory ChartDataMonth.fromJson(Map<String, dynamic> json) => ChartDataMonth(
-      companyCd: json["companyCd"] == null ? null : json["companyCd"],
-      contractorCd: json["contractorCd"] == null ? null : json["contractorCd"],
-      month: json["month"] == null ? null : json["month"],
-      year: json["year"] == null ? null : json["year"],
-      weeks: json["weeks"] == null ? null : List<Week>.from(json["weeks"].map((x) => Week.fromJson(x))),
-  );
+        companyCd: json["companyCd"] == null ? null : json["companyCd"],
+        contractorCd:
+            json["contractorCd"] == null ? null : json["contractorCd"],
+        month: json["month"] == null ? 0 : json["month"],
+        year: json["year"] == null ? null : json["year"],
+        weeks: json["weeks"] == null
+            ? null
+            : List<Week>.from(json["weeks"].map((x) => Week.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "companyCd": companyCd == null ? null : companyCd,
-    "contractorCd": contractorCd == null ? null : contractorCd,
-    "month": month == null ? null : month,
-    "year": year == null ? null : year,
-    "weeks": weeks == null ? null : List<dynamic>.from(weeks.map((x) => x.toJson())),
-  };
+        "companyCd": companyCd == null ? null : companyCd,
+        "contractorCd": contractorCd == null ? null : contractorCd,
+        "month": month == null ? 0 : month,
+        "year": year == null ? null : year,
+        "weeks": weeks == null
+            ? null
+            : List<dynamic>.from(weeks.map((x) => x.toJson())),
+      };
 }
 
 class Week {
@@ -70,32 +76,37 @@ class Week {
   });
 
   factory Week.fromJson(Map<String, dynamic> json) => Week(
-    tractorCount: json["tractorCount"] == null ? null : json["tractorCount"],
-    totalMiles: json["totalMiles"] == null ? null : json["totalMiles"],
-    loadedMiles: json["loadedMiles"] == null ? null : json["loadedMiles"],
-    emptyMiles: json["emptyMiles"] == null ? null : json["emptyMiles"],
-    totalLoads: json["totalLoads"] == null ? null : json["totalLoads"],
-    loadedLoads: json["loadedLoads"] == null ? null : json["loadedLoads"],
-    emptyLoads: json["emptyLoads"] == null ? null : json["emptyLoads"],
-    totalTractorGallons: json["totalTractorGallons"] == null ? null : json["totalTractorGallons"].toDouble(),
-    totalFuelCost: json["totalFuelCost"] == null ? null : json["totalFuelCost"].toDouble(),
-    grossAmt: json["grossAmt"] == null ? null : json["grossAmt"].toDouble(),
-    deductions: json["deductions"] == null ? null : json["deductions"],
-    netAmt: json["netAmt"] == null ? null : json["netAmt"].toDouble(),
-  );
+        tractorCount: json["tractorCount"] == null ? 0 : json["tractorCount"],
+        totalMiles: json["totalMiles"] == null ? 0 : json["totalMiles"],
+        loadedMiles: json["loadedMiles"] == null ? 0 : json["loadedMiles"],
+        emptyMiles: json["emptyMiles"] == null ? 0 : json["emptyMiles"],
+        totalLoads: json["totalLoads"] == null ? 0 : json["totalLoads"],
+        loadedLoads: json["loadedLoads"] == null ? 0 : json["loadedLoads"],
+        emptyLoads: json["emptyLoads"] == null ? 0 : json["emptyLoads"],
+        totalTractorGallons: json["totalTractorGallons"] == null
+            ? 0.0
+            : json["totalTractorGallons"].toDouble(),
+        totalFuelCost: json["totalFuelCost"] == null
+            ? 0.0
+            : json["totalFuelCost"].toDouble(),
+        grossAmt: json["grossAmt"] == null ? 0.0 : json["grossAmt"].toDouble(),
+        deductions: json["deductions"] == null ? 0.0 : json["deductions"],
+        netAmt: json["netAmt"] == null ? 0.0 : json["netAmt"].toDouble(),
+      );
 
   Map<String, dynamic> toJson() => {
-    "tractorCount": tractorCount == null ? null : tractorCount,
-    "totalMiles": totalMiles == null ? null : totalMiles,
-    "loadedMiles": loadedMiles == null ? null : loadedMiles,
-    "emptyMiles": emptyMiles == null ? null : emptyMiles,
-    "totalLoads": totalLoads == null ? null : totalLoads,
-    "loadedLoads": loadedLoads == null ? null : loadedLoads,
-    "emptyLoads": emptyLoads == null ? null : emptyLoads,
-    "totalTractorGallons": totalTractorGallons == null ? null : totalTractorGallons,
-    "totalFuelCost": totalFuelCost == null ? null : totalFuelCost,
-    "grossAmt": grossAmt == null ? null : grossAmt,
-    "deductions": deductions == null ? null : deductions,
-    "netAmt": netAmt == null ? null : netAmt,
-  };
+        "tractorCount": tractorCount == null ? 0 : tractorCount,
+        "totalMiles": totalMiles == null ? 0 : totalMiles,
+        "loadedMiles": loadedMiles == null ? 0 : loadedMiles,
+        "emptyMiles": emptyMiles == null ? 0 : emptyMiles,
+        "totalLoads": totalLoads == null ? 0 : totalLoads,
+        "loadedLoads": loadedLoads == null ? 0 : loadedLoads,
+        "emptyLoads": emptyLoads == null ? 0 : emptyLoads,
+        "totalTractorGallons":
+            totalTractorGallons == null ? 0.0 : totalTractorGallons,
+        "totalFuelCost": totalFuelCost == null ? 0.0 : totalFuelCost,
+        "grossAmt": grossAmt == null ? 0.0 : grossAmt,
+        "deductions": deductions == null ? 0.0 : deductions,
+        "netAmt": netAmt == null ? 0.0 : netAmt,
+      };
 }
