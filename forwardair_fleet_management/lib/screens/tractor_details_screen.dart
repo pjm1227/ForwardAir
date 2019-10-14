@@ -9,7 +9,8 @@ import 'package:forwardair_fleet_management/components/shimmer/list_shimmer.dart
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/components/top_widget_fuel.dart';
 import 'package:forwardair_fleet_management/components/top_widget_loads.dart';
-import 'package:forwardair_fleet_management/components/tractor_loads_details_list.dart';
+import 'package:forwardair_fleet_management/components/tractor_fuel_details_item.dart';
+import 'package:forwardair_fleet_management/components/tractor_loads_details_item.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
@@ -52,7 +53,6 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
   void initState() {
     //Call Api For Tractor data and Chart data
     //Check condition i.e for week data or month data
-    //check for
     if (dashboardData != null &&
         (dashboardData.dashboardPeriod ==
             Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH)) {
@@ -113,44 +113,26 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
               return NoResultFoundWidget();
             }
           }
-          //If state is success then show data in list
-          if (state is SuccessState) {
-            if (state.loadDetailsModel.loadDetails != null) {
-              return Stack(
-                children: <Widget>[
-                  // Background widget for overlapping of list widget
-                  new Column(
-                    children: <Widget>[
-                      new Container(
-                        height: MediaQuery.of(context).size.height * .18,
-                        color: AppColors.colorAppBar,
-                        child: Padding(
-                            padding: EdgeInsets.only(top: 10),
-                            child: _topWidget()),
-                      ),
-                    ],
-                  ),
-                  //This container return a list view with overlapping the background widget
-                  new Container(
-                    alignment: Alignment.topCenter,
-                    padding: new EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * .12,
-                    ),
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: state.loadDetailsModel.loadDetails.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return TractorLoadsDetailsList(
-                          pageName: pageName,
-                          loads: state.loadDetailsModel.loadDetails[index],
-                        );
-                      },
-                    ),
-                  )
-                ],
-              );
+          //If state is success for loads and miles then show data in list
+          if (state is LoadMilesSuccessState) {
+            if (state.tractorDetailsModel.loadDetails != null) {
+              return _mainWidget(state);
+            } else {
+              return NoResultFoundWidget();
+            }
+          }
+          //If state is success for fuel details then show data in list
+          if (state is FuelSuccessState) {
+            if (state.fuelDetailsModel.fuelDetails != null) {
+              return _mainWidget(state);
+            } else {
+              return NoResultFoundWidget();
+            }
+          }
+          //If state is success for settlement details then show data in list
+          if (state is SettlementSuccessState) {
+            if (state.settlementDetailsModel.settlementDetails != null) {
+              return _mainWidget(state);
             } else {
               return NoResultFoundWidget();
             }
@@ -160,6 +142,79 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
           );
         },
       ),
+    );
+  }
+
+  Widget _listViewWidget(TractorDetailsState state) {
+    return Container(
+        child: state is LoadMilesSuccessState
+            ? ListView.builder(
+                scrollDirection: Axis.vertical,
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: state.tractorDetailsModel.loadDetails.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return TractorLoadsDetailsItem(
+                    pageName: pageName,
+                    loads: state.tractorDetailsModel.loadDetails[index],
+                  );
+                },
+              )
+            : state is FuelSuccessState
+                ? ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: state.fuelDetailsModel.fuelDetails.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return TractorFuelDetailsList(
+                        pageName: pageName,
+                        fuelModel: state.fuelDetailsModel.fuelDetails[index],
+                      );
+                    },
+                  )
+                : state is SettlementSuccessState
+                    ? ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: state
+                            .settlementDetailsModel.settlementDetails.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return TractorFuelDetailsList(
+                            pageName: pageName,
+                            settlementModel: state.settlementDetailsModel
+                                .settlementDetails[index],
+                          );
+                          ;
+                        },
+                      )
+                    : NoResultFoundWidget());
+  }
+
+  //Main Widget
+  Widget _mainWidget(TractorDetailsState state) {
+    return Stack(
+      children: <Widget>[
+        // Background widget for overlapping of list widget
+        new Column(
+          children: <Widget>[
+            new Container(
+              height: MediaQuery.of(context).size.height * .18,
+              color: AppColors.colorAppBar,
+              child: Padding(
+                  padding: EdgeInsets.only(top: 10), child: _topWidget()),
+            ),
+          ],
+        ),
+        //This container return a list view with overlapping the background widget
+        Container(
+            alignment: Alignment.topCenter,
+            padding: new EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * .12,
+            ),
+            child: _listViewWidget(state))
+      ],
     );
   }
 

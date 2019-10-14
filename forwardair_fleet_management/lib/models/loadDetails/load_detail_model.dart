@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-LoadDetailModel loadDetailModelFromJson(String str) =>
-    LoadDetailModel.fromJson(json.decode(str));
+TractorDetailsModel loadDetailModelFromJson(String str) =>
+    TractorDetailsModel.fromJson(json.decode(str));
 
-class LoadDetailModel {
+class TractorDetailsModel {
   String companyCd;
   String contractorCd;
   int weekStart;
@@ -12,7 +12,7 @@ class LoadDetailModel {
   int month;
   List<Loads> loadDetails;
 
-  LoadDetailModel(
+  TractorDetailsModel(
       {this.companyCd,
       this.contractorCd,
       this.weekStart,
@@ -21,8 +21,8 @@ class LoadDetailModel {
       this.month,
       this.year});
 
-  factory LoadDetailModel.fromJson(Map<String, dynamic> json) =>
-      LoadDetailModel(
+  factory TractorDetailsModel.fromJson(Map<String, dynamic> json) =>
+      TractorDetailsModel(
           companyCd: json["companyCd"] == null ? null : json["companyCd"],
           contractorCd:
               json["contractorCd"] == null ? null : json["contractorCd"],

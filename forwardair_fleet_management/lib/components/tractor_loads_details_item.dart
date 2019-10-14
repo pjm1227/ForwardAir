@@ -6,11 +6,11 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
 //This class is called to show ListView for Loads and Miles of particular tractor
-class TractorLoadsDetailsList extends StatelessWidget {
+class TractorLoadsDetailsItem extends StatelessWidget {
   final Loads loads;
   final PageName pageName;
 
-  const TractorLoadsDetailsList({Key key, this.loads, this.pageName})
+  const TractorLoadsDetailsItem({Key key, this.loads, this.pageName})
       : super(key: key);
 
   @override

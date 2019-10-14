@@ -10,4 +10,6 @@ class EndPoints {
   static const String DRILL_DATA_URL = '$BASE_URL' +"secure/dashboard/drilldown";
   static const String CHART_DATA_URL = '$BASE_URL' +"secure/dashboard/breakdown";
   static const String LOAD_DETAIL_URL = '$BASE_URL' +"secure/loads";
+  static const String TRACTOR_FUEL_DETAILS = '$BASE_URL' +"secure/fuel-usage";
+  static const String TRACTOR_SETTLEMENT = '$BASE_URL' +"secure/settlement-details";
 }
