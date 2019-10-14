@@ -10,7 +10,7 @@ import 'barrels/load_details.dart';
 
 import 'events/load_detail_events.dart';
 
-class LoadDetailBloc extends Bloc<LoadDetailEvents, LoadDetailState> {
+class TractorDetailBloc extends Bloc<LoadDetailEvents, LoadDetailState> {
   @override
   get initialState => InitialState();
 

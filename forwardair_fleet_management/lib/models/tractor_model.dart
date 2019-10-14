@@ -77,20 +77,20 @@ class Tractor {
 
   factory Tractor.fromJson(Map<String, dynamic> json) => Tractor(
     tractorId: json["tractorId"] == null ? null : json["tractorId"],
-    totalMiles: json["totalMiles"] == null ? null : json["totalMiles"],
-    loadedMiles: json["loadedMiles"] == null ? null : json["loadedMiles"],
-    emptyMiles: json["emptyMiles"] == null ? null : json["emptyMiles"],
-    totalLoads: json["totalLoads"] == null ? null : json["totalLoads"],
-    loadedLoads: json["loadedLoads"] == null ? null : json["loadedLoads"],
-    emptyLoads: json["emptyLoads"] == null ? null : json["emptyLoads"],
-    totalTractorGallons: json["totalTractorGallons"] == null ? null : json["totalTractorGallons"].toDouble(),
-    totalFuelCost: json["totalFuelCost"] == null ? null : json["totalFuelCost"].toDouble(),
-    totalNet: json["totalNet"] == null ? null : json["totalNet"].toDouble(),
-    totalMilesPercent: json["totalMilesPercent"] == null ? null : json["totalMilesPercent"].toDouble(),
-    totalLoadsPercent: json["totalLoadsPercent"] == null ? null : json["totalLoadsPercent"].toDouble(),
+    totalMiles: json["totalMiles"] == null ? 0 : json["totalMiles"],
+    loadedMiles: json["loadedMiles"] == null ? 0 : json["loadedMiles"],
+    emptyMiles: json["emptyMiles"] == null ? 0 : json["emptyMiles"],
+    totalLoads: json["totalLoads"] == null ? 0 : json["totalLoads"],
+    loadedLoads: json["loadedLoads"] == null ? 0 : json["loadedLoads"],
+    emptyLoads: json["emptyLoads"] == null ? 0 : json["emptyLoads"],
+    totalTractorGallons: json["totalTractorGallons"] == null ? 0.0 : json["totalTractorGallons"].toDouble(),
+    totalFuelCost: json["totalFuelCost"] == null ? 0.0 : json["totalFuelCost"].toDouble(),
+    totalNet: json["totalNet"] == null ? 0.0 : json["totalNet"].toDouble(),
+    totalMilesPercent: json["totalMilesPercent"] == null ? 0.0 : json["totalMilesPercent"].toDouble(),
+    totalLoadsPercent: json["totalLoadsPercent"] == null ? 0.0 : json["totalLoadsPercent"].toDouble(),
     totalNetPercent: json["totalNetPercent"] == null ? null : json["totalNetPercent"],
-    totalGallonsPercent: json["totalGallonsPercent"] == null ? null : json["totalGallonsPercent"].toDouble(),
-    totalFuelCostPercent: json["totalFuelCostPercent"] == null ? null : json["totalFuelCostPercent"].toDouble(),
+    totalGallonsPercent: json["totalGallonsPercent"] == null ? 0.0 : json["totalGallonsPercent"].toDouble(),
+    totalFuelCostPercent: json["totalFuelCostPercent"] == null ? 0.0 : json["totalFuelCostPercent"].toDouble(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -107,7 +107,7 @@ class Tractor {
     "totalMilesPercent": totalMilesPercent == null ? null : totalMilesPercent,
     "totalLoadsPercent": totalLoadsPercent == null ? null : totalLoadsPercent,
     "totalNetPercent": totalNetPercent == null ? null : totalNetPercent,
-    "totalGallonsPercent": totalGallonsPercent == null ? null : totalGallonsPercent,
+    "totalGallonsPercent": totalGallonsPercent == null ? 0.0 : totalGallonsPercent,
     "totalFuelCostPercent": totalFuelCostPercent == null ? null : totalFuelCostPercent,
   };
 }

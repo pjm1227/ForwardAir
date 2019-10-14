@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forwardair_fleet_management/components/load_list_widget.dart';
+import 'package:forwardair_fleet_management/components/donut_chart.dart';
+import 'package:forwardair_fleet_management/components/top_widget_fuel.dart';
+import 'package:forwardair_fleet_management/components/top_widget_loads.dart';
+import 'package:forwardair_fleet_management/components/tractor_list_widget.dart';
 import 'package:forwardair_fleet_management/components/no_internet_connection.dart';
 import 'package:forwardair_fleet_management/components/no_result_found.dart';
 import 'package:forwardair_fleet_management/components/pager_widget.dart';
@@ -71,31 +74,14 @@ class LoadScreen extends State<LoadPage> {
   //Text for top contribution
   String _topContribution = Constants.TEXT_HIGHTOLOW;
 
-  List<Widget> _pages = <Widget>[
-    Column(
-      children: <Widget>[
-        SizedBox(
-          height: 10,
-        ),
-        Expanded(
-          child: PieChartWidget(
-            seriesListPieChart,
-            animate: true,
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-      ],
-    ),
-    Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: StackedBarChart(
-        seriesList: seriesListBarChart,
-        animate: true,
-      ),
-    ),
-  ];
+  //boolean variables to check if user press Fuel Gallons and Total Fuel Amount for Fuel Screen
+  bool isGallonClicked = false, isTotalAmountClicked = false;
+
+  //TractorData
+  TractorData _tractorData;
+
+  //Chart data for Bar Chart
+  dynamic _chartData;
 
   LoadScreen(this.pageName, this.dashboardData);
 
@@ -121,6 +107,8 @@ class LoadScreen extends State<LoadPage> {
           weekEnd: dashboardData.weekEnd,
           weekStart: dashboardData.weekStart));
     }
+    loadBloc.dispatch(
+        FuelGallonsEvent(isGallonClicked: true, isTotalAmountClicked: false));
     // loadBloc.dispatch(GetTractorDataEvent());
     super.initState();
   }
@@ -145,7 +133,13 @@ class LoadScreen extends State<LoadPage> {
         centerTitle: false,
         iconTheme: IconThemeData(color: AppColors.colorWhite),
         title: TextWidget(
-          text: pageName == PageName.LOAD_PAGE ? 'Load' : 'Miles',
+          text: pageName == PageName.LOAD_PAGE
+              ? 'Loads'
+              : pageName == PageName.MILES_PAGE
+                  ? 'Miles'
+                  : pageName == PageName.FUEL_PAGE
+                      ? 'Fuel'
+                      : 'Net Compensation',
           colorText: AppColors.colorWhite,
           textType: TextType.TEXT_LARGE,
         ),
@@ -154,15 +148,25 @@ class LoadScreen extends State<LoadPage> {
         listener: (context, state) {
           if (state is SuccessState) {
             //Set data in Stacked Bar chart
-            createDataForBarChart(state.loadChartData);
+            createDataForBarChart(true);
+            //Get tractor model from state
+            _tractorData = state.tractorData;
+            //Get chart Model from State
+            _chartData = state.loadChartData;
             //Create Pie chart
-            createPieChart(state.tractorData);
+            createPieChart(true);
             loadBloc.dispatch(SortHighToLowEvent(
                 pageName: pageName, tractorData: listTractorData));
           }
           if (state is SortState) {
             //Create Pie chart
             //  createPieChart(state.tractorData);
+          }
+          if (state is FuelGallonsAmountState) {
+            isGallonClicked = state.isGallonClicked;
+            isTotalAmountClicked = state.isTotalAmountClicked;
+            createPieChart(isGallonClicked);
+            createDataForBarChart(isGallonClicked);
           }
         },
         bloc: loadBloc,
@@ -191,7 +195,7 @@ class LoadScreen extends State<LoadPage> {
               if (state is SortState) {
                 return _initialWidget();
               }
-              return LoadPageShimmer();
+              return _initialWidget();
             }),
       ),
     );
@@ -211,15 +215,91 @@ class LoadScreen extends State<LoadPage> {
           children: <Widget>[
             //Top widget
             _topWidget(),
+            //Widget to show Fuel Gallons and Total Fuel Amount, This widget will be
+            //visible for Fuel and Compensation page
+            Container(
+              child: pageName == PageName.FUEL_PAGE
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                    child: TextWidget(
+                                  text: 'Fuel Gallons',
+                                  colorText: AppColors.colorWhite,
+                                  isBold: isGallonClicked,
+                                )),
+                                SizedBox(
+                                  width: 70,
+                                  child: Container(
+                                    child: isGallonClicked
+                                        ? Divider(
+                                            color: AppColors.colorWhite,
+                                            height: 10,
+                                          )
+                                        : null,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            loadBloc.dispatch(FuelGallonsEvent(
+                                isGallonClicked: true,
+                                isTotalAmountClicked: false));
+                          },
+                        ),
+                        InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                    child: TextWidget(
+                                  text: 'Total Fuel Amount',
+                                  colorText: AppColors.colorWhite,
+                                  isBold: isTotalAmountClicked,
+                                )),
+                                SizedBox(
+                                  width: 100,
+                                  child: isTotalAmountClicked
+                                      ? Container(
+                                          child: Divider(
+                                            color: AppColors.colorWhite,
+                                            height: 10,
+                                          ),
+                                        )
+                                      : null,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            loadBloc.dispatch(FuelGallonsEvent(
+                                isGallonClicked: false,
+                                isTotalAmountClicked: true));
+                          },
+                        ),
+                      ],
+                    )
+                  : null,
+            ),
             //Widget for Pie chart
             Container(
               height: 220,
               child: PageView.builder(
-                itemCount: _pages.length,
+                itemCount: 2,
                 physics: new AlwaysScrollableScrollPhysics(),
                 controller: _controller,
                 itemBuilder: (BuildContext context, int index) {
-                  return _pages[index % _pages.length];
+                  return _pagerWidgets(index);
                 },
               ),
             ),
@@ -228,7 +308,7 @@ class LoadScreen extends State<LoadPage> {
               child: new Center(
                 child: new DotsIndicator(
                   controller: _controller,
-                  itemCount: _pages.length,
+                  itemCount: 2,
                   onPageSelected: (int page) {
                     _controller.animateToPage(
                       page,
@@ -242,7 +322,7 @@ class LoadScreen extends State<LoadPage> {
             //Widget to show Header for sort by options
             _sortByHeader(),
             //List View Widget
-            LoadListViewWidget(
+            TractorListWidget(
                 tractorList: listTractorData,
                 pageName: pageName,
                 dashboardData: dashboardData),
@@ -286,143 +366,28 @@ class LoadScreen extends State<LoadPage> {
               color: Colors.white,
             ),
           ),
-          Row(children: <Widget>[
-            Expanded(
-              flex: 3,
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ClipOval(
-                        child: Container(
-                          color: Colors.white,
-                          height: 8.0,
-                          width: 8.0,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: TextWidget(
-                          text: pageName == PageName.LOAD_PAGE
-                              ? '${Utils.formatDecimalToWholeNumber(dashboardData.totalLoads)}'
-                              : '${Utils.formatDecimalToWholeNumber(dashboardData.totalMiles)}',
-                          textAlign: TextAlign.center,
-                          colorText: AppColors.colorWhite,
-                          textType: TextType.TEXT_MEDIUM,
-                          isBold: true,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextWidget(
-                        text: 'TOTAL',
-                        colorText: AppColors.colorWhite,
-                      ),
-                    ),
-                  ),
-                ],
+          //Here we're checking condition to change the Widget for Loads/Miles and Fuel/Compensation page
+          Container(
+              child: (pageName == PageName.LOAD_PAGE ||
+                      pageName == PageName.MILES_PAGE)
+                  ? TopWidgetForLoads(
+                      isDetailsPage: false,
+                      pageName: pageName,
+                      emptyLoads: dashboardData.emptyLoads,
+                      emptyMiles: dashboardData.emptyMiles,
+                      loadedLoads: dashboardData.loadedLoads,
+                      loadedMiles: dashboardData.loadedMiles,
+                      totalLoads: dashboardData.totalLoads,
+                      totalMiles: dashboardData.totalMiles,
+                    )
+                  : TopWidgetForFuel(
+                      pageName: pageName,
+                      grossAmount: dashboardData.grossAmt,
+                      deductions: dashboardData.deductions,
+                      totalFuelCost: dashboardData.totalFuelCost,
+                      totalTractorGallons: dashboardData.totalTractorGallons,
+                    ) //_topRowForFuel(),
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: VerticalDivider(
-                  color: AppColors.colorWhite,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ClipOval(
-                        child: Container(
-                          color: Colors.red,
-                          height: 8.0,
-                          width: 8.0,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: TextWidget(
-                          text: _calculateEmptyPercentage(),
-                          textAlign: TextAlign.center,
-                          colorText: AppColors.colorWhite,
-                          textType: TextType.TEXT_MEDIUM,
-                          isBold: true,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextWidget(
-                      text: 'EMPTY',
-                      colorText: AppColors.colorWhite,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: VerticalDivider(
-                  color: AppColors.colorWhite,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ClipOval(
-                        child: Container(
-                          color: Colors.teal,
-                          height: 8.0,
-                          width: 8.0,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0,right: 4.0),
-                        child: TextWidget(
-                          text: _calculateLoadPercentage(),
-                          textAlign: TextAlign.center,
-                          colorText: AppColors.colorWhite,
-                          textType: TextType.TEXT_MEDIUM,
-                          isBold: true,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextWidget(
-                      text: 'LOADED',
-                      colorText: AppColors.colorWhite,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ]),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Divider(
@@ -468,32 +433,6 @@ class LoadScreen extends State<LoadPage> {
         ),
       ),
     );
-  }
-
-  //empty and load percentage for top rows
-  String _calculateEmptyPercentage() {
-    if (pageName == PageName.MILES_PAGE) {
-      return ((dashboardData.emptyMiles * 100) / dashboardData.totalMiles)
-              .toStringAsFixed(2) +
-          '%';
-    } else {
-      return ((dashboardData.emptyLoads * 100) / dashboardData.totalLoads)
-              .toStringAsFixed(2) +
-          '%';
-    }
-  }
-
-  //empty and load percentage for top rows
-  String _calculateLoadPercentage() {
-    if (pageName == PageName.MILES_PAGE) {
-      return ((dashboardData.loadedMiles * 100) / dashboardData.totalMiles)
-              .toStringAsFixed(2) +
-          '%';
-    } else {
-      return ((dashboardData.loadedLoads * 100) / dashboardData.totalLoads)
-              .toStringAsFixed(2) +
-          '%';
-    }
   }
 
   //This method show the bottom options for sorting
@@ -570,15 +509,13 @@ class LoadScreen extends State<LoadPage> {
 
   //This method called when we set data in bar chart, Firstly we will check data
   //Type i.e weeks data or month data
-  void createDataForBarChart(dynamic chartData) {
+  void createDataForBarChart(bool isFuelGallons) {
     //clear the list first
     seriesListBarChart.clear();
     //Create loaded data List
     var loadedDataList = List<ChartDataModel>();
     //Create Empty data List
     var emptyDataList = List<ChartDataModel>();
-    //Create total data List
-    var totalDataList = List<ChartDataModel>();
     //Create a list with the week names, as we are not getting week names from
     //API
     var weekList = List<String>();
@@ -592,30 +529,32 @@ class LoadScreen extends State<LoadPage> {
     weekList.add("Sa");
     var count = 0; // will use in for each loop
     //Check if we get data for weeks
-    if (chartData is ChartDataWeeks) {
+    if (_chartData is ChartDataWeeks) {
       //Here data belongs to weeks
-      var weekData = chartData.days;
+      var weekData = _chartData.days;
       //Create chart data model for empty data, loaded data and Total
       if (weekData != null) {
         weekData.forEach((item) {
           var chartModelLoaded = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : Utils.formatDecimalToWholeNumber(item.totalMiles)}',
+                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost)}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.loadedLoads
-                  : item.loadedMiles);
+                  : pageName == PageName.MILES_PAGE
+                      ? item.loadedMiles
+                      : pageName == PageName.FUEL_PAGE
+                          ? isFuelGallons
+                              ? item.totalTractorGallons.toInt()
+                              : item.totalFuelCost.toInt()
+                          : item.totalFuelCost.toInt());
           var chartModelEmpty = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : Utils.formatDecimalToWholeNumber(item.totalMiles)}',
+                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost)}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.emptyLoads
-                  : item.emptyMiles);
-          /* var chartModelTotal = ChartDataModel(
-              name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-              value: pageName == PageName.LOAD_PAGE
-                  ? item.totalLoads
-                  : item.totalMiles);*/
+                  : pageName == PageName.MILES_PAGE
+                      ? item.emptyMiles
+                      : pageName == PageName.FUEL_PAGE ? 0 : 0);
           //Add data models into respective list
           loadedDataList.add(chartModelLoaded);
           emptyDataList.add(chartModelEmpty);
@@ -624,27 +563,31 @@ class LoadScreen extends State<LoadPage> {
         });
       }
       //Check if chart data is for month
-    } else if (chartData is ChartDataMonth) {
+    } else if (_chartData is ChartDataMonth) {
       //Here data belongs to weeks
-      var monthData = chartData.weeks;
+      var monthData = _chartData.weeks;
       //Create chart data model for empty data, loaded data and total
       monthData.forEach((item) {
         var chartModelLoaded = ChartDataModel(
             name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : Utils.formatDecimalToWholeNumber(item.totalMiles)}',
+                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost)}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.loadedLoads
-                : item.loadedMiles);
+                : pageName == PageName.MILES_PAGE
+                    ? item.loadedMiles
+                    : pageName == PageName.FUEL_PAGE
+                        ? isFuelGallons
+                            ? item.totalTractorGallons.toInt()
+                            : item.totalFuelCost.toInt()
+                        : item.totalFuelCost.toInt());
         var chartModelEmpty = ChartDataModel(
             name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : Utils.formatDecimalToWholeNumber(item.totalMiles)}',
+                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost)}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.emptyLoads
-                : item.emptyMiles);
-        /* var chartModelTotal = ChartDataModel(
-            name: 'Week ${count + 1}'
-                '\n${pageName == PageName.LOAD_PAGE ? item.totalLoads : item.totalMiles}',
-            value: item.totalLoads);*/
+                : pageName == PageName.MILES_PAGE
+                    ? item.emptyMiles
+                    : pageName == PageName.FUEL_PAGE ? 0 : 0);
         //Add data models into respective list
         loadedDataList.add(chartModelLoaded);
         emptyDataList.add(chartModelEmpty);
@@ -666,13 +609,6 @@ class LoadScreen extends State<LoadPage> {
       colorFn: (_, __) => charts.MaterialPalette.teal.shadeDefault,
       data: loadedDataList,
     );
-/*  var totalChartData = charts.Series<ChartDataModel, String>(
-      id: 'Total',
-      domainFn: (ChartDataModel chartData, _) => chartData.name,
-      measureFn: (ChartDataModel chartData, _) => chartData.value,
-      colorFn: (_, __) => charts.MaterialPalette.white,
-      data: totalDataList,
-    );*/
 //Add final model data in series list to show chart
     seriesListBarChart.add(loadedChartData);
     seriesListBarChart.add(emptyChartData);
@@ -683,21 +619,29 @@ class LoadScreen extends State<LoadPage> {
   // The Pie chart shows 11 divisions of the chart area representing the top 10
   // load contributors & one division area representing the consolidated load
   // count of remaining contributors.
-  void createPieChart(TractorData tractorData) {
+  void createPieChart(bool isFuelGallons) {
     //Check if List have more then 10 data, then take a sublist if first 10 elements
     // And show them into pie chart
     //first clear the series List for pie chart
     seriesListPieChart.clear();
+    //Clear the tractor data list
+    listTractorData.clear();
     //Create  data List
     var chartDataList = List<ChartDataModel>();
-    if (tractorData.tractors.length > 10) {
-      var subTractorList = tractorData.tractors.sublist(0, 10);
+    if (_tractorData.tractors.length > 10) {
+      var subTractorList = _tractorData.tractors.sublist(0, 10);
       for (int i = 0; i < subTractorList.length; i++) {
         var chartModel = ChartDataModel(
             name: subTractorList[i].tractorId,
             value: pageName == PageName.LOAD_PAGE
                 ? subTractorList[i].totalLoadsPercent
-                : subTractorList[i].totalMilesPercent,
+                : pageName == PageName.MILES_PAGE
+                    ? subTractorList[i].totalMilesPercent
+                    : pageName == PageName.FUEL_PAGE
+                        ? isFuelGallons
+                            ? subTractorList[i].totalGallonsPercent
+                            : subTractorList[i].totalFuelCost
+                        : subTractorList[i].totalNetPercent,
             color: AppColors.colorListPieChart[i]);
         chartDataList.add(chartModel);
         //Create a map object to map Tractor data with color code for dot
@@ -710,14 +654,20 @@ class LoadScreen extends State<LoadPage> {
       //Now we have to show 11th division of pie chart, i.e the total percentage
       // of remaining items, So check first if we have items in list
       var remainingItemList =
-          tractorData.tractors.sublist(10, tractorData.tractors.length);
+          _tractorData.tractors.sublist(10, _tractorData.tractors.length);
 
       double sum = 0.0;
       remainingItemList.forEach((item) {
         sum = sum +
             (pageName == PageName.LOAD_PAGE
                 ? item.totalLoadsPercent
-                : item.totalMilesPercent);
+                : pageName == PageName.MILES_PAGE
+                    ? item.totalMilesPercent
+                    : pageName == PageName.FUEL_PAGE
+                        ? isFuelGallons
+                            ? item.totalGallonsPercent
+                            : item.totalFuelCost
+                        : item.totalNetPercent);
       });
       //Add the sum of remaining loads in to data map list for pie chart
       chartDataList.add(ChartDataModel(
@@ -734,18 +684,18 @@ class LoadScreen extends State<LoadPage> {
       //If list size if less then 10 then set the list data in chart
     } else {
       //For loop to add tractor data into list for chart
-      for (int i = 0; i < tractorData.tractors.length; i++) {
+      for (int i = 0; i < _tractorData.tractors.length; i++) {
         var chartModel = ChartDataModel(
-            name: tractorData.tractors[i].tractorId,
+            name: _tractorData.tractors[i].tractorId,
             value: pageName == PageName.LOAD_PAGE
-                ? tractorData.tractors[i].totalLoadsPercent
-                : tractorData.tractors[i].totalMilesPercent,
+                ? _tractorData.tractors[i].totalLoadsPercent
+                : _tractorData.tractors[i].totalMilesPercent,
             color: AppColors.colorListPieChart[i]);
         chartDataList.add(chartModel);
         //Create a map object to map Tractor data with color code for dot
         var mapOBJ = Map<Tractor, Color>();
         mapOBJ.putIfAbsent(
-            tractorData.tractors[i], () => AppColors.colorListForDots[i]);
+            _tractorData.tractors[i], () => AppColors.colorListForDots[i]);
         //Add data in Tractor list to show in list view
         listTractorData.add(mapOBJ);
       }
@@ -769,5 +719,46 @@ class LoadScreen extends State<LoadPage> {
     );
     //Add chart data into series list
     seriesListPieChart.add(pieChart);
+  }
+
+  //This method returns widgets for PagerView
+  Widget _pagerWidgets(int index) {
+    Widget _widget;
+
+    switch (index) {
+      case 0:
+        _widget = Column(
+          children: <Widget>[
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: PieChartWidget(
+                seriesListPieChart,
+                animate: true,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+          ],
+        );
+        break;
+      case 1:
+        _widget = Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: pageName == PageName.COMPENSATION_PAGE
+              ? DonutPieChart(
+                  grossAmount: dashboardData.grossAmt,
+                  deductions: dashboardData.deductions,
+                )
+              : StackedBarChart(
+                  seriesList: seriesListBarChart,
+                  animate: true,
+                ),
+        );
+        break;
+    }
+    return _widget;
   }
 }

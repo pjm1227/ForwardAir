@@ -34,10 +34,13 @@ class DashboardPage extends StatefulWidget {
 class DashboardState extends State<DashboardPage> {
   //Dashboard Bloc
   DashboardBloc _dashboardBloc = DashboardBloc();
+
   //To make a call and send mail
   var _service = CallsAndMailService();
+
   //Selected Index in Filter
   int _selectedIndex = 3;
+
   //Pull to refresh
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -52,6 +55,7 @@ class DashboardState extends State<DashboardPage> {
     Constants.TEXT_SAFETY_PHONENUMBER,
     Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER
   ];
+
   //To handle Call button Tap in Quick contacts
   bool _isTappable = false;
 
@@ -564,178 +568,177 @@ class DashboardState extends State<DashboardPage> {
 
   //This returns Fuel Widget
   _buildFuelWidget(String totalGallons, String totalFuelAmount) {
-    return Container(
-      margin: new EdgeInsets.only(top: 5, left: 10.0, bottom: 5, right: 10),
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.rectangle,
-        borderRadius: new BorderRadius.all(Radius.circular(5)),
-        boxShadow: <BoxShadow>[
-          new BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.16),
-            blurRadius: 10.0,
-            offset: new Offset(0.0, 10.0),
-          ),
-        ],
-      ),
+    return InkWell(
       child: Container(
-        padding: EdgeInsets.only(left: 10, top: 5),
-        child: InkWell(
-            onTap: () {
-              _dashboardBloc
-                  .dispatch(DrillDownPageEvent(pageName: PageName.FUEL_PAGE));
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: TextWidget(
-                    text: Constants.TEXT_FUEL,
-                    textType: TextType.TEXT_SMALL,
-                    colorText: AppColors.colorBlue,
-                  ),
+        margin: new EdgeInsets.only(top: 5, left: 10.0, bottom: 5, right: 10),
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: new BorderRadius.all(Radius.circular(5)),
+          boxShadow: <BoxShadow>[
+            new BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.16),
+              blurRadius: 10.0,
+              offset: new Offset(0.0, 10.0),
+            ),
+          ],
+        ),
+        child: Container(
+          padding: EdgeInsets.only(left: 10, top: 5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: TextWidget(
+                  text: Constants.TEXT_FUEL,
+                  textType: TextType.TEXT_SMALL,
+                  colorText: AppColors.colorBlue,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0, right: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Flexible(
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                    top: 5,
-                                  ),
-                                  child: TextWidget(
-                                    textOverFlow: TextOverflow.ellipsis,
-                                    text: totalGallons,
-                                    textType: TextType.TEXT_MEDIUM,
-                                    colorText: AppColors.darkColorBlue,
-                                    isBold: true,
-                                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5.0, right: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Flexible(
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                  top: 5,
+                                ),
+                                child: TextWidget(
+                                  textOverFlow: TextOverflow.ellipsis,
+                                  text: totalGallons,
+                                  textType: TextType.TEXT_MEDIUM,
+                                  colorText: AppColors.darkColorBlue,
+                                  isBold: true,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5.0),
-                                child: TextWidget(
-                                    textOverFlow: TextOverflow.ellipsis,
-                                    text: Constants.TEXT_TOTAL_GALLONS,
-                                    colorText: AppColors.colorTotalGallons),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 5.0, right: 10, left: 5),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                height: 35,
-                                width: 0.5,
-                                color: Colors.grey,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0, right: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Flexible(
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.only(top: 5, right: 10),
-                                  child: TextWidget(
-                                    textOverFlow: TextOverflow.ellipsis,
-                                    text: _dashboardBloc.appendDollarSymbol(
-                                        totalFuelAmount), //'\$' + totalFuelAmount,
-                                    textType: TextType.TEXT_MEDIUM,
-                                    colorText: AppColors.darkColorBlue,
-                                    isBold: true,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5.0),
-                                child: TextWidget(
-                                    textOverFlow: TextOverflow.ellipsis,
-                                    text: Constants.TEXT_TOTAL_FUEL_AMOUNT,
-                                    colorText: AppColors.colorTotalGallons),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 0.0, top: 5),
-                          child: Container(
-                            padding: EdgeInsets.only(top: 5, left: 10),
-                            height: 30,
-                            width: 30,
-                            child: Image(
-                              image: AssetImage('images/img_fuel.png'),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: TextWidget(
+                                  textOverFlow: TextOverflow.ellipsis,
+                                  text: Constants.TEXT_TOTAL_GALLONS,
+                                  colorText: AppColors.colorTotalGallons),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: 5.0, right: 10, left: 5),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 35,
+                              width: 0.5,
+                              color: Colors.grey,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5.0, right: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Flexible(
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.only(top: 5, right: 10),
+                                child: TextWidget(
+                                  textOverFlow: TextOverflow.ellipsis,
+                                  text: _dashboardBloc
+                                      .appendDollarSymbol(totalFuelAmount),
+                                  //'\$' + totalFuelAmount,
+                                  textType: TextType.TEXT_MEDIUM,
+                                  colorText: AppColors.darkColorBlue,
+                                  isBold: true,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: TextWidget(
+                                  textOverFlow: TextOverflow.ellipsis,
+                                  text: Constants.TEXT_TOTAL_FUEL_AMOUNT,
+                                  colorText: AppColors.colorTotalGallons),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 0.0, top: 5),
+                        child: Container(
+                          padding: EdgeInsets.only(top: 5, left: 10),
+                          height: 30,
+                          width: 30,
+                          child: Image(
+                            image: AssetImage('images/img_fuel.png'),
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            )),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
+      onTap: () {
+        _dashboardBloc
+            .dispatch(DrillDownPageEvent(pageName: PageName.FUEL_PAGE));
+      },
     );
   }
 
   //This returns NetCompensationWidget Widget
   _buildNetCompensationWidget(String aTitle, String aSubTitle,
       String grossCompensation, String deductions) {
-    return Container(
-      margin: new EdgeInsets.only(left: 10.0, right: 10, top: 5.0, bottom: 5.0),
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.rectangle,
-        borderRadius: new BorderRadius.all(
-          Radius.circular(5.0),
-        ),
-        boxShadow: <BoxShadow>[
-          new BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.16),
-            blurRadius: 10.0,
-            offset: new Offset(0.0, 10.0),
+    return InkWell(
+      child: Container(
+        margin:
+            new EdgeInsets.only(left: 10.0, right: 10, top: 5.0, bottom: 5.0),
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: new BorderRadius.all(
+            Radius.circular(5.0),
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 5.0),
-        child: Container(
-          padding: EdgeInsets.only(left: 10, top: 5, right: 5),
-          child: InkWell(
-            onTap: () {
-              _dashboardBloc.dispatch(
-                  DrillDownPageEvent(pageName: PageName.COMPENSATION_PAGE));
-            },
+          boxShadow: <BoxShadow>[
+            new BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.16),
+              blurRadius: 10.0,
+              offset: new Offset(0.0, 10.0),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 5.0),
+          child: Container(
+            padding: EdgeInsets.only(left: 10, top: 5, right: 5),
             child: Column(
               children: <Widget>[
                 Row(
@@ -755,8 +758,8 @@ class DashboardState extends State<DashboardPage> {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: TextWidget(
                         textOverFlow: TextOverflow.ellipsis,
-                        text: _dashboardBloc
-                            .appendDollarSymbol(aSubTitle), //'\$' + aSubTitle,
+                        text: _dashboardBloc.appendDollarSymbol(aSubTitle),
+                        //'\$' + aSubTitle,
                         colorText: AppColors.darkColorBlue,
                         textType: TextType.TEXT_MEDIUM,
                         isBold: true,
@@ -791,6 +794,10 @@ class DashboardState extends State<DashboardPage> {
           ),
         ),
       ),
+      onTap: () {
+        _dashboardBloc
+            .dispatch(DrillDownPageEvent(pageName: PageName.COMPENSATION_PAGE));
+      },
     );
   }
 
