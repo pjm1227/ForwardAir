@@ -21,6 +21,9 @@ class SettlementBloc extends Bloc<SettlementEvents, SettlementStates> {
       yield* _makeApiCall(event);
     } else if (event is PickedDateEvent) {
       yield PickedDateState(pickedDate: event.pickedDate);
+    } else if (event is NavigateToDetailPageEvent) {
+      yield SuccessState(settlementData: event.settlementModel);
+      yield NavigateToDetailPageState(selectedIndex: event.selectedIndex,appBarTitle: event.appBarTitle, settlementModel: event.settlementModel);
     }
   }
 
@@ -99,4 +102,17 @@ class SettlementBloc extends Bloc<SettlementEvents, SettlementStates> {
       return 'NA';
     }
   }
+
+  List<SettlementCheck> applyPickerDateToSettlementList(DateTime pickedDate, SettlementModel _settlementModel) {
+    List<SettlementCheck> filteredSettlementChecks = [];
+    String pickedDateText = Utils.pickerDateToFormat(pickedDate);
+    for (var aSettlementCheck in _settlementModel.settlementChecks) {
+      String pickedMonthText = Utils.pickOnlyMonthInCheckList(aSettlementCheck.checkDt);
+      if (pickedMonthText == pickedDateText) {
+        filteredSettlementChecks.add(aSettlementCheck);
+      }
+    }
+    return filteredSettlementChecks;
+  }
+
 }

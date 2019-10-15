@@ -109,8 +109,6 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
       yield DashboardLoaded(dashboardData: selectedModel);
       yield DrillDownPageState(
           pageName: event.pageName, dashboardData: selectedModel);
-      yield DrillDownPageState(
-          pageName: event.pageName, dashboardData: selectedModel);
     }
   }
 

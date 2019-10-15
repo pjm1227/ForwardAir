@@ -31,3 +31,11 @@ class PickedDateState extends SettlementStates {
   PickedDateState({this.pickedDate})
       : super([pickedDate]);
 }
+
+class NavigateToDetailPageState extends SettlementStates {
+  final int selectedIndex;
+  final String appBarTitle;
+  final SettlementModel settlementModel;
+  NavigateToDetailPageState({this.selectedIndex, this.appBarTitle, this.settlementModel})
+      : super([selectedIndex, appBarTitle, settlementModel]);
+}

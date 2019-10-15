@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:forwardair_fleet_management/models/settlement_data_model.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -19,4 +20,12 @@ class PickedDateEvent extends SettlementEvents {
 
   PickedDateEvent({this.pickedDate})
       : super([pickedDate]);
+}
+
+class NavigateToDetailPageEvent extends SettlementEvents {
+  final int selectedIndex;
+  final String appBarTitle;
+  final SettlementModel settlementModel;
+  NavigateToDetailPageEvent({this.selectedIndex, this.appBarTitle, this.settlementModel})
+      : super([selectedIndex, appBarTitle, settlementModel]);
 }
