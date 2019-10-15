@@ -127,4 +127,17 @@ class Constants {
   static const String TEXT_DESCENDING = 'Descending Tractor ID';
   static const String TEXT_LOWTOHIGH = 'Contribution:Low to High';
   static const String TEXT_BACK = 'Back';
+
+  //Settlement Details
+  static const String TEXT_TRACTORID = 'Tractor ID';
+  static const String TEXT_DATE = 'Date';
+  static const String TEXT_DEDUCTION_TYPE = 'Deduction Type';
+  static const String TEXT_DRIVER_CONTRIBUTION = 'Driver Contribution';
+  static const String TEXT_ORIGINAL_BALANCE = 'Original Balance';
+  static const String TEXT_DRIVER_OWING = 'Driver Owing';
+  static const String TEXT_SERVICE_CHARGE = 'Service Charge';
+  static const String TEXT_PAYMENT = 'Payment';
+  static const String TEXT_DESCRIPTION = 'Description';
+  static const String TEXT_COMMENTS = 'Comments';
+
 }

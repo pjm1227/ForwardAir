@@ -81,7 +81,7 @@ class Dashboard_DB_Model {
   }
 
   Dashboard_DB_Model.fromMapObject(Map<String, dynamic> json) {
-    this.id = json['id'] == null ? 0: json['id'];
+    this.id = json['id'] == null ? null : json['id'];
     this.companyCd = json["companyCd"] == null ? null : json["companyCd"];
     this.contractorCd = json["contractorCd"] == null ? null : json["contractorCd"];
     this.weekStart = json["weekStart"] == null ? null : json["weekStart"];
