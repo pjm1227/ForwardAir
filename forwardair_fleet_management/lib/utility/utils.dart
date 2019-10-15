@@ -5,9 +5,10 @@ import 'package:intl/intl.dart';
 import 'dart:async';
 
 import 'colors.dart';
-import 'constants.dart';
 
 class Utils {
+
+  static int selectedIndexInSideMenu = 1;
   static showToast(String text) {
     Fluttertoast.showToast(
       msg: text,
@@ -65,4 +66,43 @@ class Utils {
         dateString.substring(6, 8);
     return date;
   }
+
+  static String formatStringDateToDateAndMonth(String dateString) {
+    var formattedString = '';
+    if (dateString != '')  {
+      final date = DateTime.parse(dateString);
+      final f = new DateFormat('dd MMM');
+      formattedString = f.format(date);
+    }
+    return formattedString;
+  }
+
+  static String dateNowToFormat(DateTime date) {
+    var formattedString = '';
+    if (date != null)  {
+      final format = new DateFormat('MMMM, yyyy');
+      formattedString = format.format(date);
+    }
+    return formattedString;
+  }
+
+  static String pickerDateToFormat(DateTime date) {
+    var formattedString = '';
+    if (date != null)  {
+      final format = new DateFormat('MM');
+      formattedString = format.format(date);
+    }
+    return formattedString;
+  }
+
+  static String pickOnlyMonthInCheckList(String dateString) {
+    var formattedString = '';
+    if (dateString != '')  {
+      final date = DateTime.parse(dateString);
+      final f = new DateFormat('MM');
+      formattedString = f.format(date);
+    }
+    return formattedString;
+  }
+
 }

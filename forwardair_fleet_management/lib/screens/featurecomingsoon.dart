@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
+import 'package:forwardair_fleet_management/screens/sidemenu.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 
@@ -17,6 +18,8 @@ class FeaturesComingSoonPage extends StatefulWidget {
 }
 
 class NewFeatureState extends State<FeaturesComingSoonPage> {
+
+  GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     if (Platform.isAndroid) {
@@ -30,15 +33,18 @@ class NewFeatureState extends State<FeaturesComingSoonPage> {
 
   Widget scaffoldWidget() {
     return Scaffold(
+      key: _scaffold,
       appBar: new AppBar(
+        iconTheme: new IconThemeData(color: Colors.white),
+        centerTitle: false,
+        //AppBar Title
         title: TextWidget(
           text: Constants.TEXT_BACK,
           colorText: AppColors.colorWhite,
           textType: TextType.TEXT_LARGE,
         ),
-        iconTheme: new IconThemeData(color: AppColors.colorWhite),
-        centerTitle: false,
       ),
+      drawer: SideMenuPage(scaffold: _scaffold,),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

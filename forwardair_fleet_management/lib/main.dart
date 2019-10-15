@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/driving_conformation.dart';
 import 'package:forwardair_fleet_management/components/button_widget.dart';
+import 'package:forwardair_fleet_management/screens/home_page.dart';
 import 'package:forwardair_fleet_management/screens/terms_condition_screen.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
@@ -11,14 +12,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'components/text_widget.dart';
 import 'databasemanager/terms_manager.dart';
 import 'databasemanager/user_manager.dart';
-import 'screens/home_page.dart';
 import 'screens/login_screen.dart';
 
 //Main function of an app
 //App must start from here
 main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
   Widget _defaultHome = new LoginPage();
   // Get result of the login function.
   var userManager = UserManager();

@@ -37,4 +37,11 @@ class Repository {
 
   Future<dynamic> makeLoadDetailRequest(String body, String token) =>
       _apiProvider.requestInPost(EndPoints.LOAD_DETAIL_URL, token, body);
+
+  /*
+  This method is called when user request for settlement
+   */
+
+  Future<dynamic> makeSettlementRequest(String body, String token) =>
+      _apiProvider.requestInPost(EndPoints.SETTLEMENT_URL, token, body);
 }

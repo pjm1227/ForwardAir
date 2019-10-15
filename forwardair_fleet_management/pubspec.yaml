@@ -29,6 +29,7 @@ dependencies:
   pie_chart: ^1.2.0
   shimmer:
   charts_flutter:
+  month_picker_dialog:
 
 dev_dependencies:
   flutter_test:

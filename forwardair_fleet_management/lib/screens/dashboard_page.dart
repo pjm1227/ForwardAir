@@ -9,22 +9,22 @@ import 'package:forwardair_fleet_management/components/no_result_found.dart';
 import 'package:forwardair_fleet_management/components/shimmer/dashboard_shimmer.dart';
 import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
-import 'package:forwardair_fleet_management/blocs/events/dashboardevent.dart';
-import 'package:forwardair_fleet_management/blocs/states/dashboardstate.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/screens/featurecomingsoon.dart';
 import 'package:forwardair_fleet_management/utility/callandmailservice.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
-import 'package:forwardair_fleet_management/blocs/dashboard_bloc.dart';
+import 'package:forwardair_fleet_management/blocs/barrels/dashboard.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
+import 'sidemenu.dart';
 import 'load_screen.dart';
 
 /*
   DashboardPage to display dashboard details.
 */
-
 class DashboardPage extends StatefulWidget {
+
+  DashboardPage({Key key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return DashboardState();
@@ -32,6 +32,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class DashboardState extends State<DashboardPage> {
+  GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
   //Dashboard Bloc
   DashboardBloc _dashboardBloc = DashboardBloc();
   //To make a call and send mail
@@ -170,6 +171,33 @@ class DashboardState extends State<DashboardPage> {
     //To fetch the data Initially
     _dashboardBloc.dispatch(FetchDashboardEvent());
     return Scaffold(
+      key: _scaffold,
+      appBar: new AppBar(
+        iconTheme: new IconThemeData(color: Colors.white),
+        centerTitle: false,
+        //AppBar Title
+        title: TextWidget(
+          text: Constants.TEXT_DASHBOARD,
+          colorText: AppColors.colorWhite,
+          textType: TextType.TEXT_LARGE,
+        ),
+        actions: <Widget>[
+          //To display the notification Icon
+          InkWell(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: Image.asset('images/ic_notfication_white.png')),
+            ),
+            onTap: () {
+              navigateToFeatureComingSoonPage();
+            },
+          ),
+        ],
+      ),
+      drawer: SideMenuPage(scaffold: _scaffold,),
       backgroundColor: AppColors.colorDashboard_Bg,
       //BlocListener
       body: BlocListener<DashboardBloc, dynamic>(

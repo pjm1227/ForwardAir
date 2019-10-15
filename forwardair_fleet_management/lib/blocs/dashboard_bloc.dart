@@ -3,7 +3,6 @@ import 'package:bloc/bloc.dart';
 
 import 'package:forwardair_fleet_management/blocs/barrels/dashboard.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
-import 'package:forwardair_fleet_management/models/webservice/dashboard_request.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/databasemanager/dashboard_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
@@ -15,8 +14,6 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
   DashboardManager _dashboard_dbProvider = DashboardManager();
   //Fetched List From DB
   List<Dashboard_DB_Model> dashboardItemsFromDB = [];
-  //For API Calling
-  final apiManager = DashboardRequest();
   //Flag
   bool isAPICalling = false;
   //Filter Period Type
@@ -35,11 +32,17 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     if (event is FetchDashboardEvent) {
       //When app is initialized
       if (currentState is InitialState) {
-        final posts = await _fetchDashboardDetails();
-        if (posts.length == 0) {
-          yield DashboardError();
+        final dbData = await fetchDataFromDB();
+        if (dbData.length == 0) {
+          final posts = await _fetchDashboardDetails();
+          if (posts.length == 0) {
+            yield DashboardError();
+          } else {
+            final selectedModel = applyFilterInaDashboard(posts);
+            yield DashboardLoaded(dashboardData: selectedModel);
+          }
         } else {
-          final selectedModel = applyFilterInaDashboard(posts);
+          final selectedModel = applyFilterInaDashboard(dbData);
           yield DashboardLoaded(dashboardData: selectedModel);
         }
       }

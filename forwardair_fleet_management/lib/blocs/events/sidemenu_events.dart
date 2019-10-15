@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -12,7 +13,6 @@ class DisplayInitiallyEvent extends SideMenuEvents {}
 class NavigationEvent extends SideMenuEvents {
   final int selectedIndex;
   final bool expandFlag;
-
   NavigationEvent({@required this.selectedIndex, @required this.expandFlag})
       : super([]);
 }
@@ -32,4 +32,12 @@ class SafetyIncidentsEvent extends SideMenuEvents {
 }
 
 //This event for logout
-class LogoutEvent extends SideMenuEvents {}
+class TappedOnLogoutEvent extends SideMenuEvents {
+
+}
+
+//This event for logout
+class LogoutEvent extends SideMenuEvents {
+  final int selectedIndex;
+  LogoutEvent({@required this.selectedIndex}) : super([]);
+}

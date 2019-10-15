@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:forwardair_fleet_management/databasemanager/dashboard_manager.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_role_manager.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
+import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
@@ -27,7 +28,7 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
 
   //It will call to map initial State
   @override
-  SideMenuStates get initialState => InitialState();
+  SideMenuStates get initialState => FirstState();
 
   //Here will map state according to event
   @override
@@ -38,8 +39,16 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
       await _fetchUserRoles();
       //SideMenu Items
       drawerMenuItems = drawerMenuItemsBasedOnTheUserType();
-      yield InitialState();
+      if (Utils.selectedIndexInSideMenu != null) {
+        yield InitialState(selectedIndex: Utils.selectedIndexInSideMenu);
+      } else {
+        yield InitialState(selectedIndex: 1);
+      }
     }
+    if (event is TappedOnLogoutEvent) {
+      yield TappedOnLogoutState();
+    }
+
     //To expand SafetyIncidents sub-items
     if (event is SafetyIncidentsEvent) {
       yield SafetyIncidentState(selectedIndex: event.selectedIndex);
@@ -52,13 +61,14 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
     }
     //To navigate to other screens
     if (event is NavigationEvent) {
-      yield InitialState();
+      yield InitialState(selectedIndex: event.selectedIndex);
+      Utils.selectedIndexInSideMenu = event.selectedIndex;
       yield NavigationState(selectedIndex: event.selectedIndex);
     }
     //Logout Event
     if (event is LogoutEvent) {
      // await _logoutAction();
-      yield LoggedOutState();
+      yield LoggedOutState(selectedIndex: event.selectedIndex);
     }
   }
 
