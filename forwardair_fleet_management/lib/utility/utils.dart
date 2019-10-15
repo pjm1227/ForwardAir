@@ -106,4 +106,26 @@ class Utils {
     return formattedString;
   }
 
+  static String addDollarAfterMinusSign(String deductions) {
+    String deduction = '';
+    if (deductions != 'NA') {
+      deduction = '-\$' + deductions.replaceAll(RegExp('-'), '');
+    } else {
+      deduction = 'NA';
+    }
+    return deduction;
+  }
+
+  static String appendDollarSymbol(double value) {
+    var commaAddedText = Utils().formatDecimalsNumber(
+        value != null ? value : '');
+    if (commaAddedText != '') {
+      return '\$' + commaAddedText;
+    } else {
+      return 'NA';
+    }
+  }
+
+
 }
+

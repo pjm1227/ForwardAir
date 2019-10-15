@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
+import 'package:forwardair_fleet_management/screens/settlement_detail_page.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/settlement.dart';
 import 'package:forwardair_fleet_management/components/shimmer/settlement_shimmer.dart';
-import 'package:forwardair_fleet_management/screens/featurecomingsoon.dart';
 import 'package:forwardair_fleet_management/screens/sidemenu.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/models/settlement_data_model.dart';
@@ -14,7 +14,6 @@ import 'package:forwardair_fleet_management/components/no_internet_connection.da
 import 'package:forwardair_fleet_management/components/no_result_found.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
-import 'package:forwardair_fleet_management/blocs/settlement_bloc.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 /*
   SettlementPage to display Settlement details.
@@ -29,15 +28,16 @@ class SettlementPage extends StatefulWidget {
 
 class SettlementPageState extends State<SettlementPage> {
   GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
-  //Dashboard Bloc
+  //Settlement Bloc
   SettlementBloc _settlementBloc = SettlementBloc();
+  //Settlement Model
   SettlementModel _settlementModel = SettlementModel();
+  //Filtered List
   List<SettlementCheck> filteredSettlementChecks = [];
-  int _selectedMonth = 0;
-  int _selectedYear = 0;
+  //Picker Date
   DateTime _fromDateTime = new DateTime.now();
 
-  //To Dispose
+  //To Dispose Bloc
   @override
   void dispose() {
     _settlementBloc.dispose();
@@ -52,11 +52,10 @@ class SettlementPageState extends State<SettlementPage> {
     super.initState();
   }
 
-  //This returns Dashboard Page
+  //This returns Settlement Page
   @override
   Widget build(BuildContext context) {
     //Check conditions for Status bar
-    //It's platform specific
     if (Platform.isAndroid) {
       return SafeArea(
         child: _mainWidget(),
@@ -67,11 +66,12 @@ class SettlementPageState extends State<SettlementPage> {
   }
 
   //To navigate to FeatureComingSoonPage
-  void navigateToFeatureComingSoonPage() {
+  void navigateToSettlementDetailPage(SettlementCheck _checkModel, String appBarTitle) {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.fade, child: FeaturesComingSoonPage()));
+            type: PageTransitionType.fade,
+            child: SettlementDetailsPage(settlementCheck: _checkModel,appBarTitle: appBarTitle,)));
   }
 
   //This is the main widget for this page
@@ -95,14 +95,14 @@ class SettlementPageState extends State<SettlementPage> {
         listener: (context, state) {
           if (state is PickedDateState) {
             _fromDateTime = state.pickedDate;
-            String pickedDateText = Utils.pickerDateToFormat(_fromDateTime);
             filteredSettlementChecks = [];
-            for (var aSettlementCheck in _settlementModel.settlementChecks) {
-              String pickedMonthText = Utils.pickOnlyMonthInCheckList(aSettlementCheck.checkDt);
-              if (pickedMonthText == pickedDateText) {
-                filteredSettlementChecks.add(aSettlementCheck);
-              }
-            }
+            filteredSettlementChecks =
+                _settlementBloc.applyPickerDateToSettlementList(
+                    _fromDateTime, _settlementModel);
+          } else if (state is NavigateToDetailPageState) {
+            //To navigate to Detail Page
+            navigateToSettlementDetailPage(
+                _settlementModel.settlementChecks[state.selectedIndex], state.appBarTitle);
           }
         },
         bloc: _settlementBloc,
@@ -144,7 +144,11 @@ class SettlementPageState extends State<SettlementPage> {
                 } else {
                   return mainListWidget(filteredSettlementChecks);
                 }
-              } else {
+              } else if (state is NavigateToDetailPageState) {
+                _settlementModel = state.settlementModel;
+                return mainListWidget(_settlementModel.settlementChecks);
+              }
+              else {
                 return NoResultFoundWidget();
               }
             }),
@@ -152,6 +156,7 @@ class SettlementPageState extends State<SettlementPage> {
     );
   }
 
+  //Main Widget
   Widget mainListWidget(List<SettlementCheck> settlementChecks) {
     return ListView(scrollDirection: Axis.vertical, children: <Widget>[
       _buildThisWeekWidget(Utils.dateNowToFormat(_fromDateTime)),
@@ -159,33 +164,21 @@ class SettlementPageState extends State<SettlementPage> {
     ]);
   }
 
+  //Month Picker
   Future<Null> _selectDate(BuildContext context) async {
-
     showMonthPicker(
-        context: context,
-        firstDate: DateTime( DateTime.now().year - 2 , 5),
-        lastDate: DateTime( DateTime.now().year + 1, 9 ),
-        initialDate: _fromDateTime
-    ).then((picked) {
+            context: context,
+            firstDate: DateTime(DateTime.now().year - 2, 5),
+            lastDate: DateTime(DateTime.now().year + 1, 9),
+            initialDate: _fromDateTime)
+        .then((picked) {
       if (picked != null && picked != _fromDateTime) {
         _settlementBloc.dispatch(PickedDateEvent(pickedDate: picked));
       }
     });
-
-
-//    final DateTime picked = await showDatePicker(
-//
-//      initialDatePickerMode: DatePickerMode.year,
-//
-//        context: context,
-//        initialDate: _fromDateTime,
-//        firstDate: new DateTime(2019),
-//        lastDate: new DateTime(2020));
-//    if (picked != null && picked != _fromDateTime) {
-//      _settlementBloc.dispatch(PickedDateEvent(pickedDate: picked));
-//    }
   }
 
+  //List View
   Widget _listViewWidget(List<SettlementCheck> settlementChecks) {
     return ListView.builder(
       shrinkWrap: true,
@@ -193,12 +186,13 @@ class SettlementPageState extends State<SettlementPage> {
       scrollDirection: Axis.vertical,
       itemCount: settlementChecks.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildListItemsWidget(settlementChecks[index]);
+        return _buildListItemsWidget(settlementChecks[index], index);
       },
     );
   }
 
-  _buildListItemsWidget(SettlementCheck _settlementCheck) {
+  //List View Items
+  _buildListItemsWidget(SettlementCheck _settlementCheck, int index) {
     return Container(
       margin: new EdgeInsets.only(top: 5, left: 10.0, bottom: 5, right: 10),
       decoration: new BoxDecoration(
@@ -213,61 +207,72 @@ class SettlementPageState extends State<SettlementPage> {
           ),
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(top: 12, left: 10, right: 10, bottom: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                TextWidget(
-                  textOverFlow: TextOverflow.ellipsis,
-                  text: _settlementBloc
-                      .startAndEndDateCheckDate(_settlementCheck),
-                  textType: TextType.TEXT_SMALL,
-                  colorText: AppColors.colorBlack,
-                ),
-                TextWidget(
-                  textOverFlow: TextOverflow.ellipsis,
-                  text: _settlementBloc.getCheckAmount(_settlementCheck),
-                  textType: TextType.TEXT_SMALL,
-                  colorText: AppColors.colorBlack,
-                  isBold: true,
-                ),
-              ],
-            ),
-          ),
-          Divider(
-            height: 0.5,
-          ),
-          Container(
+      child: InkWell(
+        //Navigate To Details Page
+        onTap: () {
+          _settlementBloc.dispatch(NavigateToDetailPageEvent(
+              selectedIndex: index,
+              appBarTitle:
+                  _settlementBloc.startAndEndDateCheckDate(_settlementCheck),
+              settlementModel: _settlementModel));
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
               padding:
-                  EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                  EdgeInsets.only(top: 12, left: 10, right: 10, bottom: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   TextWidget(
-                    textAlign: TextAlign.left,
                     textOverFlow: TextOverflow.ellipsis,
-                    text: 'Check ID',
+                    text: _settlementBloc
+                        .startAndEndDateCheckDate(_settlementCheck),
                     textType: TextType.TEXT_SMALL,
-                    colorText: AppColors.colorGrey,
+                    colorText: AppColors.colorBlack,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: TextWidget(
-                      textAlign: TextAlign.left,
-                      textOverFlow: TextOverflow.ellipsis,
-                      text: _settlementCheck.checkNbr,
-                      textType: TextType.TEXT_SMALL,
-                      colorText: AppColors.darkColorBlue,
-                    ),
+                  TextWidget(
+                    textOverFlow: TextOverflow.ellipsis,
+                    text: _settlementBloc.getCheckAmount(_settlementCheck),
+                    textType: TextType.TEXT_SMALL,
+                    colorText: AppColors.colorBlack,
+                    isBold: true,
                   ),
                 ],
-              )),
-        ],
+              ),
+            ),
+            Divider(
+              height: 0.5,
+            ),
+            Container(
+                padding:
+                    EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextWidget(
+                      textAlign: TextAlign.left,
+                      textOverFlow: TextOverflow.ellipsis,
+                      text: 'Check ID',
+                      textType: TextType.TEXT_SMALL,
+                      colorText: AppColors.colorGrey,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: TextWidget(
+                        textAlign: TextAlign.left,
+                        textOverFlow: TextOverflow.ellipsis,
+                        text: _settlementCheck.checkNbr,
+                        textType: TextType.TEXT_SMALL,
+                        colorText: AppColors.darkColorBlue,
+                      ),
+                    ),
+                  ],
+                )),
+          ],
+        ),
       ),
     );
   }
