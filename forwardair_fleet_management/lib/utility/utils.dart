@@ -59,11 +59,12 @@ class Utils {
 
   static String formatDateFromString(String dateString) {
     String date = '';
-    date = dateString.substring(0, 4) +
+    date = dateString.substring(4, 6) +
         '/' +
-        dateString.substring(4, 6) +
+        dateString.substring(6, 8) +
         '/' +
-        dateString.substring(6, 8);
+        dateString.substring(0, 4);
+
     return date;
   }
 

@@ -11,6 +11,7 @@ import 'package:forwardair_fleet_management/components/top_widget_fuel.dart';
 import 'package:forwardair_fleet_management/components/top_widget_loads.dart';
 import 'package:forwardair_fleet_management/components/tractor_fuel_details_item.dart';
 import 'package:forwardair_fleet_management/components/tractor_loads_details_item.dart';
+import 'package:forwardair_fleet_management/models/Tractor_settlement_model.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
@@ -203,7 +204,7 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
               height: MediaQuery.of(context).size.height * .18,
               color: AppColors.colorAppBar,
               child: Padding(
-                  padding: EdgeInsets.only(top: 10), child: _topWidget()),
+                  padding: EdgeInsets.only(top: 10), child: _topWidget(state)),
             ),
           ],
         ),
@@ -219,7 +220,11 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
   }
 
   //Widget to set TOTAL, EMPTY and LOADED Data
-  Widget _topWidget() {
+  Widget _topWidget(TractorDetailsState state) {
+    TractorSettlementModel data;
+    if(state is SettlementSuccessState ){
+      data=state.settlementDetailsModel;
+    }
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -239,10 +244,10 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
                   )
                 : TopWidgetForFuel(
                     pageName: pageName,
-                    totalTractorGallons: 0.0,
-                    totalFuelCost: 0.0,
-                    deductions: 0.0,
-                    grossAmount: 0.0,
+                    totalTractorGallons: tractorData.totalTractorGallons,
+                    totalFuelCost: tractorData.totalFuelCost,
+                    deductions: pageName==PageName.COMPENSATION_PAGE?_loadDetailsBloc.getDeduction(data.settlementDetails):0.0,
+                    grossAmount: pageName==PageName.COMPENSATION_PAGE? _loadDetailsBloc.getEarning(data.settlementDetails):0.0,
                   ),
           )
         ],
