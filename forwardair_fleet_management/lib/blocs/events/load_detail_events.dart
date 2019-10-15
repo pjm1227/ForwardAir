@@ -13,7 +13,8 @@ class FetchTractorDataEvent extends LoadDetailEvents {
   final int month, year;
   final PageName pageName;
 
-  FetchTractorDataEvent({@required this.tractorId,
+  FetchTractorDataEvent(
+      {@required this.tractorId,
       @required this.pageName,
       @required this.weekStart,
       @required this.weekEnd,

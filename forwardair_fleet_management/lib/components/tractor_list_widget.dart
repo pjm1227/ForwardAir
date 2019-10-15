@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
-import 'package:forwardair_fleet_management/screens/tractor_load_detail.dart';
+import 'package:forwardair_fleet_management/screens/tractor_details_screen.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:page_transition/page_transition.dart';
@@ -11,12 +11,12 @@ import 'text_widget.dart';
 
 //This widget return a list view widget that can be use at Load Page and
 //Miles Page
-class LoadListViewWidget extends StatelessWidget {
+class TractorListWidget extends StatelessWidget {
   final List<Map<Tractor, Color>> tractorList;
   final PageName pageName;
   final Dashboard_DB_Model dashboardData;
 
-  const LoadListViewWidget({
+  const TractorListWidget({
     Key key,
     @required this.tractorList,
     @required this.pageName,
@@ -92,7 +92,11 @@ class LoadListViewWidget extends StatelessWidget {
                                     textType: TextType.TEXT_MEDIUM,
                                     text: pageName == PageName.LOAD_PAGE
                                         ? 'Contribution(%) :  ${tractorList[index].keys.first.totalLoadsPercent}'
-                                        : 'Contribution(%) :  ${tractorList[index].keys.first.totalMilesPercent}',
+                                        : pageName == PageName.LOAD_PAGE
+                                            ? 'Contribution(%) :  ${tractorList[index].keys.first.totalMilesPercent}'
+                                            : pageName == PageName.FUEL_PAGE
+                                                ? 'Contribution(%) :  ${tractorList[index].keys.first.totalGallonsPercent}'
+                                                : 'Contribution(%) :  ${tractorList[index].keys.first.totalNetPercent}',
                                   ),
                                 )
                               ],
@@ -107,7 +111,11 @@ class LoadListViewWidget extends StatelessWidget {
                               child: TextWidget(
                                 text: pageName == PageName.LOAD_PAGE
                                     ? '${Utils.formatDecimalToWholeNumber(tractorList[index].keys.first.totalLoads)}'
-                                    : '${Utils.formatDecimalToWholeNumber(tractorList[index].keys.first.totalMiles)}',
+                                    : pageName == PageName.MILES_PAGE
+                                        ? '${Utils.formatDecimalToWholeNumber(tractorList[index].keys.first.totalMiles)}'
+                                        : pageName == PageName.FUEL_PAGE
+                                            ? '${Utils.formatDecimalToWholeNumber(tractorList[index].keys.first.totalTractorGallons)}'
+                                            : '${Utils.formatDecimalToWholeNumber(tractorList[index].keys.first.totalNet)}',
                                 colorText: AppColors.colorWhite,
                                 textType: TextType.TEXT_MEDIUM,
                                 isBold: true,
@@ -124,7 +132,7 @@ class LoadListViewWidget extends StatelessWidget {
                   context,
                   PageTransition(
                       type: PageTransitionType.fade,
-                      child: LoadDetailsPage(pageName,
+                      child: TractorDetailsPage(pageName,
                           tractorList[index].keys.first, dashboardData)));
             },
           );

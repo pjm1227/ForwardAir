@@ -19,7 +19,9 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
   LoadStates get initialState => InitialState();
 
   @override
-  Stream<LoadStates> mapEventToState(LoadEvents event,) async* {
+  Stream<LoadStates> mapEventToState(
+    LoadEvents event,
+  ) async* {
     if (event is GetTractorDataEvent) {
       //fetching load data so show shimmer effect while we get data from API
       yield ShimmerState();
@@ -46,7 +48,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
       yield ShimmerState();
       yield SortState(
           tractorData:
-          sortAscendingTractorId(event.pageName, event.tractorData));
+              sortAscendingTractorId(event.pageName, event.tractorData));
     }
     if (event is SortDescendingTractorIDEvent) {
       //Sort data model Descending order using Tractor Id
@@ -54,7 +56,14 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
       yield ShimmerState();
       yield SortState(
           tractorData:
-          sortDescendingTractorId(event.pageName, event.tractorData));
+              sortDescendingTractorId(event.pageName, event.tractorData));
+    }
+
+    if (event is FuelGallonsEvent) {
+      yield FuelGallonsAmountState(
+          isGallonClicked: event.isGallonClicked,
+          isTotalAmountClicked: event.isTotalAmountClicked);
+      yield InitialState();
     }
   }
 
@@ -141,50 +150,61 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
     }
   }
 
-  //This method sort Tractors data High to low
+  //This method sort top contributors
   TractorData topContributorData(PageName pageName, TractorData tractorModel) {
-    tractorModel.tractors.sort((a, b) =>
-    pageName == PageName.LOAD_PAGE
+    tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
         ? b.totalLoads.compareTo(a.totalLoads)
-        : b.totalMiles.compareTo(a.totalMiles));
+        : pageName == PageName.MILES_PAGE
+            ? b.totalMiles.compareTo(a.totalMiles)
+            : pageName == PageName.FUEL_PAGE
+                ? b.totalTractorGallons.compareTo(a.totalTractorGallons)
+                : b.totalNet.compareTo(a.totalNet));
     return tractorModel;
   }
 
   //This method sort Tractors data High to low
-  List<Map<Tractor, Color>> sortHighToLow(PageName pageName,
-      List<Map<Tractor, Color>> tractorModel) {
-    tractorModel.sort((a, b) =>
-    pageName == PageName.LOAD_PAGE
+  List<Map<Tractor, Color>> sortHighToLow(
+      PageName pageName, List<Map<Tractor, Color>> tractorModel) {
+    tractorModel.sort((a, b) => pageName == PageName.LOAD_PAGE
         ? b.keys.first.totalLoads.compareTo(a.keys.first.totalLoads)
-        : b.keys.first.totalMiles.compareTo(a.keys.first.totalMiles));
+        : pageName == PageName.MILES_PAGE
+            ? b.keys.first.totalMiles.compareTo(a.keys.first.totalMiles)
+            : pageName == PageName.FUEL_PAGE
+                ? b.keys.first.totalTractorGallons
+                    .compareTo(a.keys.first.totalTractorGallons)
+                : b.keys.first.totalNet
+                    .compareTo(a.keys.first.totalNet));
     return tractorModel;
   }
 
   //This method sort Tractors data low to high
-  List<Map<Tractor, Color>> sortLowToHigh(PageName pageName,
-      List<Map<Tractor, Color>> tractorModel) {
-    tractorModel.sort((a, b) =>
-    pageName == PageName.LOAD_PAGE
+  List<Map<Tractor, Color>> sortLowToHigh(
+      PageName pageName, List<Map<Tractor, Color>> tractorModel) {
+    tractorModel.sort((a, b) => pageName == PageName.LOAD_PAGE
         ? a.keys.first.totalLoads.compareTo(b.keys.first.totalLoads)
-        : a.keys.first.totalMiles.compareTo(b.keys.first.totalMiles));
+        : pageName == PageName.MILES_PAGE
+            ? a.keys.first.totalMiles.compareTo(b.keys.first.totalMiles)
+            : pageName == PageName.FUEL_PAGE
+                ? a.keys.first.totalTractorGallons
+                    .compareTo(b.keys.first.totalTractorGallons)
+                : a.keys.first.totalNet
+                    .compareTo(b.keys.first.totalNet));
     return tractorModel;
   }
 
   //This method sort Tractors data in ascending tractor id
-  List<Map<Tractor, Color>> sortAscendingTractorId(PageName pageName,
-      List<Map<Tractor, Color>> tractorModel) {
-    tractorModel.sort((a, b) =>
-        int.parse(a.keys.first.tractorId)
-            .compareTo(int.parse(b.keys.first.tractorId)));
+  List<Map<Tractor, Color>> sortAscendingTractorId(
+      PageName pageName, List<Map<Tractor, Color>> tractorModel) {
+    tractorModel.sort((a, b) => int.parse(a.keys.first.tractorId)
+        .compareTo(int.parse(b.keys.first.tractorId)));
     return tractorModel;
   }
 
   //This method sort Tractors data according to miles and loads
-  List<Map<Tractor, Color>> sortDescendingTractorId(PageName pageName,
-      List<Map<Tractor, Color>> tractorModel) {
-    tractorModel.sort((a, b) =>
-        int.parse(b.keys.first.tractorId)
-            .compareTo(int.parse(a.keys.first.tractorId)));
+  List<Map<Tractor, Color>> sortDescendingTractorId(
+      PageName pageName, List<Map<Tractor, Color>> tractorModel) {
+    tractorModel.sort((a, b) => int.parse(b.keys.first.tractorId)
+        .compareTo(int.parse(a.keys.first.tractorId)));
     return tractorModel;
   }
 

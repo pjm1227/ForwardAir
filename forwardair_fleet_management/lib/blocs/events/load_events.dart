@@ -27,8 +27,10 @@ class GetTractorDataEvent extends LoadEvents {
       : super([]);
 }
 
+//This event is called when we called chart API to fetch chart data
 class GetChartDataEvent extends LoadEvents {}
 
+//This event is called when user choose sort high to low
 class SortHighToLowEvent extends LoadEvents {
   final List<Map<Tractor, Color>> tractorData;
   final PageName pageName;
@@ -36,7 +38,7 @@ class SortHighToLowEvent extends LoadEvents {
   SortHighToLowEvent({@required this.tractorData, @required this.pageName})
       : super([tractorData, pageName]);
 }
-
+//This event is called when user choose sort low to high
 class SortLowToHighEvent extends LoadEvents {
   final List<Map<Tractor, Color>> tractorData;
   final PageName pageName;
@@ -44,7 +46,7 @@ class SortLowToHighEvent extends LoadEvents {
   SortLowToHighEvent({@required this.tractorData, @required this.pageName})
       : super([tractorData, pageName]);
 }
-
+//This event is called when user choose sort ascending using tractor ID
 class SortAscendingTractorIDEvent extends LoadEvents {
   final List<Map<Tractor, Color>> tractorData;
   final PageName pageName;
@@ -54,6 +56,7 @@ class SortAscendingTractorIDEvent extends LoadEvents {
       : super([tractorData, pageName]);
 }
 
+//This event is called when user choose sort descending using tractor ID
 class SortDescendingTractorIDEvent extends LoadEvents {
   final List<Map<Tractor, Color>> tractorData;
   final PageName pageName;
@@ -61,4 +64,13 @@ class SortDescendingTractorIDEvent extends LoadEvents {
   SortDescendingTractorIDEvent(
       {@required this.tractorData, @required this.pageName})
       : super([tractorData, pageName]);
+}
+
+//This event is called when user click on Fuel Gallons
+
+class FuelGallonsEvent extends LoadEvents {
+  final bool isGallonClicked, isTotalAmountClicked;
+  FuelGallonsEvent(
+      {@required this.isGallonClicked, @required this.isTotalAmountClicked})
+      : super([]);
 }

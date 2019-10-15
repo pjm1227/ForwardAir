@@ -1,0 +1,129 @@
+import 'package:flutter/material.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
+import 'package:forwardair_fleet_management/utility/colors.dart';
+import 'package:forwardair_fleet_management/utility/utils.dart';
+
+import 'text_widget.dart';
+//This Widget is used to show the Total Gallons, Total amount for fuel, And
+//Show the total deduction or earnings for Net Compensation Page
+class TopWidgetForFuel extends StatelessWidget {
+  final PageName pageName;
+  final double totalTractorGallons, grossAmount, totalFuelCost, deductions;
+
+  const TopWidgetForFuel(
+      {Key key,
+      this.pageName,
+      this.totalTractorGallons,
+      this.grossAmount,
+      this.totalFuelCost,
+      this.deductions})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: <Widget>[
+      Expanded(
+        flex: 4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Container(
+                  child: pageName == PageName.COMPENSATION_PAGE
+                      ? ClipOval(
+                          child: Container(
+                            color: Colors.teal,
+                            height: 8.0,
+                            width: 8.0,
+                          ),
+                        )
+                      : null,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0, right: 8.0),
+                  child: TextWidget(
+                    text: pageName == PageName.FUEL_PAGE
+                        ? '${Utils.formatDecimalToWholeNumber(totalTractorGallons)}'
+                        : '\$${Utils.formatDecimalToWholeNumber(grossAmount)}',
+                    textAlign: TextAlign.center,
+                    colorText: AppColors.colorWhite,
+                    textType: TextType.TEXT_MEDIUM,
+                    isBold: true,
+                    textOverFlow: TextOverflow.clip,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextWidget(
+                text: pageName == PageName.FUEL_PAGE ? 'GALLONS' : 'EARNINGS',
+                colorText: AppColors.colorWhite,
+              ),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        flex: 2,
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.08,
+          child: VerticalDivider(
+            color: AppColors.colorWhite,
+          ),
+        ),
+      ),
+      Expanded(
+        flex: 4,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                //Show and hide Dot based on condition
+                //On Fuel page we don't require dot
+                Container(
+                  child: pageName == PageName.COMPENSATION_PAGE
+                      ? ClipOval(
+                          child: Container(
+                            color: Colors.red,
+                            height: 8.0,
+                            width: 8.0,
+                          ),
+                        )
+                      : null,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: TextWidget(
+                    text: pageName == PageName.FUEL_PAGE
+                        ? '\$${Utils.formatDecimalToWholeNumber(totalFuelCost)}'
+                        : '\$${Utils.formatDecimalToWholeNumber(deductions)}',
+                    textAlign: TextAlign.center,
+                    colorText: AppColors.colorWhite,
+                    textType: TextType.TEXT_MEDIUM,
+                    isBold: true,
+                    textOverFlow: TextOverflow.clip,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextWidget(
+                text: pageName == PageName.FUEL_PAGE ? 'AMOUNT' : 'DEDUCTIONS',
+                colorText: AppColors.colorWhite,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ]);
+    ;
+  }
+}

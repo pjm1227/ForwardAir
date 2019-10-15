@@ -32,10 +32,10 @@ class Repository {
       _apiProvider.requestInPost(EndPoints.CHART_DATA_URL, token, body);
 
   /*
-  This method is called when user request for load/mile details
+  This method is called when user request for load/mile details for a tractor
    */
 
-  Future<dynamic> makeLoadDetailRequest(String body, String token) =>
+  Future<dynamic> makeTractorLoadsDetailRequest(String body, String token) =>
       _apiProvider.requestInPost(EndPoints.LOAD_DETAIL_URL, token, body);
 
   /*
@@ -44,4 +44,18 @@ class Repository {
 
   Future<dynamic> makeSettlementRequest(String body, String token) =>
       _apiProvider.requestInPost(EndPoints.SETTLEMENT_URL, token, body);
+
+  /*
+  This method is called when user request for tractor fuel details
+   */
+
+  Future<dynamic> makeTractorFuelDetailsRequest(String body, String token) =>
+      _apiProvider.requestInPost(EndPoints.TRACTOR_FUEL_DETAILS, token, body);
+
+  /*
+  This method is called when user request for tractor settlement
+   */
+
+  Future<dynamic> makeSettlementDetailRequest(String body, String token) =>
+      _apiProvider.requestInPost(EndPoints.TRACTOR_SETTLEMENT, token, body);
 }

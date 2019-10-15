@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-ChartDataWeeks chartDataWeeksFromJson(String str) => ChartDataWeeks.fromJson(json.decode(str));
+ChartDataWeeks chartDataWeeksFromJson(String str) =>
+    ChartDataWeeks.fromJson(json.decode(str));
 
 String chartDataWeeksToJson(ChartDataWeeks data) => json.encode(data.toJson());
 
@@ -24,20 +25,25 @@ class ChartDataWeeks {
   });
 
   factory ChartDataWeeks.fromJson(Map<String, dynamic> json) => ChartDataWeeks(
-    companyCd: json["companyCd"] == null ? null : json["companyCd"],
-    contractorCd: json["contractorCd"] == null ? null : json["contractorCd"],
-    weekStart: json["weekStart"] == null ? null : json["weekStart"],
-    weekEnd: json["weekEnd"] == null ? null : json["weekEnd"],
-    days: json["days"] == null ? null : List<Day>.from(json["days"].map((x) => Day.fromJson(x))),
-  );
+        companyCd: json["companyCd"] == null ? null : json["companyCd"],
+        contractorCd:
+            json["contractorCd"] == null ? null : json["contractorCd"],
+        weekStart: json["weekStart"] == null ? 0 : json["weekStart"],
+        weekEnd: json["weekEnd"] == null ? 0 : json["weekEnd"],
+        days: json["days"] == null
+            ? null
+            : List<Day>.from(json["days"].map((x) => Day.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "companyCd": companyCd == null ? null : companyCd,
-    "contractorCd": contractorCd == null ? null : contractorCd,
-    "weekStart": weekStart == null ? null : weekStart,
-    "weekEnd": weekEnd == null ? null : weekEnd,
-    "days": days == null ? null : List<dynamic>.from(days.map((x) => x.toJson())),
-  };
+        "companyCd": companyCd == null ? null : companyCd,
+        "contractorCd": contractorCd == null ? null : contractorCd,
+        "weekStart": weekStart == null ? 0 : weekStart,
+        "weekEnd": weekEnd == null ? 0 : weekEnd,
+        "days": days == null
+            ? null
+            : List<dynamic>.from(days.map((x) => x.toJson())),
+      };
 }
 
 class Day {
@@ -68,30 +74,34 @@ class Day {
   });
 
   factory Day.fromJson(Map<String, dynamic> json) => Day(
-    tractorCount: json["tractorCount"] == null ? null : json["tractorCount"],
-    totalMiles: json["totalMiles"] == null ? null : json["totalMiles"],
-    loadedMiles: json["loadedMiles"] == null ? null : json["loadedMiles"],
-    emptyMiles: json["emptyMiles"] == null ? null : json["emptyMiles"],
-    totalLoads: json["totalLoads"] == null ? null : json["totalLoads"],
-    loadedLoads: json["loadedLoads"] == null ? null : json["loadedLoads"],
-    emptyLoads: json["emptyLoads"] == null ? null : json["emptyLoads"],
-    totalTractorGallons: json["totalTractorGallons"] == null ? null : json["totalTractorGallons"],
-    totalFuelCost: json["totalFuelCost"] == null ? null : json["totalFuelCost"],
-    weekDt: json["weekDt"] == null ? null : json["weekDt"],
-    dayOfWeek: json["dayOfWeek"] == null ? null : json["dayOfWeek"],
-  );
+        tractorCount: json["tractorCount"] == null ? 0 : json["tractorCount"],
+        totalMiles: json["totalMiles"] == null ? 0 : json["totalMiles"],
+        loadedMiles: json["loadedMiles"] == null ? 0 : json["loadedMiles"],
+        emptyMiles: json["emptyMiles"] == null ? 0 : json["emptyMiles"],
+        totalLoads: json["totalLoads"] == null ? 0 : json["totalLoads"],
+        loadedLoads: json["loadedLoads"] == null ? 0 : json["loadedLoads"],
+        emptyLoads: json["emptyLoads"] == null ? 0 : json["emptyLoads"],
+        totalTractorGallons: json["totalTractorGallons"] == null
+            ? 0.0
+            : json["totalTractorGallons"],
+        totalFuelCost:
+            json["totalFuelCost"] == null ? 0.0 : json["totalFuelCost"],
+        weekDt: json["weekDt"] == null ? null : json["weekDt"],
+        dayOfWeek: json["dayOfWeek"] == null ? 0 : json["dayOfWeek"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "tractorCount": tractorCount == null ? null : tractorCount,
-    "totalMiles": totalMiles == null ? null : totalMiles,
-    "loadedMiles": loadedMiles == null ? null : loadedMiles,
-    "emptyMiles": emptyMiles == null ? null : emptyMiles,
-    "totalLoads": totalLoads == null ? null : totalLoads,
-    "loadedLoads": loadedLoads == null ? null : loadedLoads,
-    "emptyLoads": emptyLoads == null ? null : emptyLoads,
-    "totalTractorGallons": totalTractorGallons == null ? null : totalTractorGallons,
-    "totalFuelCost": totalFuelCost == null ? null : totalFuelCost,
-    "weekDt": weekDt == null ? null : weekDt,
-    "dayOfWeek": dayOfWeek == null ? null : dayOfWeek,
-  };
+        "tractorCount": tractorCount == null ? 0 : tractorCount,
+        "totalMiles": totalMiles == null ? 0 : totalMiles,
+        "loadedMiles": loadedMiles == null ? 0 : loadedMiles,
+        "emptyMiles": emptyMiles == null ? 0 : emptyMiles,
+        "totalLoads": totalLoads == null ? 0 : totalLoads,
+        "loadedLoads": loadedLoads == null ? 0 : loadedLoads,
+        "emptyLoads": emptyLoads == null ? 0 : emptyLoads,
+        "totalTractorGallons":
+            totalTractorGallons == null ? 0.0 : totalTractorGallons,
+        "totalFuelCost": totalFuelCost == null ? 0.0 : totalFuelCost,
+        "weekDt": weekDt == null ? null : weekDt,
+        "dayOfWeek": dayOfWeek == null ? 0 : dayOfWeek,
+      };
 }
