@@ -126,6 +126,14 @@ class Utils {
     }
   }
 
+  static String formatTimeFromString(String timeString) {
+    String time = '';
+    time = timeString.substring(9, 11) +
+        ':' +
+        timeString.substring(11, 13);
+    return time;
+  }
+
 
 }
 
