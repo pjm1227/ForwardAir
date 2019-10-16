@@ -139,5 +139,7 @@ class Constants {
   static const String TEXT_PAYMENT = 'Payment';
   static const String TEXT_DESCRIPTION = 'Description';
   static const String TEXT_COMMENTS = 'Comments';
+  static const String EARNING_TEXT = 'E';
+  static const String DEDUCTION_TEXT = 'D';
 
 }

@@ -62,6 +62,7 @@ class TractorFuelDetailsList extends StatelessWidget {
                       text: pageName == PageName.FUEL_PAGE
                           ? '\$${fuelModel.tractorFuelCost}'
                           : '\$${settlementModel.amt}',
+                      textAlign: TextAlign.end,
                       colorText: AppColors.colorAppBar,
                       isBold: true,
                     ),
@@ -90,12 +91,12 @@ class TractorFuelDetailsList extends StatelessWidget {
                       flex: 1,
                       child: TextWidget(
                           text:
-                              pageName == PageName.FUEL_PAGE ? '' : 'Order #'))
+                              pageName == PageName.FUEL_PAGE ? '' : 'Order #',textAlign: TextAlign.end,))
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+              padding: const EdgeInsets.only(left: 8.0, bottom: 8.0,right: 8),
               child: Row(
                 children: <Widget>[
                   Expanded(
@@ -110,7 +111,7 @@ class TractorFuelDetailsList extends StatelessWidget {
                       child: TextWidget(
                           text: pageName == PageName.FUEL_PAGE
                               ? ''
-                              : '${settlementModel.oid}'))
+                              :'${settlementModel.oid}',textAlign: TextAlign.end))
                 ],
               ),
             )

@@ -96,4 +96,24 @@ class TractorDetailBloc extends Bloc<LoadDetailEvents, TractorDetailsState> {
       yield* fetchLoadDetails(event);
     }
   }
+
+  double getDeduction(List<SettlementDetail> data) {
+    double deduction = 0.00;
+    for(int i=0;i<data.length;i++){
+      if(data[i].transType==Constants.DEDUCTION_TEXT){
+        deduction=deduction+data[i].amt;
+      }
+    }
+    return deduction;
+  }
+
+  double getEarning(List<SettlementDetail> data) {
+    double earnings = 0.00;
+    for(int i=0;i<data.length;i++){
+      if(data[i].transType==Constants.EARNING_TEXT){
+        earnings=earnings+data[i].amt;
+      }
+    }
+    return earnings;
+  }
 }

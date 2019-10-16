@@ -57,6 +57,14 @@ class Utils {
     return formattedNumber;
   }
 
+  static String formatTimeFromString(String timeString) {
+    String time = '';
+    time = timeString.substring(9, 11) +
+        ':' +
+        timeString.substring(11, 13);
+    return time;
+  }
+
   static String formatDateFromString(String dateString) {
     var formattedString = '';
     if (dateString != '')  {
@@ -66,6 +74,7 @@ class Utils {
     }
     return formattedString;
   }
+
 
 //  static String formatDateFromString(String dateString) {
 //    String date = '';
@@ -117,10 +126,10 @@ class Utils {
 
   static String addDollarAfterMinusSign(String deductions) {
     String deduction = '';
-    if (deductions != 'N/A') {
+    if (deductions != 'NA') {
       deduction = '-\$' + deductions.replaceAll(RegExp('-'), '');
     } else {
-      deduction = 'N/A';
+      deduction = 'NA';
     }
     return deduction;
   }
@@ -131,7 +140,7 @@ class Utils {
     if (commaAddedText != '') {
       return '\$' + commaAddedText;
     } else {
-      return 'N/A';
+      return 'NA';
     }
   }
 
