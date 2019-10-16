@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
@@ -376,14 +377,16 @@ class _SideMenuPageState extends State<SideMenuPage> {
               },
               listener: (context, state) {
                 if (state is SafetyIncidentState) {
+                  //To get SafetyIncident Expanded List Item Title.
+                  String _safetyMenuTitle = _sideMenuBloc.expandedSafetyItems[state.selectedIndex][Constants.TEXT_SAFETY_AND_INCIDENT_EXPENDED_TITLE];
                   scaffold.currentState.openEndDrawer();
-                  if (state.selectedIndex == 0) {
+                  if (_safetyMenuTitle == Constants.TEXT_REPORT_ACCIDENT) {
                     //To Navigate to  Report Accident
                     navigateToFeatureComingSoonPage();
-                  } else if (state.selectedIndex == 1) {
+                  } else if (_safetyMenuTitle == Constants.TEXT_REPORT_BREAKDOWN) {
                     //To Navigate to Report Breakdown
                     navigateToFeatureComingSoonPage();
-                  } else if (state.selectedIndex == 2) {
+                  } else if (_safetyMenuTitle == Constants.TEXT_VIEW_HISTORY) {
                     //To Navigate to View History
                     navigateToFeatureComingSoonPage();
                   }
@@ -391,6 +394,12 @@ class _SideMenuPageState extends State<SideMenuPage> {
 
                 //To Display the Logout Alert Dialogue.
                 if (state is LoggedOutState) {
+                  //Storing expanded item index
+                  Utils.expandedItemsIndex = 0;
+                  //Storing selected index
+                  Utils.selectedIndexInSideMenu = 1;
+                  //Storing Expand flag
+                  Utils.isExpanded = false;
                   showAlertDialog(scaffold.currentContext);
                 }
                 //To Clear all items in the local db.
@@ -584,7 +593,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
             )));
   }
 
-  //This return UI of Drawer Menu and Dasboard
+  //This return UI of Drawer Menu and Dashboard
   @override
   Widget build(BuildContext context) {
     //Checking condition for Platforms to include Safe Area.
