@@ -80,9 +80,9 @@ class _SideMenuPageState extends State<SideMenuPage> {
         child: new ListTile(
           leading: Container(
             child:
-            //This displays the View History, SafertyIncident
-            // Reporting and Breakdown Reporting Widget.
-            TextWidget(
+                //This displays the View History, SafertyIncident
+                // Reporting and Breakdown Reporting Widget.
+                TextWidget(
               text: _sideMenuBloc.expandedSafetyItems[index]
                   [Constants.TEXT_SAFETY_AND_INCIDENT_EXPENDED_TITLE],
               textType: TextType.TEXT_SMALL,
@@ -92,7 +92,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
           ),
           onTap: () {
             //To update the Expanded Row based on the user tap event.
-            _sideMenuBloc.dispatch(SafetyIncidentsEvent(selectedIndex: index));
+            _sideMenuBloc.dispatch(SafetyIncidentsEvent(selectedIndex: index,expandFlag: expandFlag));
           },
         ),
       ),
@@ -225,8 +225,8 @@ class _SideMenuPageState extends State<SideMenuPage> {
                       Padding(
                           padding: const EdgeInsets.only(left: 15.0),
                           child:
-                          //This display the Title of the Side Menu Widget.
-                          TextWidget(
+                              //This display the Title of the Side Menu Widget.
+                              TextWidget(
                             text: _sideMenuBloc.drawerMenuItems[index]
                                 [Constants.TEXT_SIDE_MENU_TITLE],
                             colorText: AppColors.colorBlack,
@@ -335,8 +335,8 @@ class _SideMenuPageState extends State<SideMenuPage> {
                   Padding(
                       padding: const EdgeInsets.only(left: 15.0),
                       child:
-                      //This display the Title of the Widget
-                      TextWidget(
+                          //This display the Title of the Widget
+                          TextWidget(
                         text: _sideMenuBloc.drawerMenuItems[index]
                             [Constants.TEXT_SIDE_MENU_TITLE],
                         colorText: AppColors.colorBlack,
@@ -375,6 +375,20 @@ class _SideMenuPageState extends State<SideMenuPage> {
                 return true;
               },
               listener: (context, state) {
+                if (state is SafetyIncidentState) {
+                  scaffold.currentState.openEndDrawer();
+                  if (state.selectedIndex == 0) {
+                    //To Navigate to  Report Accident
+                    navigateToFeatureComingSoonPage();
+                  } else if (state.selectedIndex == 1) {
+                    //To Navigate to Report Breakdown
+                    navigateToFeatureComingSoonPage();
+                  } else if (state.selectedIndex == 2) {
+                    //To Navigate to View History
+                    navigateToFeatureComingSoonPage();
+                  }
+                }
+
                 //To Display the Logout Alert Dialogue.
                 if (state is LoggedOutState) {
                   showAlertDialog(scaffold.currentContext);
@@ -433,9 +447,8 @@ class _SideMenuPageState extends State<SideMenuPage> {
                   return true;
                 },
                 builder: (context, state) {
-                  //To update the
                   //if (state is LoggedOutState) {
-                    //_selectedIndex = 1;
+                  //_selectedIndex = 1;
                   //}
                   // To update the expanded and collapsed Widget
                   if (state is ExpandState) {
@@ -456,8 +469,10 @@ class _SideMenuPageState extends State<SideMenuPage> {
                   }
                   // Initial Selected Item in Side Menu
                   if (state is InitialState) {
+                    _expandedListIndex = state.expandedIndex == null ? 0 : state.expandedIndex;
                     _selectedIndex =
                         state.selectedIndex == null ? 1 : state.selectedIndex;
+                    expandFlag = state.isExpanded == null ? false : state.isExpanded;
                   }
                   //This is the main widget of Side Menu Options
                   return ListView(
@@ -510,12 +525,15 @@ class _SideMenuPageState extends State<SideMenuPage> {
                                       //This widget displays UserRole
                                       TextWidget(
                                         text: _sideMenuBloc.userDetails != null
-                                            ? _sideMenuBloc.userDetails.usertype ==
+                                            ? _sideMenuBloc
+                                                        .userDetails.usertype ==
                                                     null
                                                 ? 'N/A'
-                                                : _sideMenuBloc.convertUserTypeToText(
-                                                    _sideMenuBloc
-                                                        .userDetails.usertype)
+                                                : _sideMenuBloc
+                                                    .convertUserTypeToText(
+                                                        _sideMenuBloc
+                                                            .userDetails
+                                                            .usertype)
                                             : 'N/A',
                                         colorText: AppColors.colorWhite,
                                         textType: TextType.TEXT_SMALL,
@@ -523,12 +541,22 @@ class _SideMenuPageState extends State<SideMenuPage> {
                                     ],
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 5.0,bottom: 5.0),
+                                    padding: const EdgeInsets.only(
+                                        top: 5.0, bottom: 5.0),
                                     child: Row(
                                       children: <Widget>[
                                         //This widget displays ContractorCode
                                         TextWidget(
-                                          text: _sideMenuBloc.userDetails != null ? _sideMenuBloc.userDetails.contractorcd == null ? 'N/A' : _sideMenuBloc.userDetails.contractorcd : 'N/A',
+                                          text:
+                                              _sideMenuBloc.userDetails != null
+                                                  ? _sideMenuBloc.userDetails
+                                                              .contractorcd ==
+                                                          null
+                                                      ? 'N/A'
+                                                      : _sideMenuBloc
+                                                          .userDetails
+                                                          .contractorcd
+                                                  : 'N/A',
                                           colorText: AppColors.colorWhite,
                                           textType: TextType.TEXT_SMALL,
                                         ),
