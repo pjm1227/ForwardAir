@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:forwardair_fleet_management/screens/settlement_screen.dart';
-import 'package:forwardair_fleet_management/utility/utils.dart';
-import 'package:meta/dart2js.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
 
+import 'package:forwardair_fleet_management/screens/settlement_screen.dart';
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
 import 'package:forwardair_fleet_management/screens/login_screen.dart';
@@ -17,23 +15,20 @@ import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.da
 import 'package:forwardair_fleet_management/blocs/sidemenu_bloc.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 
-/*
-   SideMenuPage.
-*/
-
 class SideMenuPage extends StatefulWidget {
+  //To get the current context from the navigated screen
   GlobalKey<ScaffoldState> scaffold;
-  int sideMenuselectedIndex;
-  SideMenuPage({this.scaffold, this.sideMenuselectedIndex});
+  //Constructor
+  SideMenuPage({this.scaffold});
   @override
-  _SideMenuPageState createState() =>
-      new _SideMenuPageState(this.scaffold);
+  _SideMenuPageState createState() => new _SideMenuPageState(this.scaffold);
 }
 
 class _SideMenuPageState extends State<SideMenuPage> {
+  //To get the current context from the navigated screen
   GlobalKey<ScaffoldState> scaffold;
+  //Constructor
   _SideMenuPageState(this.scaffold);
-
   //SideMenu Bloc
   SideMenuBloc _sideMenuBloc = SideMenuBloc();
   //Selected index
@@ -47,22 +42,27 @@ class _SideMenuPageState extends State<SideMenuPage> {
   @override
   initState() {
     super.initState();
+    //To make api call to get settlement data
     _sideMenuBloc.dispatch(DisplayInitiallyEvent());
   }
 
-  //To Dispose the SideMenu Bloc
   @override
   void dispose() {
+    //To Dispose the drawerMenuItem
     _sideMenuBloc.drawerMenuItems = [];
+    //To Dispose the Safety Item List
     _sideMenuBloc.expandedSafetyItems = [];
+    //To Dispose the SideMenu Bloc
     _sideMenuBloc.dispose();
     super.dispose();
   }
 
-  //To display versionNumber
+  //This widget is to display app version
   Widget _versionNumberWidget() {
+    //Fetch Version from Bloc
     var versionString =
         _sideMenuBloc.versionNumer != null ? _sideMenuBloc.versionNumer : '';
+    //Display the Version
     return TextWidget(
       text: Constants.TEXT_VERSION_NUMBER + versionString,
       colorText: AppColors.colorRed,
@@ -70,7 +70,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
     );
   }
 
-  //To display report list versionNumber
+  //This widget to display Safety Incident List Items
   _buildRowExpandedRows(int index) {
     return Container(
       padding: EdgeInsets.only(left: 47),
@@ -79,7 +79,10 @@ class _SideMenuPageState extends State<SideMenuPage> {
         color: Colors.transparent,
         child: new ListTile(
           leading: Container(
-            child: TextWidget(
+            child:
+            //This displays the View History, SafertyIncident
+            // Reporting and Breakdown Reporting Widget.
+            TextWidget(
               text: _sideMenuBloc.expandedSafetyItems[index]
                   [Constants.TEXT_SAFETY_AND_INCIDENT_EXPENDED_TITLE],
               textType: TextType.TEXT_SMALL,
@@ -88,6 +91,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
             ),
           ),
           onTap: () {
+            //To update the Expanded Row based on the user tap event.
             _sideMenuBloc.dispatch(SafetyIncidentsEvent(selectedIndex: index));
           },
         ),
@@ -95,7 +99,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
     );
   }
 
-  //To display SAFETY AND ACCIDENT widget
+  //This widget displays SAFETY AND ACCIDENT
   Widget _safetyAndAccidentsExpandableWidget(int index) {
     return new Container(
       child: new Column(
@@ -105,6 +109,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
+                //Expand and Collapse Event
                 _sideMenuBloc.dispatch(
                     ExpandEvent(expandFlag: expandFlag, selectedIndex: index));
               },
@@ -119,6 +124,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
+                          //This widget display leftside selected/unselected color
                           Container(
                             width: 5,
                             color: _selectedIndex != null &&
@@ -131,20 +137,20 @@ class _SideMenuPageState extends State<SideMenuPage> {
                             child: SizedBox(
                                 width: 24,
                                 height: 24,
+                                //This widget display selected/unselected images
                                 child: Image.asset(_selectedIndex == index
-                                        ? (_sideMenuBloc.drawerMenuItems[index][
-                                            Constants
-                                                .TEXT_SELECTED_ICON]) //_sideMenuBloc._selectedItemImages[index]
-                                        : (_sideMenuBloc.drawerMenuItems[index][
-                                            Constants
-                                                .TEXT_UNSELECTED_ICON]) // _imageNames[index]
-                                    )),
+                                    ? (_sideMenuBloc.drawerMenuItems[index]
+                                        [Constants.TEXT_SELECTED_ICON])
+                                    : (_sideMenuBloc.drawerMenuItems[index]
+                                        [Constants.TEXT_UNSELECTED_ICON]))),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0),
-                            child: TextWidget(
+                            child:
+                                //To display the Side Menu Title
+                                TextWidget(
                               text: _sideMenuBloc.drawerMenuItems[index]
-                                  [Constants.TEXT_SIDE_MENU_TITLE], //[index],
+                                  [Constants.TEXT_SIDE_MENU_TITLE],
                               colorText: AppColors.colorBlack,
                               textType: TextType.TEXT_MEDIUM,
                             ),
@@ -158,6 +164,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
               ),
             ),
           ),
+          //To display the Expandable Widget for Safety Incidents
           ExpandableContainer(
             expandedHeight:
                 _sideMenuBloc.expandedSafetyItems.length == 1 ? 50 : 130,
@@ -167,6 +174,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
               shrinkWrap: true,
               physics: ClampingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
+                //This display the Items in Safety Incident
                 return new Container(child: _buildRowExpandedRows(index));
               },
               itemCount: _sideMenuBloc.expandedSafetyItems.length,
@@ -177,9 +185,8 @@ class _SideMenuPageState extends State<SideMenuPage> {
     );
   }
 
-  _buildWidgetForDashboardAndCompanyNews(
-    int index,
-  ) {
+  //This widget displays the Dashboard and Company News
+  _buildWidgetForDashboardAndCompanyNews(int index) {
     return Column(
       children: <Widget>[
         Container(
@@ -196,6 +203,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
+                      //This display the left side color based on the Select/UnSelect of the Widget.
                       Container(
                         width: 5,
                         color: _selectedIndex != null && _selectedIndex == index
@@ -207,18 +215,20 @@ class _SideMenuPageState extends State<SideMenuPage> {
                         child: SizedBox(
                             width: 24,
                             height: 24,
+                            //This display the image based on the Select/UnSelect of the Widget.
                             child: Image.asset(_selectedIndex == index
-                                    ? _sideMenuBloc.drawerMenuItems[index][Constants
-                                        .TEXT_SELECTED_ICON] //_selectedItemImages[index]
-                                    : _sideMenuBloc.drawerMenuItems[index][Constants
-                                        .TEXT_UNSELECTED_ICON] //_imageNames[index]
-                                )),
+                                ? _sideMenuBloc.drawerMenuItems[index]
+                                    [Constants.TEXT_SELECTED_ICON]
+                                : _sideMenuBloc.drawerMenuItems[index]
+                                    [Constants.TEXT_UNSELECTED_ICON])),
                       ),
                       Padding(
                           padding: const EdgeInsets.only(left: 15.0),
-                          child: TextWidget(
-                            text: _sideMenuBloc.drawerMenuItems[index][Constants
-                                .TEXT_SIDE_MENU_TITLE], //_drawerMenuItems[index],
+                          child:
+                          //This display the Title of the Side Menu Widget.
+                          TextWidget(
+                            text: _sideMenuBloc.drawerMenuItems[index]
+                                [Constants.TEXT_SIDE_MENU_TITLE],
                             colorText: AppColors.colorBlack,
                             textType: TextType.TEXT_MEDIUM,
                           )),
@@ -227,6 +237,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
                   onTap: () {
                     expandFlag = false;
                     _expandedListIndex = 0;
+                    // To navigate to dashboard/Company News Page
                     _sideMenuBloc.dispatch(NavigationEvent(
                         selectedIndex: index, expandFlag: false));
                   }),
@@ -238,17 +249,20 @@ class _SideMenuPageState extends State<SideMenuPage> {
     );
   }
 
-  //To Display the items inside ListView
+  //This widget displays all items in SideMenu.
   Widget _buildRow(int index) {
+    //Fetching Side Menu Title from Bloc
     final _menuTitle =
         _sideMenuBloc.drawerMenuItems[index][Constants.TEXT_SIDE_MENU_TITLE];
-
     if (_menuTitle == Constants.TEXT_SAFETY_INCIDENTS) {
+      //This widget displays SAFETY INCIDENTS.
       return _safetyAndAccidentsExpandableWidget(index);
     } else if (_menuTitle == Constants.TEXT_DASHBOARD ||
         _menuTitle == Constants.TEXT_COMPANY_NEWS) {
+      //This widget displays Dashboard and Company News.
       return _buildWidgetForDashboardAndCompanyNews(index);
     } else if (_menuTitle == Constants.TEXT_MODULES) {
+      //This widget displays Module.
       return _moduleWidget(index);
     } else if (_menuTitle == Constants.TEXT_FLEET_TRACKER ||
         _menuTitle == Constants.TEXT_SETTLEMENTS ||
@@ -256,12 +270,16 @@ class _SideMenuPageState extends State<SideMenuPage> {
         _menuTitle == Constants.TEXT_PROFILE ||
         _menuTitle == Constants.TEXT_SETTINGS ||
         _menuTitle == Constants.TEXT_LOGOUT) {
+      /*This Widget displays a Fleet Tracker, Settlements,
+       Unavailability, Profile, Settings, Logout */
       return _otherMenuWidget(index);
     } else {
+      //Displays Empty Container. This is for safer case.
       return Container();
     }
   }
 
+  //This widget displays Module.
   Widget _moduleWidget(int index) {
     return Column(
       children: <Widget>[
@@ -281,6 +299,8 @@ class _SideMenuPageState extends State<SideMenuPage> {
     );
   }
 
+  /*This Widget displays a Fleet Tracker, Settlements,
+       Unavailability, Profile, Settings, Logout */
   Widget _otherMenuWidget(int index) {
     return Container(
       height: 45,
@@ -293,6 +313,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+                  //This display the left side color based on the Select/UnSelect of the Widget.
                   Container(
                     width: 5,
                     color: _selectedIndex != null && _selectedIndex == index
@@ -304,17 +325,20 @@ class _SideMenuPageState extends State<SideMenuPage> {
                     child: SizedBox(
                         width: 24,
                         height: 24,
+                        //This display the image based on the Select/UnSelect of the Widget
                         child: Image.asset(_selectedIndex == index
-                            ? _sideMenuBloc.drawerMenuItems[index][Constants
-                                .TEXT_SELECTED_ICON] //_selectedItemImages[index]
-                            : _sideMenuBloc.drawerMenuItems[index][Constants
-                                .TEXT_UNSELECTED_ICON])), //_imageNames[index])),
+                            ? _sideMenuBloc.drawerMenuItems[index]
+                                [Constants.TEXT_SELECTED_ICON]
+                            : _sideMenuBloc.drawerMenuItems[index]
+                                [Constants.TEXT_UNSELECTED_ICON])),
                   ),
                   Padding(
                       padding: const EdgeInsets.only(left: 15.0),
-                      child: TextWidget(
-                        text: _sideMenuBloc.drawerMenuItems[index][Constants
-                            .TEXT_SIDE_MENU_TITLE], //_drawerMenuItems[index],
+                      child:
+                      //This display the Title of the Widget
+                      TextWidget(
+                        text: _sideMenuBloc.drawerMenuItems[index]
+                            [Constants.TEXT_SIDE_MENU_TITLE],
                         colorText: AppColors.colorBlack,
                         textType: TextType.TEXT_MEDIUM,
                       )),
@@ -323,14 +347,12 @@ class _SideMenuPageState extends State<SideMenuPage> {
               onTap: () {
                 expandFlag = false;
                 _expandedListIndex = 0;
-                if (index == _sideMenuBloc.drawerMenuItems.length -1) {
-                  _sideMenuBloc.dispatch(
-                      TappedOnLogoutEvent());
+                if (index == _sideMenuBloc.drawerMenuItems.length - 1) {
+                  _sideMenuBloc.dispatch(TappedOnLogoutEvent());
                 } else {
                   _sideMenuBloc.dispatch(
                       NavigationEvent(selectedIndex: index, expandFlag: false));
                 }
-
               }),
           color: Colors.transparent,
         ),
@@ -338,7 +360,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
     );
   }
 
-  //Scaffold Widget
+  //Main Widget of Side Menu
   Widget _scaffoldWidget() {
     return new Drawer(
         child: Container(
@@ -353,53 +375,53 @@ class _SideMenuPageState extends State<SideMenuPage> {
                 return true;
               },
               listener: (context, state) {
+                //To Display the Logout Alert Dialogue.
                 if (state is LoggedOutState) {
                   showAlertDialog(scaffold.currentContext);
                 }
+                //To Clear all items in the local db.
                 if (state is TappedOnLogoutState) {
-                  _sideMenuBloc.dispatch(LogoutEvent(selectedIndex: _selectedIndex));
+                  _sideMenuBloc
+                      .dispatch(LogoutEvent(selectedIndex: _selectedIndex));
                 }
-                //Navigation option
+                //To Navigate to corresponding pages.
                 if (state is NavigationState) {
+                  // To update selected rows widget
                   final index =
                       state.selectedIndex == null ? 0 : state.selectedIndex;
+                  //To get the selected Side Menu Title
                   String _menuTitle = _sideMenuBloc.drawerMenuItems[index]
                       [Constants.TEXT_SIDE_MENU_TITLE];
+
                   switch (_menuTitle) {
-                    //(index) {
+                    //To Navigate To Safety Incident Sub Pages
                     case Constants.TEXT_SAFETY_INCIDENTS:
                       break;
                     case Constants.TEXT_DASHBOARD:
-                      {
-                        scaffold.currentState.openEndDrawer();
-                        Navigator.push(
-                            context,
-                            PageTransition(
-
-                                type: PageTransitionType.fade,
-                                child: DashboardPage()));
-                      }
+                      //To End Drawer
+                      scaffold.currentState.openEndDrawer();
+                      //Navigate To Dashboard Page
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: DashboardPage()));
                       break;
                     case Constants.TEXT_SETTLEMENTS:
-                      {
-                        scaffold.currentState.openEndDrawer();
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                type: PageTransitionType.fade,
-                                child: SettlementPage()));
-                      }
+                      //To End Drawer
+                      scaffold.currentState.openEndDrawer();
+                      // Navigate To Settlement Page
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: SettlementPage()));
                       break;
-                    case Constants.TEXT_LOGOUT: //11:
-                      {
-//                        //Log out
-//                        _sideMenuBloc.dispatch(LogoutEvent());
-                      }
+                    case Constants.TEXT_LOGOUT:
                       break;
                     default:
-                      {
-                        navigateToFeatureComingSoonPage();
-                      }
+                      // Navigate To Settlement Page
+                      navigateToFeatureComingSoonPage();
                       break;
                   }
                 }
@@ -411,31 +433,33 @@ class _SideMenuPageState extends State<SideMenuPage> {
                   return true;
                 },
                 builder: (context, state) {
-                  //Expanded Items inside Safety Incidents
-                  if (state is LoggedOutState) {
-                    _selectedIndex = 1;
-                  }
+                  //To update the
+                  //if (state is LoggedOutState) {
+                    //_selectedIndex = 1;
+                  //}
+                  // To update the expanded and collapsed Widget
                   if (state is ExpandState) {
                     _selectedIndex =
                         state.selectedIndex == null ? 0 : state.selectedIndex;
                     expandFlag =
                         state.expandFlag == null ? false : state.expandFlag;
                   }
-                  //Navigation State
+                  //To update selected widget in Navigation State
                   if (state is NavigationState) {
                     _selectedIndex =
                         state.selectedIndex == null ? 0 : state.selectedIndex;
                   }
-                  //To Expand Safety Incidents Items
+                  //To update ui in Safety Incidents List
                   if (state is SafetyIncidentState) {
                     _expandedListIndex =
                         state.selectedIndex == null ? 0 : state.selectedIndex;
                   }
-
+                  // Initial Selected Item in Side Menu
                   if (state is InitialState) {
-                    _selectedIndex = state.selectedIndex == null ? 1 : state.selectedIndex;
+                    _selectedIndex =
+                        state.selectedIndex == null ? 1 : state.selectedIndex;
                   }
-                  //Returns Side Menu Options
+                  //This is the main widget of Side Menu Options
                   return ListView(
                     padding: Platform.isIOS ? EdgeInsets.all(0.0) : null,
                     children: <Widget>[
@@ -452,12 +476,11 @@ class _SideMenuPageState extends State<SideMenuPage> {
                               ),
                             ),
                           ),
-                          //Version Number
+                          //This widget displays App Version
                           Positioned(
                               bottom: 0,
                               right: 10,
                               child: _versionNumberWidget()),
-
                           Padding(
                             padding: EdgeInsets.only(
                                 left: 15,
@@ -466,40 +489,59 @@ class _SideMenuPageState extends State<SideMenuPage> {
                                     : 15,
                                 right: 8),
                             child: ListTile(
-                              //User Name Text
+                              //This widget displays the UserName
                               title: Container(
-                                  padding: EdgeInsets.only(bottom: 10, top: 12),
+                                  padding: EdgeInsets.only(bottom: 5, top: 12),
                                   child: TextWidget(
                                     text: _sideMenuBloc.userDetails != null
                                         ? _sideMenuBloc.userDetails.fullName ==
                                                 null
-                                            ? 'User Name'
+                                            ? 'N/A'
                                             : _sideMenuBloc.userDetails.fullName
-                                        : 'User Name',
+                                        : 'N/A',
                                     isBold: true,
                                     colorText: AppColors.colorWhite,
                                     textType: TextType.TEXT_SMALL,
                                   )),
-                              //User Role Text
-                              subtitle: Container(
-                                child: TextWidget(
-                                  text: _sideMenuBloc.userDetails != null
-                                      ? _sideMenuBloc.userDetails.usertype ==
-                                              null
-                                          ? ''
-                                          : _sideMenuBloc.convertUserTypeToText(
-                                              _sideMenuBloc
-                                                  .userDetails.usertype)
-                                      : '',
-                                  colorText: AppColors.colorWhite,
-                                  textType: TextType.TEXT_SMALL,
-                                ),
+                              subtitle: Column(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      //This widget displays UserRole
+                                      TextWidget(
+                                        text: _sideMenuBloc.userDetails != null
+                                            ? _sideMenuBloc.userDetails.usertype ==
+                                                    null
+                                                ? 'N/A'
+                                                : _sideMenuBloc.convertUserTypeToText(
+                                                    _sideMenuBloc
+                                                        .userDetails.usertype)
+                                            : 'N/A',
+                                        colorText: AppColors.colorWhite,
+                                        textType: TextType.TEXT_SMALL,
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0,bottom: 5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        //This widget displays ContractorCode
+                                        TextWidget(
+                                          text: _sideMenuBloc.userDetails != null ? _sideMenuBloc.userDetails.contractorcd == null ? 'N/A' : _sideMenuBloc.userDetails.contractorcd : 'N/A',
+                                          colorText: AppColors.colorWhite,
+                                          textType: TextType.TEXT_SMALL,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ],
                       ),
-                      //Holder of the DrawerMenu
+                      //This display the Holder of the DrawerMenu
                       ListView.builder(
                         padding: EdgeInsets.only(top: 10),
                         shrinkWrap: true,
@@ -517,6 +559,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
   //This return UI of Drawer Menu and Dasboard
   @override
   Widget build(BuildContext context) {
+    //Checking condition for Platforms to include Safe Area.
     if (Platform.isIOS) {
       return _scaffoldWidget();
     } else {
@@ -527,7 +570,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
   }
 
   showAlertDialog(BuildContext context) {
-   // Navigator.of(context).pop();
+    // Navigator.of(context).pop();
     scaffold.currentState.openEndDrawer();
     // set up the buttons
     Widget cancelButton = FlatButton(
@@ -539,11 +582,12 @@ class _SideMenuPageState extends State<SideMenuPage> {
     Widget continueButton = FlatButton(
       child: Text("Yes"),
       onPressed: () async {
+        //To clear all data in local db.
         await _sideMenuBloc.logoutAction();
-        navigateToLginPage();
+        //Then to navigate to Login Page.
+        navigateToLoginPage();
       },
     );
-
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Logout"),
@@ -553,8 +597,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
         continueButton,
       ],
     );
-
-    // show the dialog
+    // show the alert dialog
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -565,16 +608,17 @@ class _SideMenuPageState extends State<SideMenuPage> {
   }
 
   // To navigate to the Login screen
-  void navigateToLginPage() {
+  void navigateToLoginPage() {
+    //To remove Alert Dialogue
     Navigator.pop(scaffold.currentContext, true);
-    Navigator.of(scaffold.currentContext).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => LoginPage()), ModalRoute.withName('/login'),);
-//    Navigator.pushReplacement(
-//      scaffold.currentContext,
-//      MaterialPageRoute(builder: (_) => LoginPage()),
-//    );
+    //To Navigate To Login Screen.
+    Navigator.of(scaffold.currentContext).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => LoginPage()),
+      ModalRoute.withName('/login'),
+    );
   }
 
-  // To navigate to the Feature Coming soon screen
+  //To navigate to the Feature Coming soon page.
   void navigateToFeatureComingSoonPage() {
     Navigator.push(
         context,

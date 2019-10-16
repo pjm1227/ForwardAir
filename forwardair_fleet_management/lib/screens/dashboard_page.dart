@@ -19,11 +19,9 @@ import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'sidemenu.dart';
 import 'load_screen.dart';
 
-/*
-  DashboardPage to display dashboard details.
-*/
-class DashboardPage extends StatefulWidget {
+//This widget dashboard page
 
+class DashboardPage extends StatefulWidget {
   DashboardPage({Key key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
@@ -32,6 +30,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class DashboardState extends State<DashboardPage> {
+  //To set the Scaffold Key
   GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
   //Dashboard Bloc
   DashboardBloc _dashboardBloc = DashboardBloc();
@@ -45,12 +44,15 @@ class DashboardState extends State<DashboardPage> {
   //Pull to refresh
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  //Dashboard DB Model
   Dashboard_DB_Model _dashboardDataModel = Dashboard_DB_Model();
+  //Quick Contacts Email List
   final _quickContactEmails = [
     Constants.TEXT_DISPATCH_QUCKCONTACT_EMAIL,
     Constants.TEXT_SAFETY_QUCKCONTACT_EMAIL,
     Constants.TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL
   ];
+  //Quick Contacts Phone Number List
   final _quickContactPhoneNumbers = [
     Constants.TEXT_DISPATCH_PHONENUMBER,
     Constants.TEXT_SAFETY_PHONENUMBER,
@@ -60,61 +62,74 @@ class DashboardState extends State<DashboardPage> {
   //To handle Call button Tap in Quick contacts
   bool _isTappable = false;
 
-  //To Dispose
   @override
   void dispose() {
+    //To Dispose Dashboard Bloc
     _dashboardBloc.dispose();
+    //To Dispose refreshController
     _refreshController.dispose();
     super.dispose();
   }
 
   //Child Widgets of the Refresh Controller
   Widget _childWidgetToRefresh(dynamic state) {
+    //To close refresh indicator
     _refreshController.refreshCompleted();
     if (state is InitialState) {
-      //Initial State
+      //To block tap event of quick Contact
       _dashboardBloc.isAPICalling = true;
+      //This displays shimmer while calling API.
       return Center(child: DashBoardShimmer());
     } else if (state is DashboardError) {
-      //Error State
       if (_dashboardBloc.noInternetText != '') {
+        //To block tap event of quick Contact
         _dashboardBloc.isAPICalling = false;
+        //If No Internet connection
         return NoInternetFoundWidget();
       } else {
+        //To block tap event of quick Contact
         _dashboardBloc.isAPICalling = false;
+        //No Data Found
         return NoResultFoundWidget();
       }
-    } // Success State
-    else if (state is DashboardLoaded ||
+    } else if (state is DashboardLoaded ||
         state is OpenQuickContactsState ||
         state is QuickContactsMailState ||
         state is QuickContactsCallState ||
         state is DrillDownPageState) {
       if (state.dashboardData != null) {
         _dashboardDataModel = state.dashboardData;
-        //Fetched Data
         if (_dashboardDataModel.dashboardPeriod != null) {
+          //To block tap event of quick Contact
           _dashboardBloc.isAPICalling = false;
+          //To display the Items in dashboard, after getting data from the api.
           return _listViewWidget();
         } else {
-          //No Data Found
+          //To block tap event of quick Contact
           _dashboardBloc.isAPICalling = false;
+          //No Data Found
           return NoResultFoundWidget();
         }
       } else {
-        //No Data Found
+        //To block tap event of quick Contact
         _dashboardBloc.isAPICalling = false;
+        //No Data Found
         return NoResultFoundWidget();
       }
     } //ApplyFilter State
     else if (state is ApplyFilterState) {
+      //Here getting updated model after applying filter from bloc.
       _dashboardDataModel = state.aModel;
+      //To get selected index in filter List
       _selectedIndex = state.selectedIndex;
+      //To block tap event of quick Contact
       _dashboardBloc.isAPICalling = false;
+      //To display the Items in dashboard, after applying filter.
       return _listViewWidget();
     } else {
-      //No Data Found
+      //To block tap event of quick Contact
       _dashboardBloc.isAPICalling = false;
+      //No Data Found
       return NoResultFoundWidget();
     }
   }
@@ -125,68 +140,69 @@ class DashboardState extends State<DashboardPage> {
       physics: AlwaysScrollableScrollPhysics(),
       itemCount: 4,
       itemBuilder: (BuildContext context, int index) {
-        //Filter widget
+        //This widget displays Filter
         if (index == 0) {
           final filterPeriod = _dashboardBloc
               .convertPeriodToTitle(_dashboardDataModel.dashboardPeriod);
           return _buildThisWeekWidget(filterPeriod);
         }
-        //Total loads and Total Miles widget
+        //This widget displays Total loads and Total Miles
         if (index == 1) {
           return _buildWidgetTotalLoadsAndMiles(
               _dashboardDataModel.totalLoads != null
                   ? '${Utils.formatDecimalToWholeNumber(_dashboardDataModel.totalLoads)}'
-                  : 'NA',
+                  : 'N/A',
               _dashboardDataModel.totalMiles != null
                   ? '${Utils.formatDecimalToWholeNumber(_dashboardDataModel.totalMiles)}'
-                  : 'NA');
+                  : 'N/A');
         }
-        //Fuel widget
+        //This widget displays Total Fuel
         else if (index == 2) {
           return _buildFuelWidget(
               _dashboardDataModel.totalTractorGallons != null
                   ? '${Utils.formatDecimalToWholeNumber(_dashboardDataModel.totalTractorGallons)}'
-                  : 'NA',
+                  : 'N/A',
               _dashboardDataModel.totalFuelCost != null
                   ? '${Utils.formatDecimalToWholeNumber(_dashboardDataModel.totalFuelCost)}'
-                  : 'NA');
+                  : 'N/A');
         }
-        //NetCompensation and Deductions Widget
+        //This widget displays NetCompensation and Deductions
         else {
           return _buildNetCompensationWidget(
               Constants.TEXT_NET_CONPENSATION,
               _dashboardDataModel.netAmt != null
                   ? '${Utils().formatDecimalsNumber(_dashboardDataModel.netAmt)}'
-                  : 'NA',
+                  : 'N/A',
               _dashboardDataModel.grossAmt != null
                   ? '${Utils().formatDecimalsNumber(_dashboardDataModel.grossAmt)}'
-                  : 'NA',
+                  : 'N/A',
               _dashboardDataModel.deductions != null
                   ? '${Utils().formatDecimalsNumber(_dashboardDataModel.deductions)}'
-                  : 'NA');
+                  : 'N/A');
         }
       },
     );
   }
 
-  //This returns Dashboard Page
   @override
   Widget build(BuildContext context) {
-    //To fetch the data Initially
+    //To fetch the data Initially. Calling API.
     _dashboardBloc.dispatch(FetchDashboardEvent());
+    //This is the main widget  in this page.
     return Scaffold(
       key: _scaffold,
+      //This widget displays the App Bar
       appBar: new AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
         centerTitle: false,
-        //AppBar Title
+        //This widget displays the AppBar Title
         title: TextWidget(
           text: Constants.TEXT_DASHBOARD,
           colorText: AppColors.colorWhite,
           textType: TextType.TEXT_LARGE,
         ),
         actions: <Widget>[
-          //To display the notification Icon
+          //To display the notification Icon widget
           InkWell(
             child: Padding(
               padding: const EdgeInsets.only(right: 15.0),
@@ -196,12 +212,17 @@ class DashboardState extends State<DashboardPage> {
                   child: Image.asset('images/ic_notfication_white.png')),
             ),
             onTap: () {
+              //To navigate to feature coming soon page.
               navigateToFeatureComingSoonPage();
             },
           ),
         ],
       ),
-      drawer: SideMenuPage(scaffold: _scaffold,),
+      //This widget dispalys the SideMenu
+      drawer: SideMenuPage(
+        scaffold: _scaffold,
+      ),
+      //To Show Page Background color
       backgroundColor: AppColors.colorDashboard_Bg,
       //BlocListener
       body: BlocListener<DashboardBloc, dynamic>(
@@ -211,8 +232,10 @@ class DashboardState extends State<DashboardPage> {
         },
         listener: (context, state) {
           if (state is OpenQuickContactsState) {
+            //To Open Quick Contacts Widget
             _buildBottomSheet(context);
           } else if (state is QuickContactsMailState) {
+            //To Open Mail App Using Url Launcher.
             switch (state.selectedIndex) {
               case 0:
                 {
@@ -234,6 +257,7 @@ class DashboardState extends State<DashboardPage> {
                 break;
             }
           } else if (state is QuickContactsCallState) {
+            //To Open Caller App Using Url Launcher.
             switch (state.selectedIndex) {
               case 0:
                 {
@@ -252,14 +276,15 @@ class DashboardState extends State<DashboardPage> {
                 break;
             }
           } else if (state is DrillDownPageState) {
+            //To Navigate to Drill Down Page
             navigateToDrillDownPage(state.pageName);
           }
 
           if (state is QuickContactsCallState) {
+            //To Maintain Tap button State for different platforms.
             if (Platform.isIOS) {
-              print('delaying');
+              //Make delay in ios platform to maintain a state.
               Future.delayed(const Duration(seconds: 1), () {
-                print('after 1 sec');
                 _isTappable = true;
               });
             } else {
@@ -277,9 +302,12 @@ class DashboardState extends State<DashboardPage> {
                 enablePullDown: true,
                 header: MaterialClassicHeader(),
                 onRefresh: () {
+                  //To allow quick conatct button to open the bottom sheet.
                   _dashboardBloc.isAPICalling = true;
+                  //To make a dashboard api call.
                   _dashboardBloc.dispatch(PullToRefreshDashboardEvent());
                 },
+                //To update the widget based on the States.
                 child: _childWidgetToRefresh(state));
           },
         ),
@@ -289,7 +317,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //Quick Contacts Widget
+  //To Display Bottom Navigation Quick Contacts Holder.
   Widget _bottomNavigationBarWidget() {
     return BottomAppBar(
       elevation: 0,
@@ -314,6 +342,7 @@ class DashboardState extends State<DashboardPage> {
           child: Container(
             child: Material(
               color: Colors.transparent,
+              //To open Mail and Caller apps respectively.
               child: _handleTapEventForQuickContact(),
             ),
           ),
@@ -322,6 +351,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //To Display the Quick Contact button widget
   Widget redColorBottomBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -377,8 +407,12 @@ class DashboardState extends State<DashboardPage> {
       onDoubleTap: () {},
       child: redColorBottomBar(),
       onTap: () {
+        //If quick contacts button tapping is allowed, then it can able to open the quick contacts sheet.
+        // else ignoring the taps.
         if (_dashboardBloc.isAPICalling == false) {
+          //To allow qucik button as tappable.
           _isTappable = true;
+          //To Open the Quick Contacts Bottom Sheet.
           _dashboardBloc.dispatch(OpenQuickContactsEvent());
         } else {
           print('Ignoring Taps');
@@ -411,7 +445,9 @@ class DashboardState extends State<DashboardPage> {
             trailing: SizedBox(
                 width: 28,
                 height: 30,
+                //This display the calendar icon.
                 child: Image.asset('images/ic_calendar.png')),
+            //This display the calendar filter title.
             leading: TextWidget(
                 textOverFlow: TextOverflow.ellipsis,
                 text: aFilterTitle,
@@ -419,6 +455,7 @@ class DashboardState extends State<DashboardPage> {
                 isBold: true,
                 colorText: AppColors.colorWhite),
             onTap: () {
+              //While Making Api call blocking the Tap Event of Week Filter button.
               if (_dashboardBloc.isAPICalling == false) {
                 _weekModalBottomSheet(context);
               }
@@ -431,7 +468,7 @@ class DashboardState extends State<DashboardPage> {
 
   //This return the Bottom sheet when user taps on This week Filter
   Widget _weekModalBottomSheet(context) {
-    //List of options in filter bootom sheet
+    //List of options in filter bottom sheet
     final weekFilterOptions = [
       Constants.TEXT_THISWEEK,
       Constants.TEXT_LASTWEEK,
@@ -439,7 +476,6 @@ class DashboardState extends State<DashboardPage> {
       Constants.TEXT_THISMONTH,
       Constants.TEXT_CANCEL
     ];
-
     //Text Style of the Cancel Text
     final _cancelText = TextWidget(
       text: Constants.TEXT_CANCEL,
@@ -447,7 +483,7 @@ class DashboardState extends State<DashboardPage> {
       colorText: AppColors.colorBlack,
       textAlign: TextAlign.center,
     );
-    //This Returns bottom sheet
+    //This Widget Displays Calendar Filter bottom sheet items.
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -467,10 +503,12 @@ class DashboardState extends State<DashboardPage> {
                         if (index == 4) {
                           Navigator.of(context).pop();
                         } else {
-                          //Selected Filter in  Bottom Sheet
+                          //To close Filter Bottom Sheet
                           Navigator.of(context).pop();
+                          //To update the Filter Title Widget.
                           var selectedPeriodText = _dashboardBloc
                               .convertTitleToPeriod(weekFilterOptions[index]);
+                          //Applying Filter based on the Week, Month,etc.
                           _dashboardBloc.dispatch(ApplyFilterEvent(
                               selectedIndex: index,
                               selectedDashboardPeriod: selectedPeriodText));
@@ -510,7 +548,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //This returns TotalLoadsAndMiles Widget
+  //This Widget displays TotalLoads And Miles
   _totalLoadsAndMilesWidget(String aTitle, String aSubTitle) {
     return Expanded(
       child: new InkWell(
@@ -585,6 +623,7 @@ class DashboardState extends State<DashboardPage> {
           ),
         ),
         onTap: () {
+          //To Open load/Miles Page
           _dashboardBloc.dispatch(DrillDownPageEvent(
               pageName: aTitle == Constants.TEXT_TOTAL_LOADS
                   ? PageName.LOAD_PAGE
@@ -594,7 +633,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
-  //This returns Fuel Widget
+  //This Widget displays Total Fuel
   _buildFuelWidget(String totalGallons, String totalFuelAmount) {
     return InkWell(
       child: Container(
@@ -736,6 +775,7 @@ class DashboardState extends State<DashboardPage> {
         ),
       ),
       onTap: () {
+        //To Navigate To Fuel Page
         _dashboardBloc
             .dispatch(DrillDownPageEvent(pageName: PageName.FUEL_PAGE));
       },
@@ -771,6 +811,7 @@ class DashboardState extends State<DashboardPage> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
+                    //This displays the NetCompensation Title Widget
                     TextWidget(
                       textOverFlow: TextOverflow.ellipsis,
                       text: aTitle,
@@ -784,15 +825,17 @@ class DashboardState extends State<DashboardPage> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: TextWidget(
+                      child:
+                          //This displays the Net Compensation Amount Widget
+                          TextWidget(
                         textOverFlow: TextOverflow.ellipsis,
                         text: _dashboardBloc.appendDollarSymbol(aSubTitle),
-                        //'\$' + aSubTitle,
                         colorText: AppColors.darkColorBlue,
                         textType: TextType.TEXT_MEDIUM,
                         isBold: true,
                       ),
                     ),
+                    //This displays the NetCompensation image icon.
                     Padding(
                       padding: const EdgeInsets.only(right: 5),
                       child: Column(
@@ -810,11 +853,12 @@ class DashboardState extends State<DashboardPage> {
                     ),
                   ],
                 ),
+                //This displays the GrossCompensation Widget
                 grossCompensationAndDeductionsWiget(
                     Constants.TEXT_GROSS_COMPENSATION,
-                    _dashboardBloc.appendDollarSymbol(
-                        grossCompensation), //'\$' + grossCompensation,
+                    _dashboardBloc.appendDollarSymbol(grossCompensation),
                     true),
+                //This displays the Deduction Widget
                 grossCompensationAndDeductionsWiget(Constants.TEXT_DEDUCTIONS,
                     _dashboardBloc.addDollarAfterMinusSign(deductions), false),
               ],
@@ -823,6 +867,7 @@ class DashboardState extends State<DashboardPage> {
         ),
       ),
       onTap: () {
+        //To navigate to compensation page.
         _dashboardBloc
             .dispatch(DrillDownPageEvent(pageName: PageName.COMPENSATION_PAGE));
       },
@@ -847,6 +892,7 @@ class DashboardState extends State<DashboardPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
+                    //This displays the Compensation And Deductions Title
                     child: TextWidget(
                       textOverFlow: TextOverflow.ellipsis,
                       textAlign: TextAlign.left,
@@ -856,6 +902,7 @@ class DashboardState extends State<DashboardPage> {
                     ),
                   ),
                   Expanded(
+                    //This displays the Compensation And Deductions Amount
                     child: TextWidget(
                         textOverFlow: TextOverflow.ellipsis,
                         text: sTitle,
@@ -928,7 +975,9 @@ class DashboardState extends State<DashboardPage> {
                           leading: _userIconWidget(index),
                           title: Padding(
                             padding: const EdgeInsets.only(top: 10.0),
-                            child: TextWidget(
+                            child:
+                                //This displays the QuickContact Left Side Title Widget
+                                TextWidget(
                               textOverFlow: TextOverflow.ellipsis,
                               text: quickContactList[index],
                               textType: TextType.TEXT_NORMAL,
@@ -943,12 +992,11 @@ class DashboardState extends State<DashboardPage> {
                                   Expanded(
                                     flex: 2,
                                     child: Container(
-                                      padding: EdgeInsets.only(
-                                        top: 5,
-                                      ),
+                                      padding: EdgeInsets.only(top: 5),
+                                      //This displays the QuickContact Phone Numbers Widget
                                       child: TextWidget(
                                         textOverFlow: TextOverflow.ellipsis,
-                                        text: _quickContactEmails[index],
+                                        text: _quickContactPhoneNumbers[index],
                                         colorText: AppColors.lightBlack,
                                         textType: TextType.TEXT_XSMALL,
                                       ),
@@ -963,9 +1011,10 @@ class DashboardState extends State<DashboardPage> {
                                     child: Container(
                                       padding:
                                           EdgeInsets.only(top: 5, bottom: 5),
+                                      //This displays the QuickContact Emails Widget
                                       child: TextWidget(
                                         textOverFlow: TextOverflow.ellipsis,
-                                        text: _quickContactPhoneNumbers[index],
+                                        text: _quickContactEmails[index],
                                         colorText: AppColors.lightBlack,
                                         textType: TextType.TEXT_XSMALL,
                                       ),
@@ -975,6 +1024,7 @@ class DashboardState extends State<DashboardPage> {
                               ),
                             ],
                           ),
+                          //This displays the QuickContact Image Icons Widget
                           trailing: _roundedIconsRow(index),
                         ),
                       ),
@@ -985,7 +1035,7 @@ class DashboardState extends State<DashboardPage> {
         ));
   }
 
-  //Bottom Sheet
+  //To display the holder of the Quick contact Bottom Sheet
   void _buildBottomSheet(context) {
     showModalBottomSheet(
         context: context,
@@ -994,7 +1044,7 @@ class DashboardState extends State<DashboardPage> {
         });
   }
 
-  //User Icons
+  //Quick Contact Image Icons for Dispatch, Safety and driver Relations
   _userIconWidget(int index) {
     String imageName = '';
     switch (index) {
@@ -1021,6 +1071,7 @@ class DashboardState extends State<DashboardPage> {
     );
   }
 
+  //To display the mail and call icons in Quick Contacts
   _roundedIconsRow(int index) {
     return Container(
       width: 100,
@@ -1037,6 +1088,7 @@ class DashboardState extends State<DashboardPage> {
           ),
           onDoubleTap: () {},
           onTap: () {
+            //Event To Open Mail App.
             _dashboardBloc
                 .dispatch(QuickContactTapsOnMailEvent(selectedIndex: index));
           },
@@ -1051,11 +1103,14 @@ class DashboardState extends State<DashboardPage> {
                   image: AssetImage('images/ic_call.png'), fit: BoxFit.fill),
             ),
           ),
+          //To block double tap event.
           onDoubleTap: () {},
           onTap: () {
             print('isTappable calue : $_isTappable');
             if (_isTappable) {
+              //To block the tap event in quick contact button.
               _isTappable = false;
+              //Event To Open Caller app.
               _dashboardBloc
                   .dispatch(QuickContactTapsOnCallEvent(selectedIndex: index));
             }

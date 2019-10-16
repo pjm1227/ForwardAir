@@ -91,12 +91,16 @@ class TractorListWidget extends StatelessWidget {
                                   child: TextWidget(
                                     textType: TextType.TEXT_MEDIUM,
                                     text: pageName == PageName.LOAD_PAGE
-                                        ? 'Contribution(%) :  ${tractorList[index].keys.first.totalLoadsPercent}'
+                                        ? '${tractorList[index].keys.first.totalLoadsPercent}%'
+                                       // ? 'Contribution(%) :  ${tractorList[index].keys.first.totalLoadsPercent}'
                                         : pageName == PageName.LOAD_PAGE
-                                            ? 'Contribution(%) :  ${tractorList[index].keys.first.totalMilesPercent}'
+                                        ? '${tractorList[index].keys.first.totalMilesPercent}%'
+                                           // ? 'Contribution(%) :  ${tractorList[index].keys.first.totalMilesPercent}'
                                             : pageName == PageName.FUEL_PAGE
-                                                ? 'Contribution(%) :  ${tractorList[index].keys.first.totalGallonsPercent}'
-                                                : 'Contribution(%) :  ${tractorList[index].keys.first.totalNetPercent}',
+                                               // ? 'Contribution(%) :  ${tractorList[index].keys.first.totalGallonsPercent}'
+                                               // : 'Contribution(%) :  ${tractorList[index].keys.first.totalNetPercent}',
+                                                  ? '${tractorList[index].keys.first.totalGallonsPercent}%'
+                                                  : '${tractorList[index].keys.first.totalNetPercent}%',
                                   ),
                                 )
                               ],

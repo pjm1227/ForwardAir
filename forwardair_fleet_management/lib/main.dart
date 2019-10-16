@@ -153,7 +153,7 @@ class DrivingState extends State<DrivingPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Expanded(flex: 3, child: Image.asset('images/ic_fa_logo.png')),
-            Expanded(flex: 5, child: _middleWidget()),
+            Expanded(flex: 3, child: _middleWidget()),
             Expanded(flex: 2, child: _bottomWidget()),
           ]),
     );
@@ -196,12 +196,26 @@ class DrivingState extends State<DrivingPage> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Expanded(
-          flex: 3,
+          flex: 2,
           child: Image.asset(
             'images/ic_icon.png',
             fit: BoxFit.fill,
           ),
         ),
+
+        Expanded(
+          flex:3,
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.only(left: 8, top: 0, bottom: 0, right: 8),
+              child: new TextWidget(text:Constants.APP_CAN_DETECT,
+                  textAlign: TextAlign.center,
+                  textType: TextType.TEXT_MEDIUM,
+            ),
+          ),
+        ),),
+
+        /*Removed This Widget According to the Client's Feedback.
         Expanded(
           flex: 3,
           child: Center(
@@ -216,6 +230,7 @@ class DrivingState extends State<DrivingPage> {
             ),
           ),
         ),
+
         Expanded(
           flex: 1,
           child: Padding(
@@ -227,6 +242,7 @@ class DrivingState extends State<DrivingPage> {
                     fontFamily: Constants.FONT_FAMILY_ROBOTO_BOLD)),
           ),
         ),
+
         Expanded(
           flex: 3,
           child: Center(
@@ -238,7 +254,7 @@ class DrivingState extends State<DrivingPage> {
                       fontSize: 16, fontFamily: Constants.FONT_FAMILY_ROBOTO)),
             ),
           ),
-        )
+        ) */
       ],
     );
   }

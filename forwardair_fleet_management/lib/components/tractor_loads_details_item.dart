@@ -32,20 +32,34 @@ class TractorLoadsDetailsItem extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  ClipOval(
-                    child: Container(
-                      color: loads.loadedMiles == 0
-                          ? AppColors.colorRed
-                          : AppColors.colorDOT,
-                      height: 8.0,
-                      width: 8.0,
-                    ),
+                  Row(
+                    children: <Widget>[
+                      ClipOval(
+                        child: Container(
+                          color: loads.loadedMiles == 0
+                              ? AppColors.colorRed
+                              : AppColors.colorDOT,
+                          height: 8.0,
+                          width: 8.0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextWidget(
+                          text: 'Order No. ${loads.orderNbr}',
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                  Container(
                     child: TextWidget(
-                      text: 'Order No. ${loads.orderNbr}',
+                      textOverFlow: TextOverflow.ellipsis,
+                      text: pageName == PageName.MILES_PAGE
+                          ? '(${Utils.formatDecimalToWholeNumber(loads.loadedMiles)}mi)'
+                          : '',
+                      colorText: AppColors.colorBlack,
                     ),
                   ),
                 ],
@@ -62,7 +76,7 @@ class TractorLoadsDetailsItem extends StatelessWidget {
                           child: TextWidget(
                             textOverFlow: TextOverflow.ellipsis,
                             colorText: AppColors.colorAppBar,
-                            textType: TextType.TEXT_MEDIUM,
+                            textType: TextType.TEXT_SMALL,
                             text: loads.originCity != null
                                 ? loads.originCity
                                 : 'N/A',
@@ -84,7 +98,7 @@ class TractorLoadsDetailsItem extends StatelessWidget {
                           child: TextWidget(
                             colorText: AppColors.colorAppBar,
                             textOverFlow: TextOverflow.ellipsis,
-                            textType: TextType.TEXT_MEDIUM,
+                            textType: TextType.TEXT_SMALL,
                             text: loads.destCity.isNotEmpty
                                 ? loads.destCity
                                 : 'N/A',
@@ -108,7 +122,7 @@ class TractorLoadsDetailsItem extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 6,
+                    flex: 4,
                     child: TextWidget(
                       text: loads.settlementFinalDt != null
                           ? Utils.formatDateFromString(loads.settlementFinalDt)
@@ -125,7 +139,7 @@ class TractorLoadsDetailsItem extends StatelessWidget {
             // Driver details Widget
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: TextWidget(text: 'Driver Details'),
+              child: TextWidget(text: 'Driver'),
             ),
             //Driver name widget
             Padding(
@@ -148,7 +162,7 @@ class TractorLoadsDetailsItem extends StatelessWidget {
                           // Driver details Widget
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: TextWidget(text: 'Co-Driver Details'),
+                            child: TextWidget(text: 'Co-Driver'),
                           ),
                           //Driver name widget
                           Padding(
@@ -177,7 +191,7 @@ class TractorLoadsDetailsItem extends StatelessWidget {
           child: TextWidget(
             textOverFlow: TextOverflow.ellipsis,
             colorText: AppColors.colorAppBar,
-            textType: TextType.TEXT_MEDIUM,
+            textType: TextType.TEXT_SMALL,
             text: loadData.originCity != null ? loadData.originCity : 'N/A',
           ),
         ),
@@ -196,22 +210,22 @@ class TractorLoadsDetailsItem extends StatelessWidget {
           child: TextWidget(
             colorText: AppColors.colorAppBar,
             textOverFlow: TextOverflow.ellipsis,
-            textType: TextType.TEXT_MEDIUM,
+            textType: TextType.TEXT_SMALL,
             text: loadData.destCity.isNotEmpty ? loadData.destCity : 'N/A',
           ),
         ),
-        Expanded(
-          flex: 3,
-          child: Container(
-            child: TextWidget(
-              textOverFlow: TextOverflow.ellipsis,
-              text: pageName == PageName.MILES_PAGE
-                  ? '(${Utils.formatDecimalToWholeNumber(loadData.loadedMiles)}mi)'
-                  : '',
-              colorText: AppColors.colorBlack,
-            ),
-          ),
-        ),
+//        Expanded(
+//          flex: 3,
+//          child: Container(
+//            child: TextWidget(
+//              textOverFlow: TextOverflow.ellipsis,
+//              text: pageName == PageName.MILES_PAGE
+//                  ? '(${Utils.formatDecimalToWholeNumber(loadData.loadedMiles)}mi)'
+//                  : '',
+//              colorText: AppColors.colorBlack,
+//            ),
+//          ),
+//        ),
       ],
     );
   }

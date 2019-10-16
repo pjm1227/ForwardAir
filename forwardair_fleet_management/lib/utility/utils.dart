@@ -58,14 +58,24 @@ class Utils {
   }
 
   static String formatDateFromString(String dateString) {
-    String date = '';
-    date = dateString.substring(0, 4) +
-        '/' +
-        dateString.substring(4, 6) +
-        '/' +
-        dateString.substring(6, 8);
-    return date;
+    var formattedString = '';
+    if (dateString != '')  {
+      final date = DateTime.parse(dateString);
+      final f = new DateFormat('MM/dd/yyyy');
+      formattedString = f.format(date);
+    }
+    return formattedString;
   }
+
+//  static String formatDateFromString(String dateString) {
+//    String date = '';
+//    date = dateString.substring(0, 4) +
+//        '/' +
+//        dateString.substring(4, 6) +
+//        '/' +
+//        dateString.substring(6, 8);
+//    return date;
+//  }
 
   static String formatStringDateToDateAndMonth(String dateString) {
     var formattedString = '';
@@ -107,10 +117,10 @@ class Utils {
 
   static String addDollarAfterMinusSign(String deductions) {
     String deduction = '';
-    if (deductions != 'NA') {
+    if (deductions != 'N/A') {
       deduction = '-\$' + deductions.replaceAll(RegExp('-'), '');
     } else {
-      deduction = 'NA';
+      deduction = 'N/A';
     }
     return deduction;
   }
@@ -121,7 +131,7 @@ class Utils {
     if (commaAddedText != '') {
       return '\$' + commaAddedText;
     } else {
-      return 'NA';
+      return 'N/A';
     }
   }
 

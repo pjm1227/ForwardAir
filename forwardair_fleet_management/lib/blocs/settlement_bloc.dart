@@ -78,7 +78,7 @@ class SettlementBloc extends Bloc<SettlementEvents, SettlementStates> {
     if (startDate != '') {
       startDate = startDate;
     } else {
-      startDate = 'NA';
+      startDate = 'N/A';
     }
     String endDate = Utils.formatStringDateToDateAndMonth(
         _settlementCheck.payPeriodEndDt != null
@@ -87,7 +87,7 @@ class SettlementBloc extends Bloc<SettlementEvents, SettlementStates> {
     if (endDate != '') {
       endDate = endDate;
     } else {
-      endDate = 'NA';
+      endDate = 'N/A';
     }
     combinedText = '$startDate - $endDate';
     return combinedText;
@@ -99,7 +99,7 @@ class SettlementBloc extends Bloc<SettlementEvents, SettlementStates> {
     if (commaAddedText != '') {
       return '\$' + commaAddedText;
     } else {
-      return 'NA';
+      return 'N/A';
     }
   }
 

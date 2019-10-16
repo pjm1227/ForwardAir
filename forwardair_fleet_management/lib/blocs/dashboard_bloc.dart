@@ -222,20 +222,20 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
 
   String addDollarAfterMinusSign(String deductions) {
     String deduction = '';
-    if (deductions != 'NA') {
+    if (deductions != 'N/A') {
       deduction = '-\$' + deductions.replaceAll(RegExp('-'), '');
     } else {
-      deduction = 'NA';
+      deduction = 'N/A';
     }
     return deduction;
   }
 
   String appendDollarSymbol(String value) {
     String textWithDollar = '';
-    if (value != 'NA') {
+    if (value != 'N/A') {
       textWithDollar = '\$' + value;
     } else {
-      textWithDollar = 'NA';
+      textWithDollar = 'N/A';
     }
     return textWithDollar;
   }

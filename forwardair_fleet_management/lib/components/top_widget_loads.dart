@@ -94,56 +94,6 @@ class TopWidgetForLoads extends StatelessWidget {
               children: <Widget>[
                 ClipOval(
                   child: Container(
-                    color: Colors.red,
-                    height: 8.0,
-                    width: 8.0,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: TextWidget(
-                    text: isDetailsPage
-                        ? '$emptyLoads'
-                        : _calculateEmptyPercentage(),
-                    textAlign: TextAlign.center,
-                    colorText: AppColors.colorWhite,
-                    textType: TextType.TEXT_MEDIUM,
-                    isBold: true,
-                    textOverFlow: TextOverflow.clip,
-                    maxLines: 1,
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextWidget(
-                text: 'EMPTY',
-                colorText: AppColors.colorWhite,
-              ),
-            ),
-          ],
-        ),
-      ),
-      Expanded(
-        flex: 1,
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.08,
-          child: VerticalDivider(
-            color: AppColors.colorWhite,
-          ),
-        ),
-      ),
-      Expanded(
-        flex: 3,
-        child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ClipOval(
-                  child: Container(
                     color: Colors.teal,
                     height: 8.0,
                     width: 8.0,
@@ -169,6 +119,56 @@ class TopWidgetForLoads extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextWidget(
                 text: 'LOADED',
+                colorText: AppColors.colorWhite,
+              ),
+            ),
+          ],
+        ),
+      ),
+      Expanded(
+        flex: 1,
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.08,
+          child: VerticalDivider(
+            color: AppColors.colorWhite,
+          ),
+        ),
+      ),
+      Expanded(
+        flex: 3,
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ClipOval(
+                  child: Container(
+                    color: Colors.red,
+                    height: 8.0,
+                    width: 8.0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: TextWidget(
+                    text: isDetailsPage
+                        ? '$emptyLoads'
+                        : _calculateEmptyPercentage(),
+                    textAlign: TextAlign.center,
+                    colorText: AppColors.colorWhite,
+                    textType: TextType.TEXT_MEDIUM,
+                    isBold: true,
+                    textOverFlow: TextOverflow.clip,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextWidget(
+                text: 'EMPTY',
                 colorText: AppColors.colorWhite,
               ),
             ),

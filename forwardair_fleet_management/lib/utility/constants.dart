@@ -87,7 +87,7 @@ class Constants {
   static const String TEXT_QUICK_CONTACT = 'QUICK CONTACT';
   static const String TEXT_DISPATCH = 'Dispatch';
   static const String TEXT_SAFETY_OFFICER = 'Safety';
-  static const String TEXT_REFERRAL_AND_DRIVERRELATION = 'Driver Relations';
+  static const String TEXT_REFERRAL_AND_DRIVERRELATION = 'Contractor Relations';
   static const String TEXT_THISWEEK = 'This Week';
   static const String TEXT_LASTWEEK = 'Last Week';
   static const String TEXT_PREV_SETTLEMENT_PERIOD = 'Previous Settlement Period';
@@ -95,9 +95,9 @@ class Constants {
   static const String TEXT_CANCEL  =  'Cancel';
   static const String TEXT_TOTAL_LOADS = 'Total Loads';
   static const String TEXT_TOTAL_MILES = 'Total Miles';
-  static const String TEXT_FUEL = 'Fuel';
-  static const String TEXT_TOTAL_GALLONS = 'Total Gallons';
-  static const String TEXT_TOTAL_FUEL_AMOUNT = 'Total Fuel Amount';
+  static const String TEXT_FUEL = 'Total Fuel';
+  static const String TEXT_TOTAL_GALLONS = 'Gallons';
+  static const String TEXT_TOTAL_FUEL_AMOUNT = 'Amount';
   static const String TEXT_GROSS_COMPENSATION = 'Gross Compensation';
   static const String TEXT_DEDUCTIONS = 'Deductions';
   static const String TEXT_DASHBOARD_PERIOD_THIS_MONTH = "M";
