@@ -16,7 +16,7 @@ class FleetTrackerBloc extends Bloc<FleetTrackerEvents, FleetTrackerState> {
   //This method is check internet first, If we have internet connection
   // then call an API else Check if data exists in DB, If we have data in db then
   // Show it from DB else show some error
-  Stream<FleetTrackerState> fetchLoadDetails(
+  Stream<FleetTrackerState> fetchFleetTrackerDetails(
       FetchFleetDataEvent event) async* {
     //Check for internet connection first
     var isConnection = await Utils.isConnectionAvailable();
@@ -28,33 +28,33 @@ class FleetTrackerBloc extends Bloc<FleetTrackerEvents, FleetTrackerState> {
       if (userModel.token != null) {
         var repository = Repository();
         //Create a request Model
-
-        var result = await repository.makeFleetDataRequest(userModel.token);
-        //Check if result is an instance of CompensationModel or ErrorModel
-        //If it's CompensationModel then insert data into DB else show error message
+        var result =
+            await repository.makeFleetTrackerDataRequest(userModel.token);
+        //Check if result is an instance of FleetTrackerModel or ErrorModel
+        //If it's FleetTrackerModel then insert data into DB else show error message
         if (result is ErrorModel) {
-          yield DetailsErrorState(errorMessage: result.errorMessage);
+          yield FleetErrorState(errorMessage: result.errorMessage);
         } else {
           try {
             FleetTrackerModel fleetModel = fleetFromJson(result);
-            yield SuccessState(fleetModel: fleetModel);
+            yield FleetSuccessState(fleetModel: fleetModel);
           } catch (_) {
-            yield DetailsErrorState(errorMessage: Constants.SOMETHING_WRONG);
+            yield FleetErrorState(errorMessage: Constants.SOMETHING_WRONG);
             print("db Exception");
           }
         }
       } else {
-        yield DetailsErrorState(errorMessage: Constants.SOMETHING_WRONG);
+        yield FleetErrorState(errorMessage: Constants.SOMETHING_WRONG);
       }
     } else {
-      yield DetailsErrorState(errorMessage: Constants.NO_INTERNET_FOUND);
+      yield FleetErrorState(errorMessage: Constants.NO_INTERNET_FOUND);
     }
   }
 
   @override
   Stream<FleetTrackerState> mapEventToState(FleetTrackerEvents event) async* {
     if (event is FleetTrackerEvents) {
-      yield* fetchLoadDetails(event);
+      yield* fetchFleetTrackerDetails(event);
     }
   }
 }

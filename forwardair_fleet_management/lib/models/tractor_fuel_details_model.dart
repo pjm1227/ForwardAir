@@ -7,7 +7,8 @@ import 'dart:convert';
 TractorFuelDetailsModel fuelDetailFromJson(String str) =>
     TractorFuelDetailsModel.fromJson(json.decode(str));
 
-String fuelDetailToJson(TractorFuelDetailsModel data) => json.encode(data.toJson());
+String fuelDetailToJson(TractorFuelDetailsModel data) =>
+    json.encode(data.toJson());
 
 class TractorFuelDetailsModel {
   String companyCd;
@@ -39,20 +40,20 @@ class TractorFuelDetailsModel {
         fuelDetails: json["fuelDetails"] == null
             ? null
             : List<FuelDetail>.from(
-            json["fuelDetails"].map((x) => FuelDetail.fromJson(x))),
+                json["fuelDetails"].map((x) => FuelDetail.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-    "companyCd": companyCd == null ? null : companyCd,
-    "contractorCd": contractorCd == null ? null : contractorCd,
-    "month": month == null ? 0 : month,
-    "year": year == null ? null : year,
-    "weekStart": weekStart == null ? 0 : weekStart,
-    "weekEnd": weekEnd == null ? 0 : weekEnd,
-    "fuelDetails": fuelDetails == null
-        ? null
-        : List<dynamic>.from(fuelDetails.map((x) => x.toJson())),
-  };
+        "companyCd": companyCd == null ? null : companyCd,
+        "contractorCd": contractorCd == null ? null : contractorCd,
+        "month": month == null ? 0 : month,
+        "year": year == null ? null : year,
+        "weekStart": weekStart == null ? 0 : weekStart,
+        "weekEnd": weekEnd == null ? 0 : weekEnd,
+        "fuelDetails": fuelDetails == null
+            ? null
+            : List<dynamic>.from(fuelDetails.map((x) => x.toJson())),
+      };
 }
 
 class FuelDetail {
@@ -105,68 +106,70 @@ class FuelDetail {
   });
 
   factory FuelDetail.fromJson(Map<String, dynamic> json) => FuelDetail(
-    fuelCardId: json["fuelCardId"] == null ? null : json["fuelCardId"],
-    tractorId: json["tractorId"] == null ? null : json["tractorId"],
-    fuelCardNbr: json["fuelCardNbr"] == null ? 0 : json["fuelCardNbr"],
-    fuelCardType:
-    json["fuelCardType"] == null ? null : json["fuelCardType"],
-    driverName: json["driverName"] == null ? null : json["driverName"],
-    usageDt: json["usageDt"] == null ? null : json["usageDt"],
-    truckStopNm: json["truckStopNm"] == null ? null : json["truckStopNm"],
-    truckStopCty:
-    json["truckStopCty"] == null ? null : json["truckStopCty"],
-    truckStopSt: json["truckStopSt"] == null ? null : json["truckStopSt"],
-    truckStopCd: json["truckStopCd"] == null ? null : json["truckStopCd"],
-    truckStopInvoiceNbr: json["truckStopInvoiceNbr"] == null
-        ? null
-        : json["truckStopInvoiceNbr"],
-    oilQts: json["oilQts"] == null ? 0 : json["oilQts"],
-    productAmt: json["productAmt"] == null ? 0 : json["productAmt"],
-    cashAdvanceAmt:
-    json["cashAdvanceAmt"] == null ? null : json["cashAdvanceAmt"],
-    oilCost: json["oilCost"] == null ? 0 : json["oilCost"],
-    fuelFee: json["fuelFee"] == null ? 0.0 : json["fuelFee"],
-    tractorGallons: json["tractorGallons"] == null
-        ? 0.0
-        : json["tractorGallons"].toDouble(),
-    tractorFuelPricePerGal: json["tractorFuelPricePerGal"] == null
-        ? 0.0
-        : json["tractorFuelPricePerGal"].toDouble(),
-    cashAdvanceCharge:
-    json["cashAdvanceCharge"] == null ? 0 : json["cashAdvanceCharge"],
-    tractorFuelCost: json["tractorFuelCost"] == null
-        ? 0.0
-        : json["tractorFuelCost"].toDouble(),
-    netAmtDue:
-    json["netAmtDue"] == null ? 0.0 : json["netAmtDue"].toDouble(),
-    rebateAmt:
-    json["rebateAmt"] == null ? 0.0 : json["rebateAmt"].toDouble(),
-  );
+        fuelCardId: json["fuelCardId"] == null ? null : json["fuelCardId"],
+        tractorId: json["tractorId"] == null ? null : json["tractorId"],
+        fuelCardNbr: json["fuelCardNbr"] == null ? 0 : json["fuelCardNbr"],
+        fuelCardType:
+            json["fuelCardType"] == null ? null : json["fuelCardType"],
+        driverName: json["driverName"] == null ? null : json["driverName"],
+        usageDt: json["usageDt"] == null ? null : json["usageDt"],
+        truckStopNm: json["truckStopNm"] == null ? null : json["truckStopNm"],
+        truckStopCty:
+            json["truckStopCty"] == null ? null : json["truckStopCty"],
+        truckStopSt: json["truckStopSt"] == null ? null : json["truckStopSt"],
+        truckStopCd: json["truckStopCd"] == null ? null : json["truckStopCd"],
+        truckStopInvoiceNbr: json["truckStopInvoiceNbr"] == null
+            ? null
+            : json["truckStopInvoiceNbr"],
+        oilQts: json["oilQts"] == null ? 0 : json["oilQts"],
+        productAmt: json["productAmt"] == null ? 0 : json["productAmt"],
+        cashAdvanceAmt:
+            json["cashAdvanceAmt"] == null ? null : json["cashAdvanceAmt"],
+        oilCost: json["oilCost"] == null ? 0 : json["oilCost"],
+        fuelFee: json["fuelFee"] == null || json["fuelFee"] == 0
+            ? 0.0
+            : json["fuelFee"],
+        tractorGallons: json["tractorGallons"] == null
+            ? 0.0
+            : json["tractorGallons"].toDouble(),
+        tractorFuelPricePerGal: json["tractorFuelPricePerGal"] == null
+            ? 0.0
+            : json["tractorFuelPricePerGal"].toDouble(),
+        cashAdvanceCharge:
+            json["cashAdvanceCharge"] == null ? 0 : json["cashAdvanceCharge"],
+        tractorFuelCost: json["tractorFuelCost"] == null
+            ? 0.0
+            : json["tractorFuelCost"].toDouble(),
+        netAmtDue:
+            json["netAmtDue"] == null ? 0.0 : json["netAmtDue"].toDouble(),
+        rebateAmt:
+            json["rebateAmt"] == null ? 0.0 : json["rebateAmt"].toDouble(),
+      );
 
   Map<String, dynamic> toJson() => {
-    "fuelCardId": fuelCardId == null ? null : fuelCardId,
-    "tractorId": tractorId == null ? null : tractorId,
-    "fuelCardNbr": fuelCardNbr == null ? 0 : fuelCardNbr,
-    "fuelCardType": fuelCardType == null ? null : fuelCardType,
-    "driverName": driverName == null ? null : driverName,
-    "usageDt": usageDt == null ? null : usageDt,
-    "truckStopNm": truckStopNm == null ? null : truckStopNm,
-    "truckStopCty": truckStopCty == null ? null : truckStopCty,
-    "truckStopSt": truckStopSt == null ? null : truckStopSt,
-    "truckStopCd": truckStopCd == null ? null : truckStopCd,
-    "truckStopInvoiceNbr":
-    truckStopInvoiceNbr == null ? null : truckStopInvoiceNbr,
-    "oilQts": oilQts == null ? 0 : oilQts,
-    "productAmt": productAmt == null ? 0 : productAmt,
-    "cashAdvanceAmt": cashAdvanceAmt == null ? null : cashAdvanceAmt,
-    "oilCost": oilCost == null ? 0 : oilCost,
-    "fuelFee": fuelFee == null ? 0.0 : fuelFee,
-    "tractorGallons": tractorGallons == null ? 0.0 : tractorGallons,
-    "tractorFuelPricePerGal":
-    tractorFuelPricePerGal == null ? 0.0 : tractorFuelPricePerGal,
-    "cashAdvanceCharge": cashAdvanceCharge == null ? 0 : cashAdvanceCharge,
-    "tractorFuelCost": tractorFuelCost == null ? 0.0 : tractorFuelCost,
-    "netAmtDue": netAmtDue == null ? 0.0 : netAmtDue,
-    "rebateAmt": rebateAmt == null ? 0.0 : rebateAmt,
-  };
+        "fuelCardId": fuelCardId == null ? null : fuelCardId,
+        "tractorId": tractorId == null ? null : tractorId,
+        "fuelCardNbr": fuelCardNbr == null ? 0 : fuelCardNbr,
+        "fuelCardType": fuelCardType == null ? null : fuelCardType,
+        "driverName": driverName == null ? null : driverName,
+        "usageDt": usageDt == null ? null : usageDt,
+        "truckStopNm": truckStopNm == null ? null : truckStopNm,
+        "truckStopCty": truckStopCty == null ? null : truckStopCty,
+        "truckStopSt": truckStopSt == null ? null : truckStopSt,
+        "truckStopCd": truckStopCd == null ? null : truckStopCd,
+        "truckStopInvoiceNbr":
+            truckStopInvoiceNbr == null ? null : truckStopInvoiceNbr,
+        "oilQts": oilQts == null ? 0 : oilQts,
+        "productAmt": productAmt == null ? 0 : productAmt,
+        "cashAdvanceAmt": cashAdvanceAmt == null ? null : cashAdvanceAmt,
+        "oilCost": oilCost == null ? 0 : oilCost,
+        "fuelFee": fuelFee == null ? 0.0 : fuelFee,
+        "tractorGallons": tractorGallons == null ? 0.0 : tractorGallons,
+        "tractorFuelPricePerGal":
+            tractorFuelPricePerGal == null ? 0.0 : tractorFuelPricePerGal,
+        "cashAdvanceCharge": cashAdvanceCharge == null ? 0 : cashAdvanceCharge,
+        "tractorFuelCost": tractorFuelCost == null ? 0.0 : tractorFuelCost,
+        "netAmtDue": netAmtDue == null ? 0.0 : netAmtDue,
+        "rebateAmt": rebateAmt == null ? 0.0 : rebateAmt,
+      };
 }

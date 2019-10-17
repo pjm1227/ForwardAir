@@ -59,6 +59,15 @@ class Repository {
   Future<dynamic> makeSettlementDetailRequest(String body, String token) =>
       _apiProvider.requestInPost(EndPoints.TRACTOR_SETTLEMENT, token, body);
 
-  Future<dynamic> makeFleetDataRequest( String token) =>
-      _apiProvider.requestInPost(EndPoints.FLEET_TRACKER_URL , token, null);
+  /*
+  This method is called when user request for fleet tracker details
+   */
+  Future<dynamic> makeFleetTrackerDataRequest(String token) =>
+      _apiProvider.requestInPost(EndPoints.FLEET_TRACKER_URL, token, null);
+
+  /*
+  This method is called when user request for Revenue details for a tractor
+   */
+  Future<dynamic> makeRevenueDetailsRequest(String token,String body) =>
+      _apiProvider.requestInPost(EndPoints.TRACTOR_REVENUE_DETAILS, token, body);
 }

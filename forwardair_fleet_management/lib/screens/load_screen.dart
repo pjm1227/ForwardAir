@@ -13,6 +13,7 @@ import 'package:forwardair_fleet_management/components/pie_chart_widget.dart';
 import 'package:forwardair_fleet_management/components/shimmer/load_page_shimmer.dart';
 import 'package:forwardair_fleet_management/components/stacked_bar_chart.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
+import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
 import 'package:forwardair_fleet_management/models/chart_data_model.dart';
 import 'package:forwardair_fleet_management/models/chart_data_month.dart';
 import 'package:forwardair_fleet_management/models/chart_data_weeks.dart';
@@ -83,6 +84,9 @@ class LoadScreen extends State<LoadPage> {
   //Chart data for Bar Chart
   dynamic _chartData;
 
+  //Animation for Pie chart
+  bool isAnimate = false;
+
   LoadScreen(this.pageName, this.dashboardData);
 
   @override
@@ -147,18 +151,23 @@ class LoadScreen extends State<LoadPage> {
       body: BlocListener<LoadBloc, LoadStates>(
         listener: (context, state) {
           if (state is SuccessState) {
-            //Set data in Stacked Bar chart
-            createDataForBarChart(true);
             //Get tractor model from state
             _tractorData = state.tractorData;
             //Get chart Model from State
             _chartData = state.loadChartData;
+            //Pie chart animation
+            isAnimate = true;
             //Create Pie chart
-            createPieChart(true);
+            if (_tractorData.tractors != null) createPieChart(true);
+            //Set data in Stacked Bar chart
+            if (_chartData != null) createDataForBarChart(true);
+
+            //Event to show High to Low sorting by default
             loadBloc.dispatch(SortHighToLowEvent(
                 pageName: pageName, tractorData: listTractorData));
           }
           if (state is SortState) {
+            isAnimate = false;
             //Create Pie chart
             //  createPieChart(state.tractorData);
           }
@@ -167,6 +176,14 @@ class LoadScreen extends State<LoadPage> {
             isTotalAmountClicked = state.isTotalAmountClicked;
             createPieChart(isGallonClicked);
             createDataForBarChart(isGallonClicked);
+            //Animation for Bar chart
+            try {
+              if (_controller != null && _controller.page == 1) {
+                _controller.jumpToPage(2);
+              }
+            } catch (_) {}
+            //Pie chart animation
+            isAnimate = true;
           }
         },
         bloc: loadBloc,
@@ -203,7 +220,6 @@ class LoadScreen extends State<LoadPage> {
 
   //Initial Widget
   Widget _initialWidget() {
-    var pager = new PageController();
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -294,26 +310,38 @@ class LoadScreen extends State<LoadPage> {
             //Widget for Pie chart
             Container(
               height: 220,
-              child: PageView.builder(
-                itemCount: 2,
-                physics: new AlwaysScrollableScrollPhysics(),
-                controller: _controller,
-                itemBuilder: (BuildContext context, int index) {
-                  return _pagerWidgets(index);
+              child: FutureBuilder<List<Widget>>(
+                future: _pagerWidgets(),
+                initialData: List(),
+                builder: (builder, itemList) {
+                  return PageView.builder(
+                    itemCount: itemList.data.length,
+                    physics: new AlwaysScrollableScrollPhysics(),
+                    controller: _controller,
+                    itemBuilder: (BuildContext context, int index) {
+                      return itemList.data[index];
+                    },
+                  );
                 },
               ),
             ),
             //Widget for Dots indicator
             Container(
               child: new Center(
-                child: new DotsIndicator(
-                  controller: _controller,
-                  itemCount: 2,
-                  onPageSelected: (int page) {
-                    _controller.animateToPage(
-                      page,
-                      duration: _duration,
-                      curve: _curve,
+                child: FutureBuilder<List<Widget>>(
+                  future: _pagerWidgets(),
+                  initialData: List(),
+                  builder: (builder, itemList) {
+                    return new DotsIndicator(
+                      controller: _controller,
+                      itemCount: itemList.data.length,
+                      onPageSelected: (int page) {
+                        _controller.animateToPage(
+                          page,
+                          duration: _duration,
+                          curve: _curve,
+                        );
+                      },
                     );
                   },
                 ),
@@ -537,7 +565,7 @@ class LoadScreen extends State<LoadPage> {
         weekData.forEach((item) {
           var chartModelLoaded = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost)}',
+                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost) : ''}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.loadedLoads
                   : pageName == PageName.MILES_PAGE
@@ -549,7 +577,7 @@ class LoadScreen extends State<LoadPage> {
                           : item.totalFuelCost.toInt());
           var chartModelEmpty = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost)}',
+                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost) : ''}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.emptyLoads
                   : pageName == PageName.MILES_PAGE
@@ -570,7 +598,7 @@ class LoadScreen extends State<LoadPage> {
       monthData.forEach((item) {
         var chartModelLoaded = ChartDataModel(
             name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost)}',
+                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost) : ''}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.loadedLoads
                 : pageName == PageName.MILES_PAGE
@@ -582,7 +610,7 @@ class LoadScreen extends State<LoadPage> {
                         : item.totalFuelCost.toInt());
         var chartModelEmpty = ChartDataModel(
             name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost)}',
+                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost) : ''}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.emptyLoads
                 : pageName == PageName.MILES_PAGE
@@ -721,44 +749,59 @@ class LoadScreen extends State<LoadPage> {
     seriesListPieChart.add(pieChart);
   }
 
-  //This method returns widgets for PagerView
-  Widget _pagerWidgets(int index) {
-    Widget _widget;
+  //This method returns the list of widgets for PagerView
+  //Here we're checking conditions based on userType because for
+  Future<List<Widget>> _pagerWidgets() async {
+    // Create object of user Manager to fetch user data
+    var userManager = UserManager();
+    //Get Data from User Table
+    var userModel = await userManager.getData();
+    print('User Type is ${userModel.usertype}');
+    //Create a list of widgets that would be change dynamically based on user type
+    var listOfWidgets = List<Widget>();
+    //Create Widgets the would be show in pager
 
-    switch (index) {
-      case 0:
-        _widget = Column(
-          children: <Widget>[
-            SizedBox(
-              height: 10,
+    var pieChartWidget = Column(
+      children: <Widget>[
+        SizedBox(
+          height: 10,
+        ),
+        Expanded(
+          child: PieChartWidget(
+            seriesListPieChart,
+            animate: true,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+
+    var barChartWidget = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: pageName == PageName.COMPENSATION_PAGE
+          ? DonutPieChart(
+              grossAmount: dashboardData.grossAmt,
+              deductions: dashboardData.deductions,
+            )
+          : StackedBarChart(
+              pageName: pageName,
+              seriesList: seriesListBarChart,
+              animate: true,
             ),
-            Expanded(
-              child: PieChartWidget(
-                seriesListPieChart,
-                animate: true,
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-          ],
-        );
-        break;
-      case 1:
-        _widget = Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: pageName == PageName.COMPENSATION_PAGE
-              ? DonutPieChart(
-                  grossAmount: dashboardData.grossAmt,
-                  deductions: dashboardData.deductions,
-                )
-              : StackedBarChart(
-                  seriesList: seriesListBarChart,
-                  animate: true,
-                ),
-        );
-        break;
+    );
+
+    //Now check condition for userType to add a widget
+    if (userModel.usertype == Constants.TEXT_FO_TYPE ||
+        userModel.usertype == Constants.TEXT_FOD_TYPE) {
+      //add pie chart and bar chart widgets in list
+      listOfWidgets.add(pieChartWidget);
+      listOfWidgets.add(barChartWidget);
+    } else {
+      // Add only Bar chart
+      listOfWidgets.add(barChartWidget);
     }
-    return _widget;
+    return listOfWidgets;
   }
 }

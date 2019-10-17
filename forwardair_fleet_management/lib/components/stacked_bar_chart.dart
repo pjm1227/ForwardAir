@@ -4,6 +4,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/chart.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
+import 'package:forwardair_fleet_management/models/enums/page_names.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
@@ -26,8 +27,9 @@ class StackedBarChart extends StatelessWidget {
   int loaded = 0;
   int empty = 0;
   final chartBloc = ChartBloc();
+  PageName pageName;
 
-  StackedBarChart({this.seriesList, this.animate});
+  StackedBarChart({this.seriesList, this.animate, this.pageName});
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class StackedBarChart extends StatelessWidget {
   }
 
   Widget _chartWidget() {
+    print('Page Name in Chart is');
     return Column(
       children: <Widget>[
         Container(
@@ -62,15 +65,19 @@ class StackedBarChart extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         TextWidget(
-                          text: "Total : ${Utils.formatDecimalToWholeNumber(total)}",
+                          text:"Total : ${Utils.formatDecimalToWholeNumber(total)}",
                           colorText: AppColors.colorWhite,
                         ),
                         TextWidget(
-                          text: "Loaded : ${Utils.formatDecimalToWholeNumber(loaded)}",
+                          text: pageName == PageName.FUEL_PAGE
+                              ? ''
+                              : "Loaded : ${Utils.formatDecimalToWholeNumber(loaded)}",
                           colorText: AppColors.colorWhite,
                         ),
                         TextWidget(
-                          text: 'Empty : ${Utils.formatDecimalToWholeNumber(empty)}',
+                          text: pageName == PageName.FUEL_PAGE
+                              ? ''
+                              : 'Empty : ${Utils.formatDecimalToWholeNumber(empty)}',
                           colorText: AppColors.colorWhite,
                         )
                       ],

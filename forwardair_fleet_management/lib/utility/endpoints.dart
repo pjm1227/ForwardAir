@@ -14,4 +14,5 @@ class EndPoints {
   static const String TRACTOR_FUEL_DETAILS = '$BASE_URL' +"secure/fuel-usage";
   static const String TRACTOR_SETTLEMENT = '$BASE_URL' +"secure/settlement-details";
   static const String FLEET_TRACKER_URL = '$BASE_URL' +"secure/fleet-tracker";
+  static const String TRACTOR_REVENUE_DETAILS= '$BASE_URL' +"secure/settlement-transaction";
 }

@@ -16,11 +16,16 @@ import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.da
 import 'package:forwardair_fleet_management/blocs/sidemenu_bloc.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 
+import 'safetyandincidents/report_accident_screen.dart';
+import 'safetyandincidents/view_history_screen.dart';
+
 class SideMenuPage extends StatefulWidget {
   //To get the current context from the navigated screen
   GlobalKey<ScaffoldState> scaffold;
+
   //Constructor
   SideMenuPage({this.scaffold});
+
   @override
   _SideMenuPageState createState() => new _SideMenuPageState(this.scaffold);
 }
@@ -28,14 +33,19 @@ class SideMenuPage extends StatefulWidget {
 class _SideMenuPageState extends State<SideMenuPage> {
   //To get the current context from the navigated screen
   GlobalKey<ScaffoldState> scaffold;
+
   //Constructor
   _SideMenuPageState(this.scaffold);
+
   //SideMenu Bloc
   SideMenuBloc _sideMenuBloc = SideMenuBloc();
+
   //Selected index
   int _selectedIndex = 1;
+
   //Expand Flag
   bool expandFlag = false;
+
   //Expanded List index
   int _expandedListIndex = 0;
 
@@ -93,7 +103,8 @@ class _SideMenuPageState extends State<SideMenuPage> {
           ),
           onTap: () {
             //To update the Expanded Row based on the user tap event.
-            _sideMenuBloc.dispatch(SafetyIncidentsEvent(selectedIndex: index,expandFlag: expandFlag));
+            _sideMenuBloc.dispatch(SafetyIncidentsEvent(
+                selectedIndex: index, expandFlag: expandFlag));
           },
         ),
       ),
@@ -378,17 +389,20 @@ class _SideMenuPageState extends State<SideMenuPage> {
               listener: (context, state) {
                 if (state is SafetyIncidentState) {
                   //To get SafetyIncident Expanded List Item Title.
-                  String _safetyMenuTitle = _sideMenuBloc.expandedSafetyItems[state.selectedIndex][Constants.TEXT_SAFETY_AND_INCIDENT_EXPENDED_TITLE];
+                  String _safetyMenuTitle =
+                      _sideMenuBloc.expandedSafetyItems[state.selectedIndex]
+                          [Constants.TEXT_SAFETY_AND_INCIDENT_EXPENDED_TITLE];
                   scaffold.currentState.openEndDrawer();
                   if (_safetyMenuTitle == Constants.TEXT_REPORT_ACCIDENT) {
                     //To Navigate to  Report Accident
-                    navigateToFeatureComingSoonPage();
-                  } else if (_safetyMenuTitle == Constants.TEXT_REPORT_BREAKDOWN) {
+                    navigateToNextWidget(ReportAccidentPage());
+                  } else if (_safetyMenuTitle ==
+                      Constants.TEXT_REPORT_BREAKDOWN) {
                     //To Navigate to Report Breakdown
                     navigateToFeatureComingSoonPage();
                   } else if (_safetyMenuTitle == Constants.TEXT_VIEW_HISTORY) {
                     //To Navigate to View History
-                    navigateToFeatureComingSoonPage();
+                    navigateToNextWidget(ViewHistoryPage());
                   }
                 }
 
@@ -478,10 +492,12 @@ class _SideMenuPageState extends State<SideMenuPage> {
                   }
                   // Initial Selected Item in Side Menu
                   if (state is InitialState) {
-                    _expandedListIndex = state.expandedIndex == null ? 0 : state.expandedIndex;
+                    _expandedListIndex =
+                        state.expandedIndex == null ? 0 : state.expandedIndex;
                     _selectedIndex =
                         state.selectedIndex == null ? 1 : state.selectedIndex;
-                    expandFlag = state.isExpanded == null ? false : state.isExpanded;
+                    expandFlag =
+                        state.isExpanded == null ? false : state.isExpanded;
                   }
                   //This is the main widget of Side Menu Options
                   return ListView(
@@ -661,5 +677,11 @@ class _SideMenuPageState extends State<SideMenuPage> {
         context,
         PageTransition(
             type: PageTransitionType.fade, child: FeaturesComingSoonPage()));
+  }
+
+  //this method is used to navigate as per passed widget name
+  void navigateToNextWidget(Widget widgetName) {
+    Navigator.push(context,
+        PageTransition(type: PageTransitionType.fade, child: widgetName));
   }
 }
