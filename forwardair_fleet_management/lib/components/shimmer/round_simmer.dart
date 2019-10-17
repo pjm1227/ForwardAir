@@ -5,6 +5,7 @@ class RoundShimmer extends StatelessWidget{
   Widget build(BuildContext context) {
     return  Container(
       child: Shimmer.fromColors(
+        period: Duration(milliseconds: 800),
         baseColor: Colors.grey[400],
         highlightColor: Colors.grey[100],
         enabled: true,

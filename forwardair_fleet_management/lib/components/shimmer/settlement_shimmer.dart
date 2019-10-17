@@ -53,6 +53,7 @@ class SettlementShimmerPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Shimmer.fromColors(
+                  period: Duration(milliseconds: 800),
                   baseColor: Colors.grey[400],
                   highlightColor: Colors.grey[100],
                   enabled: true,
@@ -63,6 +64,7 @@ class SettlementShimmerPage extends StatelessWidget {
                   ),
                 ),
                 Shimmer.fromColors(
+                  period: Duration(milliseconds: 800),
                   baseColor: Colors.grey[400],
                   highlightColor: Colors.grey[100],
                   enabled: true,
@@ -85,6 +87,7 @@ class SettlementShimmerPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Shimmer.fromColors(
+                    period: Duration(milliseconds: 800),
                     baseColor: Colors.grey[400],
                     highlightColor: Colors.grey[100],
                     enabled: true,
@@ -96,6 +99,7 @@ class SettlementShimmerPage extends StatelessWidget {
                   ),
                   Padding(padding: EdgeInsets.only(top: 5),),
                   Shimmer.fromColors(
+                    period: Duration(milliseconds: 800),
                     baseColor: Colors.grey[400],
                     highlightColor: Colors.grey[100],
                     enabled: true,
@@ -137,6 +141,7 @@ class SettlementShimmerPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children:[
                 Shimmer.fromColors(
+                    period: Duration(milliseconds: 800),
                     baseColor: Colors.grey[400],
                     highlightColor: Colors.grey[100],
                     enabled: true,
@@ -146,6 +151,7 @@ class SettlementShimmerPage extends StatelessWidget {
                       color: Colors.grey,
                     )),
                 Shimmer.fromColors(
+                    period: Duration(milliseconds: 800),
                     baseColor: Colors.grey[400],
                     highlightColor: Colors.grey[100],
                     enabled: true,

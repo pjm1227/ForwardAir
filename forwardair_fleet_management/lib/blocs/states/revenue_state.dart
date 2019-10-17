@@ -20,7 +20,7 @@ class RevenueErrorState extends RevenueDetailsState {
 
 //It will handle the Accept state for the page
 class RevenueSuccessState extends RevenueDetailsState {
-  final TractorRevenueModel tractorRevenueModel;
+  final dynamic tractorRevenueModel;
 
   RevenueSuccessState({@required this.tractorRevenueModel}) : super([tractorRevenueModel]);
 }

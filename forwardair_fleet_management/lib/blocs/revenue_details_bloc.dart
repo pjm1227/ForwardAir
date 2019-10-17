@@ -47,13 +47,18 @@ class RevenueDetailsBloc
         //If it's TractorModel then insert data into DB else show error message
         if (result is ErrorModel) {
           print('Error found in Revenue Details API');
-          yield InitialState();
           //Show some error
           yield RevenueErrorState(errorMessage: result.errorMessage);
         } else {
           try {
-            //Data found for Tractors
-            var tractorRevenueModel = tractorRevenueModelFromJson(result);
+            var tractorRevenueModel;
+            if (event.transactionType == 'E') {
+              //Data found for Tractors
+              tractorRevenueModel = tractorRevenueModelFromJson(result);
+            } else {
+              tractorRevenueModel = revenueDeductionModelFromJson(result);
+            }
+
             print('Revenue Data Found');
 
             yield RevenueSuccessState(tractorRevenueModel: tractorRevenueModel);

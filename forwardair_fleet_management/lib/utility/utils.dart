@@ -7,7 +7,6 @@ import 'dart:async';
 import 'colors.dart';
 
 class Utils {
-
   static int selectedIndexInSideMenu = 1;
   static int expandedItemsIndex = 0;
   static bool isExpanded = false;
@@ -62,22 +61,23 @@ class Utils {
 
   static String formatTimeFromString(String timeString) {
     String time = '';
-    time = timeString.substring(9, 11) +
-        ':' +
-        timeString.substring(11, 13);
+    time = timeString.substring(9, 11) + ':' + timeString.substring(11, 13);
     return time;
   }
 
   static String formatDateFromString(String dateString) {
-    var formattedString = '';
-    if (dateString != '')  {
-      final date = DateTime.parse(dateString);
-      final f = new DateFormat('MM/dd/yyyy');
-      formattedString = f.format(date);
+    try {
+      var formattedString = '';
+      if (dateString != '') {
+        final date = DateTime.parse(dateString);
+        final f = new DateFormat('MM/dd/yyyy');
+        formattedString = f.format(date);
+      }
+      return formattedString;
+    } catch (_) {
+      return 'N/A';
     }
-    return formattedString;
   }
-
 
 //  static String formatDateFromString(String dateString) {
 //    String date = '';
@@ -91,7 +91,7 @@ class Utils {
 
   static String formatStringDateToDateAndMonth(String dateString) {
     var formattedString = '';
-    if (dateString != '')  {
+    if (dateString != '') {
       final date = DateTime.parse(dateString);
       final f = new DateFormat('dd MMM');
       formattedString = f.format(date);
@@ -101,7 +101,7 @@ class Utils {
 
   static String dateNowToFormat(DateTime date) {
     var formattedString = '';
-    if (date != null)  {
+    if (date != null) {
       final format = new DateFormat('MMMM, yyyy');
       formattedString = format.format(date);
     }
@@ -110,7 +110,7 @@ class Utils {
 
   static String pickerDateToFormat(DateTime date) {
     var formattedString = '';
-    if (date != null)  {
+    if (date != null) {
       final format = new DateFormat('MM');
       formattedString = format.format(date);
     }
@@ -119,7 +119,7 @@ class Utils {
 
   static String pickOnlyMonthInCheckList(String dateString) {
     var formattedString = '';
-    if (dateString != '')  {
+    if (dateString != '') {
       final date = DateTime.parse(dateString);
       final f = new DateFormat('MM');
       formattedString = f.format(date);
@@ -138,15 +138,12 @@ class Utils {
   }
 
   static String appendDollarSymbol(double value) {
-    var commaAddedText = Utils().formatDecimalsNumber(
-        value != null ? value : '');
+    var commaAddedText =
+        Utils().formatDecimalsNumber(value != null ? value : '');
     if (commaAddedText != '') {
       return '\$' + commaAddedText;
     } else {
       return 'NA';
     }
   }
-
-
 }
-
