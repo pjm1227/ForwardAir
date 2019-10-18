@@ -55,7 +55,7 @@ class SettlementDetail {
   String transType;
   String transactionDt;
   String description;
-  double amt;
+  String amt;
   String orderNbr;
 
   SettlementDetail({
@@ -78,7 +78,7 @@ class SettlementDetail {
         transactionDt:
         json["transactionDt"] == null ? null : json["transactionDt"],
         description: json["description"] == null ? null : json["description"],
-        amt: json["amt"] == null ? 0.0 : json["amt"].toDouble(),
+        amt: json["amt"] == null ? null : json["amt"],
         orderNbr: json["orderNbr"] == null ? null : json["orderNbr"],
       );
 

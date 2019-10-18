@@ -99,9 +99,9 @@ class TractorDetailBloc extends Bloc<LoadDetailEvents, TractorDetailsState> {
 
   double getDeduction(List<SettlementDetail> data) {
     double deduction = 0.00;
-    for(int i=0;i<data.length;i++){
-      if(data[i].transType==Constants.DEDUCTION_TEXT){
-        deduction=deduction+data[i].amt;
+    for (int i = 0; i < data.length; i++) {
+      if (data[i].transType == Constants.DEDUCTION_TEXT) {
+        deduction = deduction + double.parse(data[i].amt);
       }
     }
     return deduction;
@@ -109,9 +109,9 @@ class TractorDetailBloc extends Bloc<LoadDetailEvents, TractorDetailsState> {
 
   double getEarning(List<SettlementDetail> data) {
     double earnings = 0.00;
-    for(int i=0;i<data.length;i++){
-      if(data[i].transType==Constants.EARNING_TEXT){
-        earnings=earnings+data[i].amt;
+    for (int i = 0; i < data.length; i++) {
+      if (data[i].transType == Constants.EARNING_TEXT) {
+        earnings = earnings + double.parse(data[i].amt);
       }
     }
     return earnings;

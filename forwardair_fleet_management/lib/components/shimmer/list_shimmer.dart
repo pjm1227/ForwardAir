@@ -31,8 +31,8 @@ class ListViewShimmer extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Shimmer.fromColors(
-              period: Duration(milliseconds: 800),
-              baseColor: Colors.grey[400],
+              period: Duration(milliseconds: 1000),
+              baseColor: Colors.grey[300],
               highlightColor: Colors.grey[100],
               enabled: true,
               child:Column(

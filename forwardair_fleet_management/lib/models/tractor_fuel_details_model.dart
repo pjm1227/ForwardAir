@@ -69,16 +69,16 @@ class FuelDetail {
   String truckStopCd;
   String truckStopInvoiceNbr;
   int oilQts;
-  int productAmt;
+  String productAmt;
   String cashAdvanceAmt;
-  int oilCost;
-  double fuelFee;
-  double tractorGallons;
-  double tractorFuelPricePerGal;
-  int cashAdvanceCharge;
-  double tractorFuelCost;
-  double netAmtDue;
-  double rebateAmt;
+  String oilCost;
+  String fuelFee;
+  String tractorGallons;
+  String tractorFuelPricePerGal;
+  String cashAdvanceCharge;
+  String tractorFuelCost;
+  String netAmtDue;
+  String rebateAmt;
 
   FuelDetail({
     this.fuelCardId,
@@ -122,28 +122,28 @@ class FuelDetail {
             ? null
             : json["truckStopInvoiceNbr"],
         oilQts: json["oilQts"] == null ? 0 : json["oilQts"],
-        productAmt: json["productAmt"] == null ? 0 : json["productAmt"],
+        productAmt: json["productAmt"] == null ? null : json["productAmt"],
         cashAdvanceAmt:
             json["cashAdvanceAmt"] == null ? null : json["cashAdvanceAmt"],
-        oilCost: json["oilCost"] == null ? 0 : json["oilCost"],
+        oilCost: json["oilCost"] == null ? null: json["oilCost"],
         fuelFee: json["fuelFee"] == null || json["fuelFee"] == 0
-            ? 0.0
+            ? null
             : json["fuelFee"],
         tractorGallons: json["tractorGallons"] == null
-            ? 0.0
-            : json["tractorGallons"].toDouble(),
+            ? null
+            : json["tractorGallons"],
         tractorFuelPricePerGal: json["tractorFuelPricePerGal"] == null
-            ? 0.0
-            : json["tractorFuelPricePerGal"].toDouble(),
+            ?null
+            : json["tractorFuelPricePerGal"],
         cashAdvanceCharge:
             json["cashAdvanceCharge"] == null ? 0 : json["cashAdvanceCharge"],
         tractorFuelCost: json["tractorFuelCost"] == null
-            ? 0.0
-            : json["tractorFuelCost"].toDouble(),
+            ? null
+            : json["tractorFuelCost"],
         netAmtDue:
-            json["netAmtDue"] == null ? 0.0 : json["netAmtDue"].toDouble(),
+            json["netAmtDue"] == null ? null : json["netAmtDue"],
         rebateAmt:
-            json["rebateAmt"] == null ? 0.0 : json["rebateAmt"].toDouble(),
+            json["rebateAmt"] == null ? null : json["rebateAmt"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -162,14 +162,14 @@ class FuelDetail {
         "oilQts": oilQts == null ? 0 : oilQts,
         "productAmt": productAmt == null ? 0 : productAmt,
         "cashAdvanceAmt": cashAdvanceAmt == null ? null : cashAdvanceAmt,
-        "oilCost": oilCost == null ? 0 : oilCost,
-        "fuelFee": fuelFee == null ? 0.0 : fuelFee,
-        "tractorGallons": tractorGallons == null ? 0.0 : tractorGallons,
+        "oilCost": oilCost == null ? null : oilCost,
+        "fuelFee": fuelFee == null ? null : fuelFee,
+        "tractorGallons": tractorGallons == null ?null : tractorGallons,
         "tractorFuelPricePerGal":
-            tractorFuelPricePerGal == null ? 0.0 : tractorFuelPricePerGal,
-        "cashAdvanceCharge": cashAdvanceCharge == null ? 0 : cashAdvanceCharge,
-        "tractorFuelCost": tractorFuelCost == null ? 0.0 : tractorFuelCost,
-        "netAmtDue": netAmtDue == null ? 0.0 : netAmtDue,
-        "rebateAmt": rebateAmt == null ? 0.0 : rebateAmt,
+            tractorFuelPricePerGal == null ? null : tractorFuelPricePerGal,
+        "cashAdvanceCharge": cashAdvanceCharge == null ? null : cashAdvanceCharge,
+        "tractorFuelCost": tractorFuelCost == null ? null : tractorFuelCost,
+        "netAmtDue": netAmtDue == null ? null : netAmtDue,
+        "rebateAmt": rebateAmt == null ? null : rebateAmt,
       };
 }

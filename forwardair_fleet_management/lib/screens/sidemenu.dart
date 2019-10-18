@@ -17,6 +17,7 @@ import 'package:forwardair_fleet_management/customwidgets/expandablecontainer.da
 import 'package:forwardair_fleet_management/blocs/sidemenu_bloc.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 
+import 'fleet_tracker_screen.dart';
 import 'safetyandincidents/report_accident_screen.dart';
 import 'safetyandincidents/view_history_screen.dart';
 
@@ -460,6 +461,13 @@ class _SideMenuPageState extends State<SideMenuPage> {
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (context) => UnavailabilityListPage()),
                               (Route<dynamic> route) => false);
+
+                      break;
+                      case Constants.TEST_FLEET_TRACKER_ROLE:
+                       //To End Drawer
+                      scaffold.currentState.openEndDrawer();
+                      // Navigate To Settlement Page
+                      navigateToNextWidget(FleetTrackerPage());
 
                       break;
                     default:

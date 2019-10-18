@@ -23,15 +23,15 @@ class TractorRevenueModel {
   String tractorId;
   String category;
   String description;
-  double amount;
+  String amount;
   String taxableFlg;
   int qty;
-  double rate;
+  String rate;
   String uom;
   String orderNbr;
   String originCty;
   String originSt;
-  int originDt;
+  String originDt;
   String destCty;
   String destSt;
   String destDt;
@@ -96,10 +96,10 @@ class TractorRevenueModel {
     tractorId: json["tractorId"] == null ? null : json["tractorId"],
     category: json["category"] == null ? null : json["category"],
     description: json["description"] == null ? null : json["description"],
-    amount: json["amount"] == null ? null : json["amount"].toDouble(),
+    amount: json["amount"] == null ? null : json["amount"],
     taxableFlg: json["taxableFlg"] == null ? null : json["taxableFlg"],
     qty: json["qty"] == null ? null : json["qty"],
-    rate: json["rate"] == null ? null : json["rate"].toDouble(),
+    rate: json["rate"] == null ? null : json["rate"],
     uom: json["uom"] == null ? null : json["uom"],
     orderNbr: json["orderNbr"] == null ? null : json["orderNbr"],
     originCty: json["originCty"] == null ? null : json["originCty"],

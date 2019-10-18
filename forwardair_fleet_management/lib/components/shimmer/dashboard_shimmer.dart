@@ -74,8 +74,8 @@ class DashBoardShimmer extends StatelessWidget {
                 width: 28,
                 height: 30,
                 child: Shimmer.fromColors(
-                    period: Duration(milliseconds: 800),
-                    baseColor: Colors.grey[400],
+                    period: Duration(milliseconds: 1000),
+                    baseColor: Colors.grey[300],
                     highlightColor: Colors.grey[100],
                     enabled: true,
                     child: Container(
@@ -84,8 +84,8 @@ class DashBoardShimmer extends StatelessWidget {
                       color: Colors.grey,
                     ))),
             leading: Shimmer.fromColors(
-                period: Duration(milliseconds: 800),
-                baseColor: Colors.grey[400],
+                period: Duration(milliseconds: 1000),
+                baseColor: Colors.grey[300],
                 highlightColor: Colors.grey[100],
                 enabled: true,
                 child: Container(
@@ -135,8 +135,8 @@ class DashBoardShimmer extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 5.0, left: 10.0),
               child: Shimmer.fromColors(
-                  period: Duration(milliseconds: 800),
-                  baseColor: Colors.grey[400],
+                  period: Duration(milliseconds: 1000),
+                  baseColor: Colors.grey[300],
                   highlightColor: Colors.grey[100],
                   enabled: true,
                   child: Row(
@@ -144,8 +144,8 @@ class DashBoardShimmer extends StatelessWidget {
                       Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Shimmer.fromColors(
-                            period: Duration(milliseconds: 800),
-                            baseColor: Colors.grey[400],
+                            period: Duration(milliseconds: 1000),
+                            baseColor: Colors.grey[300],
                             highlightColor: Colors.grey[100],
                             enabled: true,
                             child: Container(
@@ -165,8 +165,8 @@ class DashBoardShimmer extends StatelessWidget {
                   SizedBox(
                       height: 37,
                       child: Shimmer.fromColors(
-                        period: Duration(milliseconds: 800),
-                        baseColor: Colors.grey[400],
+                        period: Duration(milliseconds: 1000),
+                        baseColor: Colors.grey[300],
                         highlightColor: Colors.grey[100],
                         enabled: true,
                         child: Container(
@@ -176,8 +176,8 @@ class DashBoardShimmer extends StatelessWidget {
                         ),
                       )),
                   Shimmer.fromColors(
-                      period: Duration(milliseconds: 800),
-                      baseColor: Colors.grey[400],
+                      period: Duration(milliseconds: 1000),
+                      baseColor: Colors.grey[300],
                       highlightColor: Colors.grey[100],
                       enabled: true,
                       child: Container(
@@ -223,8 +223,8 @@ class DashBoardShimmer extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Shimmer.fromColors(
-                      period: Duration(milliseconds: 800),
-                      baseColor: Colors.grey[400],
+                      period: Duration(milliseconds: 1000),
+                      baseColor: Colors.grey[300],
                       highlightColor: Colors.grey[100],
                       enabled: true,
                       child: Container(
@@ -244,8 +244,8 @@ class DashBoardShimmer extends StatelessWidget {
                           SizedBox(
                             height: 27.0,
                             child: Shimmer.fromColors(
-                                period: Duration(milliseconds: 800),
-                                baseColor: Colors.grey[400],
+                                period: Duration(milliseconds: 1000),
+                                baseColor: Colors.grey[300],
                                 highlightColor: Colors.grey[100],
                                 enabled: true,
                                 child: Container(
@@ -257,8 +257,8 @@ class DashBoardShimmer extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(top: 3.0),
                             child: Shimmer.fromColors(
-                                period: Duration(milliseconds: 800),
-                                baseColor: Colors.grey[400],
+                                period: Duration(milliseconds: 1000),
+                                baseColor: Colors.grey[300],
                                 highlightColor: Colors.grey[100],
                                 enabled: true,
                                 child: Container(
@@ -296,8 +296,8 @@ class DashBoardShimmer extends StatelessWidget {
                               maxHeight: 27.0,
                             ),
                             child: Shimmer.fromColors(
-                                period: Duration(milliseconds: 800),
-                                baseColor: Colors.grey[400],
+                                period: Duration(milliseconds: 1000),
+                                baseColor: Colors.grey[300],
                                 highlightColor: Colors.grey[100],
                                 enabled: true,
                                 child: Container(
@@ -309,8 +309,8 @@ class DashBoardShimmer extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(top: 3.0),
                             child: Shimmer.fromColors(
-                                period: Duration(milliseconds: 800),
-                                baseColor: Colors.grey[400],
+                                period: Duration(milliseconds: 1000),
+                                baseColor: Colors.grey[300],
                                 highlightColor: Colors.grey[100],
                                 enabled: true,
                                 child: Container(
@@ -327,8 +327,8 @@ class DashBoardShimmer extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           Shimmer.fromColors(
-                              period: Duration(milliseconds: 800),
-                              baseColor: Colors.grey[400],
+                              period: Duration(milliseconds: 1000),
+                              baseColor: Colors.grey[300],
                               highlightColor: Colors.grey[100],
                               enabled: true,
                               child: Container(
@@ -376,8 +376,8 @@ class DashBoardShimmer extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Shimmer.fromColors(
-                        period: Duration(milliseconds: 800),
-                        baseColor: Colors.grey[400],
+                        period: Duration(milliseconds: 1000),
+                        baseColor: Colors.grey[300],
                         highlightColor: Colors.grey[100],
                         enabled: true,
                         child: Container(
@@ -393,8 +393,8 @@ class DashBoardShimmer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Shimmer.fromColors(
-                          period: Duration(milliseconds: 800),
-                          baseColor: Colors.grey[400],
+                          period: Duration(milliseconds: 1000),
+                          baseColor: Colors.grey[300],
                           highlightColor: Colors.grey[100],
                           enabled: true,
                           child: Container(
@@ -404,8 +404,8 @@ class DashBoardShimmer extends StatelessWidget {
                           )),
                     ),
                     Shimmer.fromColors(
-                      period: Duration(milliseconds: 800),
-                      baseColor: Colors.grey[400],
+                      period: Duration(milliseconds: 1000),
+                      baseColor: Colors.grey[300],
                       highlightColor: Colors.grey[100],
                       enabled: true,
                       child: Container(
@@ -443,8 +443,8 @@ class DashBoardShimmer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Shimmer.fromColors(
-                      period: Duration(milliseconds: 800),
-                      baseColor: Colors.grey[400],
+                      period: Duration(milliseconds: 1000),
+                      baseColor: Colors.grey[300],
                       highlightColor: Colors.grey[100],
                       enabled: true,
                       child: Container(
@@ -453,8 +453,8 @@ class DashBoardShimmer extends StatelessWidget {
                         width: 120,
                       )),
                   Shimmer.fromColors(
-                      period: Duration(milliseconds: 800),
-                      baseColor: Colors.grey[400],
+                      period: Duration(milliseconds: 1000),
+                      baseColor: Colors.grey[300],
                       highlightColor: Colors.grey[100],
                       enabled: true,
                       child: Container(
@@ -469,7 +469,7 @@ class DashBoardShimmer extends StatelessWidget {
 //              padding: const EdgeInsets.only(top: 8.0),
 //              child: Divider(
 //                height: 0.5,
-//                color: Colors.grey[400],
+//                color: Colors.grey[300],
 //              ),
 //            )
           ],
