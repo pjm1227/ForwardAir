@@ -43,6 +43,9 @@ class Utils {
 
   //Number formatting
   String formatDecimalsNumber(double decimalNumber) {
+    if (decimalNumber == 0 ) {
+      return '0';
+    }
     final formatter = new NumberFormat("#,###.00");
     String formattedNumber = formatter.format(decimalNumber);
     return formattedNumber;

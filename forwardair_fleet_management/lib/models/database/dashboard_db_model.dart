@@ -71,11 +71,11 @@ class Dashboard_DB_Model {
     map["totalLoads"] = totalLoads == null ? 0 : totalLoads;
     map["loadedLoads"] = loadedLoads == null ? 0 : loadedLoads;
     map["emptyLoads"] = emptyLoads == null ? null : emptyLoads;
-    map["totalTractorGallons"] = totalTractorGallons == null ? 0.0 : totalTractorGallons;
-    map["totalFuelCost"] = totalFuelCost == null ? 0.0 : totalFuelCost;
-    map["grossAmt"] = grossAmt == null ? 0.0 : grossAmt;
-    map["deductions"] = deductions == null ? 0.0 : deductions;
-    map["netAmt"] =  netAmt == null ? 0.0 : netAmt;
+    map["totalTractorGallons"] = totalTractorGallons == null ? 0 : totalTractorGallons;
+    map["totalFuelCost"] = totalFuelCost == null ? 0 : totalFuelCost;
+    map["grossAmt"] = grossAmt == null ? 0 : grossAmt;
+    map["deductions"] = deductions == null ? 0 : deductions;
+    map["netAmt"] =  netAmt == null ? 0 : netAmt;
     map["dashboardPeriod"] =  dashboardPeriod == null ? null : dashboardPeriod;
     return map;
   }
@@ -95,11 +95,11 @@ class Dashboard_DB_Model {
     this.totalLoads = json["totalLoads"] == null ? 0 : json["totalLoads"];
     this.loadedLoads = json["loadedLoads"] == null ? 0 : json["loadedLoads"];
     this.emptyLoads = json["emptyLoads"] == null ? 0 : json["emptyLoads"];
-    this.totalTractorGallons = json["totalTractorGallons"] == null ? 0.0 : json["totalTractorGallons"];
-    this.totalFuelCost = json["totalFuelCost"] == null ? 0.0 : json["totalFuelCost"];
-    this.grossAmt = json["grossAmt"] == null ? 0.0: json["grossAmt"];
-    this.deductions = json["deductions"] == null ? 0.0 : json["deductions"];
-    this.netAmt = json["netAmt"] == null ? 0.0 : json["netAmt"];
+    this.totalTractorGallons = json["totalTractorGallons"] == null ? 0 : json["totalTractorGallons"];
+    this.totalFuelCost = json["totalFuelCost"] == null ? 0 : json["totalFuelCost"];
+    this.grossAmt = json["grossAmt"] == null ? 0: json["grossAmt"];
+    this.deductions = json["deductions"] == null ? 0 : json["deductions"];
+    this.netAmt = json["netAmt"] == null ? 0 : json["netAmt"];
     this.dashboardPeriod = json["dashboardPeriod"] == null ? null : json["dashboardPeriod"];
   }
 
