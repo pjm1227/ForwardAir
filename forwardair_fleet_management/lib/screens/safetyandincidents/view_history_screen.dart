@@ -8,7 +8,7 @@ import '../sidemenu.dart';
 
 //This class is used to call API for view history inside safety and incidents module
 class ViewHistoryPage extends StatelessWidget {
- final GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
+ //final GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,20 +25,20 @@ class ViewHistoryPage extends StatelessWidget {
   //It's the main widget for view history
   Widget _scaffoldWidget() {
     return Scaffold(
-        key: _scaffold,
-        appBar: new AppBar(
-          iconTheme: new IconThemeData(color: Colors.white),
-          centerTitle: false,
-          //AppBar Title
-          title: TextWidget(
-            text: 'Safety & Incident History',
-            colorText: AppColors.colorWhite,
-            textType: TextType.TEXT_LARGE,
-          ),
-        ),
-        drawer: SideMenuPage(
-          scaffold: _scaffold,
-        ),
+       // key: _scaffold,
+//        appBar: new AppBar(
+//          iconTheme: new IconThemeData(color: Colors.white),
+//          centerTitle: false,
+//          //AppBar Title
+//          title: TextWidget(
+//            text: 'Safety & Incident History',
+//            colorText: AppColors.colorWhite,
+//            textType: TextType.TEXT_LARGE,
+//          ),
+//        ),
+//        drawer: SideMenuPage(
+//          scaffold: _scaffold,
+//        ),
         body: ListView.builder(
             itemCount: 10,
             itemBuilder: (context, index) {

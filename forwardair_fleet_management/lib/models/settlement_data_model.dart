@@ -44,7 +44,7 @@ class SettlementCheck {
   String checkNbr;
   String checkDt;
   String payPeriodEndDt;
-  double checkAmt;
+  String checkAmt;
   String directDepositFlag;
   String weekNumber;
 
@@ -61,7 +61,7 @@ class SettlementCheck {
     checkNbr: json["checkNbr"],
     checkDt: json["checkDt"],
     payPeriodEndDt: json["payPeriodEndDt"],
-    checkAmt: json["checkAmt"].toDouble(),
+    checkAmt: json["checkAmt"],
     directDepositFlag: json["directDepositFlag"],
     weekNumber: json["weekNumber"],
   );

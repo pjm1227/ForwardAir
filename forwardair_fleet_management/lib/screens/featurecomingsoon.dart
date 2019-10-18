@@ -10,16 +10,19 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
   Feature coming soon page to display statics data fro Future screens.
 */
 class FeaturesComingSoonPage extends StatefulWidget {
+  final isFromDashboard ;
+  FeaturesComingSoonPage(this.isFromDashboard);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return NewFeatureState();
+    return NewFeatureState(this.isFromDashboard);
   }
 }
 
 class NewFeatureState extends State<FeaturesComingSoonPage> {
+  final isFromDashboard;
+  NewFeatureState(this.isFromDashboard);
 
-  GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     if (Platform.isAndroid) {
@@ -33,8 +36,8 @@ class NewFeatureState extends State<FeaturesComingSoonPage> {
 
   Widget scaffoldWidget() {
     return Scaffold(
-      key: _scaffold,
-      appBar: new AppBar(
+     // key: _scaffold,
+      appBar:isFromDashboard ? new AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
         centerTitle: false,
         //AppBar Title
@@ -43,8 +46,8 @@ class NewFeatureState extends State<FeaturesComingSoonPage> {
           colorText: AppColors.colorWhite,
           textType: TextType.TEXT_LARGE,
         ),
-      ),
-      drawer: SideMenuPage(scaffold: _scaffold,),
+      ) : null,
+      //drawer: SideMenuPage(scaffold: _scaffold,),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
