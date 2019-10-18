@@ -13,7 +13,7 @@ class RevenueDetailsShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Shimmer.fromColors(
-          period: Duration(milliseconds: 800),
+          period: Duration(milliseconds: 1000),
             baseColor: Colors.grey[300],
             highlightColor: Colors.grey[100],
             enabled: true,
@@ -95,41 +95,4 @@ class RevenueDetailsShimmer extends StatelessWidget {
             )));
   }
 
-  //This is the common widget for deduction and earning widgets,
-  //In this widget we're showing comments and description
-  Widget _descriptionWidget(String description, String comment) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Divider(),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-            child: TextWidget(text: 'Description'),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-            child: TextWidget(
-              text: description,
-              colorText: AppColors.colorAppBar,
-            ),
-          ),
-          Divider(),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-            child: TextWidget(text: 'Comments'),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-            child: TextWidget(
-              text: comment,
-              colorText: AppColors.colorAppBar,
-            ),
-          )
-        ],
-      ),
-    );
-  }
 }

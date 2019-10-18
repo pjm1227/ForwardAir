@@ -23,11 +23,11 @@ class RevenueDeductionModel {
   String tractorId;
   String category;
   String description;
-  int drivercontribution;
-  double originalbalance;
-  int driverowing;
-  int servicecharge;
-  int payment;
+  String drivercontribution;
+  String originalbalance;
+  String driverowing;
+  String servicecharge;
+  String payment;
   String unitNbr;
 
   RevenueDeductionModel({
@@ -69,7 +69,7 @@ class RevenueDeductionModel {
     category: json["category"] == null ? null : json["category"],
     description: json["description"] == null ? null : json["description"],
     drivercontribution: json["drivercontribution"] == null ? null : json["drivercontribution"],
-    originalbalance: json["originalbalance"] == null ? null : json["originalbalance"].toDouble(),
+    originalbalance: json["originalbalance"] == null ? null : json["originalbalance"],
     driverowing: json["driverowing"] == null ? null : json["driverowing"],
     servicecharge: json["servicecharge"] == null ? null : json["servicecharge"],
     payment: json["payment"] == null ? null : json["payment"],
