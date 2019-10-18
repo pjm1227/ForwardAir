@@ -5,18 +5,20 @@ import 'package:meta/meta.dart';
 abstract class FleetTrackerState extends Equatable {
   FleetTrackerState([List props = const []]) : super(props);
 }
+
 //It will handle Initial state
 class InitialState extends FleetTrackerState {}
 
-//It will handle Error state for Compensation page
-class DetailsErrorState extends FleetTrackerState {
+//It will handle Error state for fleet tracker page
+class FleetErrorState extends FleetTrackerState {
   final String errorMessage;
-  DetailsErrorState({@required this.errorMessage}) : super([errorMessage]);
+
+  FleetErrorState({@required this.errorMessage}) : super([errorMessage]);
 }
 
-//It will handle Loaded state for Compensation page
-class SuccessState extends FleetTrackerState {
+//It will handle success state for Fleet tracker page
+class FleetSuccessState extends FleetTrackerState {
   final FleetTrackerModel fleetModel;
 
-  SuccessState({this.fleetModel}) : super([fleetModel]);
+  FleetSuccessState({this.fleetModel}) : super([fleetModel]);
 }

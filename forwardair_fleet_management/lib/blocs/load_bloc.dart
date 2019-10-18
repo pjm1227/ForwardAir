@@ -94,6 +94,8 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
         //Check if result is an instance of TractorModel or ErrorModel
         //If it's TractorModel then insert data into DB else show error message
         if (result is ErrorModel) {
+          print('Error found in Tractor API');
+          yield InitialState();
           //Show some error
           yield ErrorState(errorMessage: result.errorMessage);
         } else {
@@ -172,8 +174,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
             : pageName == PageName.FUEL_PAGE
                 ? b.keys.first.totalTractorGallons
                     .compareTo(a.keys.first.totalTractorGallons)
-                : b.keys.first.totalNet
-                    .compareTo(a.keys.first.totalNet));
+                : b.keys.first.totalNet.compareTo(a.keys.first.totalNet));
     return tractorModel;
   }
 
@@ -187,8 +188,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
             : pageName == PageName.FUEL_PAGE
                 ? a.keys.first.totalTractorGallons
                     .compareTo(b.keys.first.totalTractorGallons)
-                : a.keys.first.totalNet
-                    .compareTo(b.keys.first.totalNet));
+                : a.keys.first.totalNet.compareTo(b.keys.first.totalNet));
     return tractorModel;
   }
 

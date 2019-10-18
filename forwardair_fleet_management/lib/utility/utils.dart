@@ -7,7 +7,6 @@ import 'dart:async';
 import 'colors.dart';
 
 class Utils {
-
   static int selectedIndexInSideMenu = 1;
   static int expandedItemsIndex = 0;
   static bool isExpanded = false;
@@ -71,13 +70,17 @@ class Utils {
 
   //Format Date for Date
   static String formatDateFromString(String dateString) {
-    var formattedString = '';
-    if (dateString != '')  {
-      final date = DateTime.parse(dateString);
-      final f = new DateFormat('MM/dd/yyyy');
-      formattedString = f.format(date);
+    try {
+      var formattedString = '';
+      if (dateString != '') {
+        final date = DateTime.parse(dateString);
+        final f = new DateFormat('MM/dd/yyyy');
+        formattedString = f.format(date);
+      }
+      return formattedString;
+    } catch (_) {
+      return 'N/A';
     }
-    return formattedString;
   }
 
   //Format Start and End Date String
@@ -153,7 +156,6 @@ class Utils {
     final formatter = new DateFormat('yyyyMMdd');
     final inputDate = formatter.format(date);
     final todayDate = formatter.format(DateTime.now());
-    
     final iDate = DateTime.parse(inputDate);
     final tDate = DateTime.parse(todayDate);
    if (iDate.isBefore(tDate)) {

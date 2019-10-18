@@ -29,7 +29,7 @@ DEPENDENCIES:
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - FMDB
     - Reachability
 
@@ -62,4 +62,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 128fc5a11a20dfa29b16c0496d58030ee7520635
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.7.4

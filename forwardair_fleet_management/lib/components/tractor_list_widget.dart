@@ -110,7 +110,7 @@ class TractorListWidget extends StatelessWidget {
                           flex: 3,
                           child: Container(
                             height: 65,
-                            color: Colors.teal,
+                            color: AppColors.colorAppBar,
                             child: Center(
                               child: TextWidget(
                                 text: pageName == PageName.LOAD_PAGE

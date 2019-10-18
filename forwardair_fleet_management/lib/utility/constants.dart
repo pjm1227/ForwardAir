@@ -142,6 +142,9 @@ class Constants {
   static const String EARNING_TEXT = 'E';
   static const String DEDUCTION_TEXT = 'D';
 
+  //Report Accident
+  static const String TEXT_EMERGENCY_CALL = 'If you or anyone else involved in the accident are critically injured please dial 911 immediately';
+
   //Unavailabilty
   static const String TEXT_UPCOMING = 'Upcoming';
   static const String TEXT_PAST = 'Past';

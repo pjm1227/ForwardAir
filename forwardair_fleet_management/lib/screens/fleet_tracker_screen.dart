@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/components/no_internet_connection.dart';
@@ -10,22 +12,20 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/fleet_tracker.dart';
 
-
 class FleetTrackerPage extends StatefulWidget {
-
-@override
-_FleetTrackerPage createState() =>
-    _FleetTrackerPage();
+  @override
+  _FleetTrackerPage createState() => _FleetTrackerPage();
 }
-class _FleetTrackerPage extends State<FleetTrackerPage>{
 
+class _FleetTrackerPage extends State<FleetTrackerPage> {
   FleetTrackerBloc _fleetBloc = FleetTrackerBloc();
 
   @override
-  void initState(){
+  void initState() {
     _fleetBloc.dispatch(FetchFleetDataEvent());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +45,7 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
         child: BlocBuilder<FleetTrackerBloc, FleetTrackerState>(
           bloc: _fleetBloc,
           builder: (context, state) {
-            if (state is DetailsErrorState) {
+            if (state is FleetErrorState) {
               if (state.errorMessage == Constants.NO_INTERNET_FOUND) {
                 return NoInternetFoundWidget();
               } else {
@@ -53,9 +53,15 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
               }
             }
             //If state is success then show data in list
-            if (state is SuccessState) {
-              if (state.fleetModel!=null) {
-                return successWidget(state.fleetModel);
+            if (state is FleetSuccessState) {
+              if (state.fleetModel != null) {
+                if (Platform.isAndroid) {
+                  return SafeArea(
+                    child: _mainWidget(state.fleetModel),
+                  );
+                } else {
+                  return _mainWidget(state.fleetModel);
+                }
               } else {
                 return NoResultFoundWidget();
               }
@@ -69,20 +75,19 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
     );
   }
 
-  Widget successWidget(FleetTrackerModel dataModel) {
+  Widget _mainWidget(FleetTrackerModel dataModel) {
     return Padding(
-      padding: const EdgeInsets.only(top:8.0,bottom: 8,left: 8,right: 8),
-      child: new  ListView.builder(
-          scrollDirection: Axis.vertical,
-          physics: const AlwaysScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: dataModel.currentPositions.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _listItem(dataModel.currentPositions[index]);
-          },
-        ),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8, left: 8, right: 8),
+      child: new ListView.builder(
+        scrollDirection: Axis.vertical,
+        physics: const AlwaysScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: dataModel.currentPositions.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _listItem(dataModel.currentPositions[index]);
+        },
+      ),
     );
-
   }
 
   Widget _listItem(CurrentPositions fleetData) {
@@ -96,8 +101,8 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
           children: <Widget>[
             //Row widget to show dot,header and price
             Padding(
-              padding: const EdgeInsets.only(
-                  top: 8.0, left: 8, right: 8, bottom: 4),
+              padding:
+                  const EdgeInsets.only(top: 8.0, left: 8, right: 8, bottom: 4),
               child: Row(
                 children: <Widget>[
                   ClipOval(
@@ -119,12 +124,9 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           TextWidget(
-                            text: fleetData.driverName!=null?fleetData.driverName:"Michael Joseph",
-                            colorText: AppColors.colorBlack,
-                            textType: TextType.TEXT_SMALL,
-                          ),
-                          TextWidget(
-                            text: fleetData.driverClass!=null?fleetData.driverClass:"Class A",
+                            text: fleetData.driverName != null
+                                ? fleetData.driverName
+                                : "Michael Joseph",
                             colorText: AppColors.colorBlack,
                             textType: TextType.TEXT_SMALL,
                           ),
@@ -139,8 +141,12 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0, right: 8),
                       child: TextWidget(
-                        text: fleetData.ignitionOnOff=='ON'?"Active":"Unavailable", //'\$' + amount,
-                        colorText: fleetData.ignitionOnOff=='ON'?Colors.green:Colors.red,
+                        text: fleetData.ignitionOnOff == 'ON'
+                            ? "Active"
+                            : "Unavailable", //'\$' + amount,
+                        colorText: fleetData.ignitionOnOff == 'ON'
+                            ? Colors.green
+                            : Colors.red,
                         isBold: true,
                         textAlign: TextAlign.end,
                       ),
@@ -153,7 +159,7 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
             //Divider
 
             Padding(
-              padding: const EdgeInsets.only(top: 4.0,left: 4,right: 4),
+              padding: const EdgeInsets.only(top: 4.0, left: 4, right: 4),
               child: Divider(
                 height: 1,
                 color: AppColors.colorGrey,
@@ -162,11 +168,11 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
 
             // Unit Number Text Widget
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 8,right: 16),
+              padding: const EdgeInsets.only(left: 16.0, top: 8, right: 16),
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex:4,
+                    flex: 4,
                     child: TextWidget(
                       text: 'Unit',
                       colorText: AppColors.colorGrey,
@@ -175,7 +181,9 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
                   Expanded(
                     flex: 2,
                     child: TextWidget(
-                      text:  fleetData.unitNbr != null?'${fleetData.unitNbr}':"N/A",
+                      text: fleetData.unitNbr != null
+                          ? '${fleetData.unitNbr}'
+                          : "N/A",
                       colorText: AppColors.colorBlack,
                       isBold: true,
                       textAlign: TextAlign.end,
@@ -188,11 +196,12 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
             //Location Widget
 
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0,right: 16),
+              padding: const EdgeInsets.only(
+                  left: 16.0, top: 8.0, bottom: 8.0, right: 16),
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex:4,
+                    flex: 4,
                     child: TextWidget(
                       text: 'Location',
                       colorText: AppColors.colorGrey,
@@ -201,13 +210,12 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
                   Expanded(
                     flex: 2,
                     child: TextWidget(
-                      text: fleetData.placeName != null
-                          ? '${fleetData.placeName}'
-                          : 'N/A',
-                      colorText: AppColors.colorBlack,
-                      isBold: true,
-                      textAlign: TextAlign.end
-                    ),
+                        text: fleetData.placeName != null
+                            ? '${fleetData.placeName}'
+                            : 'N/A',
+                        colorText: AppColors.colorBlack,
+                        isBold: true,
+                        textAlign: TextAlign.end),
                   ),
                 ],
               ),
@@ -216,11 +224,12 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
             //Current Load Text Widget
 
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0,right: 16),
+              padding: const EdgeInsets.only(
+                  left: 16.0, top: 8.0, bottom: 8.0, right: 16),
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex:4,
+                    flex: 4,
                     child: TextWidget(
                       text: 'Current Load',
                       colorText: AppColors.colorGrey,
@@ -229,13 +238,12 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
                   Expanded(
                     flex: 2,
                     child: TextWidget(
-                      text: fleetData.currentOrder != null
-                          ? '${fleetData.currentOrder}'
-                          : 'N/A',
-                      colorText: AppColors.colorBlack,
-                      isBold: true,
-                      textAlign: TextAlign.end
-                    ),
+                        text: fleetData.currentOrder != null
+                            ? '${fleetData.currentOrder}'
+                            : 'N/A',
+                        colorText: AppColors.colorBlack,
+                        isBold: true,
+                        textAlign: TextAlign.end),
                   ),
                 ],
               ),
@@ -244,11 +252,12 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
             //Expected time Text Widget
 
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0,right: 16),
+              padding: const EdgeInsets.only(
+                  left: 16.0, top: 8.0, bottom: 8.0, right: 16),
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex:4,
+                    flex: 4,
                     child: TextWidget(
                       text: 'ETA',
                       colorText: AppColors.colorGrey,
@@ -257,13 +266,11 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
                   Expanded(
                     flex: 2,
                     child: TextWidget(
-                      text: fleetData.etaDt != null
-                          ? Utils.formatTimeFromString(
-                          fleetData.etaDt)
-                          : "N/A",
-                      isBold: true,
-                      textAlign: TextAlign.end
-                    ),
+                        text: fleetData.etaDt != null
+                            ? Utils.formatTimeFromString(fleetData.etaDt)
+                            : "N/A",
+                        isBold: true,
+                        textAlign: TextAlign.end),
                   ),
                 ],
               ),
@@ -272,25 +279,25 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
             //NextOrder Text Widget
 
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0,right: 16),
+              padding: const EdgeInsets.only(
+                  left: 16.0, top: 8.0, bottom: 8.0, right: 16),
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex:4,
+                    flex: 4,
                     child: TextWidget(
                       text: 'Next Load',
                       colorText: AppColors.colorGrey,
                     ),
                   ),
                   Expanded(
-                    flex:2,
+                    flex: 2,
                     child: TextWidget(
-                      text: fleetData.nextOrder != null
-                          ? '${fleetData.nextOrder}'
-                          : 'N/A',
-                      isBold: true,
-                      textAlign: TextAlign.end
-                    ),
+                        text: fleetData.nextOrder != null
+                            ? '${fleetData.nextOrder}'
+                            : 'N/A',
+                        isBold: true,
+                        textAlign: TextAlign.end),
                   ),
                 ],
               ),
@@ -299,11 +306,12 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
             //scheduleDepart Text Widget
 
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0,right: 16),
+              padding: const EdgeInsets.only(
+                  left: 16.0, top: 8.0, bottom: 8.0, right: 16),
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex:4,
+                    flex: 4,
                     child: TextWidget(
                       text: 'Sch. Depart',
                       colorText: AppColors.colorGrey,
@@ -312,13 +320,12 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
                   Expanded(
                     flex: 2,
                     child: TextWidget(
-                      text: fleetData.nextOrderScheduledDepartDt != null
-                          ? Utils.formatTimeFromString(
-                          fleetData.nextOrderScheduledDepartDt)
-                          : "N/A",
-                      isBold: true,
-                      textAlign: TextAlign.end
-                    ),
+                        text: fleetData.nextOrderScheduledDepartDt != null
+                            ? Utils.formatTimeFromString(
+                                fleetData.nextOrderScheduledDepartDt)
+                            : "N/A",
+                        isBold: true,
+                        textAlign: TextAlign.end),
                   ),
                 ],
               ),
@@ -326,5 +333,4 @@ class _FleetTrackerPage extends State<FleetTrackerPage>{
           ],
         ));
   }
-
 }
