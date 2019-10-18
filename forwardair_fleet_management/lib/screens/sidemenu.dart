@@ -19,6 +19,7 @@ import 'package:forwardair_fleet_management/blocs/sidemenu_bloc.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 
 import 'safetyandincidents/report_accident_screen.dart';
+import 'safetyandincidents/report_breakdown_screen.dart';
 import 'safetyandincidents/view_history_screen.dart';
 
 class SideMenuPage extends StatefulWidget {
@@ -31,12 +32,16 @@ class _SideMenuPageState extends State<SideMenuPage> {
 
   //SideMenu Bloc
   SideMenuBloc _sideMenuBloc = SideMenuBloc();
+
   //Selected index
   int _selectedIndex = 1;
+
   //Expand Flag
   bool expandFlag = false;
+
   //Expanded List index
   int _expandedListIndex = 0;
+
   //Menu Title
   String sideMenuTitle = Constants.TEXT_DASHBOARD;
 
@@ -364,25 +369,28 @@ class _SideMenuPageState extends State<SideMenuPage> {
   }
 
   _appBarWidget(String title) {
-
     return BaseAppBar(
       height: AppBar().preferredSize.height,
       //This widget displays the AppBar Title
-      title: title == Constants.TEXT_VIEW_HISTORY ? 'Safety & Incident History' : title,
+      title: title == Constants.TEXT_VIEW_HISTORY
+          ? 'Safety & Incident History'
+          : title,
       widgets: <Widget>[
         //To display the notification Icon widget
-        title == Constants.TEXT_DASHBOARD ? InkWell(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 15.0),
-            child: SizedBox(
-                width: 30,
-                height: 30,
-                child: Image.asset('images/ic_notfication_white.png')),
-          ),
-          onTap: () {
-            navigateToFeatureComingSoonPage();
-          },
-        ) : Container(),
+        title == Constants.TEXT_DASHBOARD
+            ? InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 15.0),
+                  child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: Image.asset('images/ic_notfication_white.png')),
+                ),
+                onTap: () {
+                  navigateToFeatureComingSoonPage();
+                },
+              )
+            : Container(),
       ],
     );
   }
@@ -405,6 +413,8 @@ class _SideMenuPageState extends State<SideMenuPage> {
         return ViewHistoryPage();
       case Constants.TEXT_REPORT_ACCIDENT:
         return ReportAccidentPage();
+      case Constants.TEXT_REPORT_BREAKDOWN:
+        return ReportBreakdownPage();
       default:
         return FeaturesComingSoonPage(false);
         break;
@@ -652,10 +662,11 @@ class _SideMenuPageState extends State<SideMenuPage> {
 
   //To navigate to the Feature Coming soon page.
   void navigateToFeatureComingSoonPage() {
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade, child: FeaturesComingSoonPage(true)));
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: FeaturesComingSoonPage(true)));
   }
 
   //this method is used to navigate as per passed widget name

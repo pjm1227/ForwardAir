@@ -135,7 +135,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
                 // Handle type error
               } catch (_) {
                 print("Exception found in chart API");
-                yield ErrorState(errorMessage: result.errorMessage);
+                yield ErrorState(errorMessage: "");
               }
             }
           } catch (_) {
