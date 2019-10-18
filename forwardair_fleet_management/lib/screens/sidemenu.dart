@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forwardair_fleet_management/screens/unavailabilty_list_page.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,7 +82,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
         child: new ListTile(
           leading: Container(
             child:
-                //This displays the View History, SafertyIncident
+                //This displays the View History, Safety Incident
                 // Reporting and Breakdown Reporting Widget.
                 TextWidget(
               text: _sideMenuBloc.expandedSafetyItems[index]
@@ -391,7 +392,6 @@ class _SideMenuPageState extends State<SideMenuPage> {
                     navigateToFeatureComingSoonPage();
                   }
                 }
-
                 //To Display the Logout Alert Dialogue.
                 if (state is LoggedOutState) {
                   //Storing expanded item index
@@ -424,23 +424,29 @@ class _SideMenuPageState extends State<SideMenuPage> {
                       //To End Drawer
                       scaffold.currentState.openEndDrawer();
                       //Navigate To Dashboard Page
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.fade,
-                              child: DashboardPage()));
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => DashboardPage()),
+                              (Route<dynamic> route) => false);
                       break;
                     case Constants.TEXT_SETTLEMENTS:
                       //To End Drawer
                       scaffold.currentState.openEndDrawer();
                       // Navigate To Settlement Page
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.fade,
-                              child: SettlementPage()));
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => SettlementPage()),
+                              (Route<dynamic> route) => false);
                       break;
                     case Constants.TEXT_LOGOUT:
+                      break;
+                    case Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY:
+                       //To End Drawer
+                      scaffold.currentState.openEndDrawer();
+                      // Navigate To Settlement Page
+
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => UnavailabilityListPage()),
+                              (Route<dynamic> route) => false);
+
                       break;
                     default:
                       // Navigate To Settlement Page
@@ -515,7 +521,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
                             child: ListTile(
                               //This widget displays the UserName
                               title: Container(
-                                  padding: EdgeInsets.only(bottom: 5, top: 12),
+                                  padding: EdgeInsets.only(bottom: 5, top: 8),
                                   child: TextWidget(
                                     text: _sideMenuBloc.userDetails != null
                                         ? _sideMenuBloc.userDetails.fullName ==
@@ -545,7 +551,6 @@ class _SideMenuPageState extends State<SideMenuPage> {
                                                             .usertype)
                                             : 'N/A',
                                         colorText: AppColors.colorWhite,
-                                        textType: TextType.TEXT_SMALL,
                                       ),
                                     ],
                                   ),
@@ -567,7 +572,6 @@ class _SideMenuPageState extends State<SideMenuPage> {
                                                           .contractorcd
                                                   : 'N/A',
                                           colorText: AppColors.colorWhite,
-                                          textType: TextType.TEXT_SMALL,
                                         ),
                                       ],
                                     ),
@@ -657,9 +661,10 @@ class _SideMenuPageState extends State<SideMenuPage> {
 
   //To navigate to the Feature Coming soon page.
   void navigateToFeatureComingSoonPage() {
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade, child: FeaturesComingSoonPage()));
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => FeaturesComingSoonPage()),
+            (Route<dynamic> route) => false);
+
   }
 }

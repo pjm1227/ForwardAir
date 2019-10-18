@@ -142,4 +142,8 @@ class Constants {
   static const String EARNING_TEXT = 'E';
   static const String DEDUCTION_TEXT = 'D';
 
+  //Unavailabilty
+  static const String TEXT_UPCOMING = 'Upcoming';
+  static const String TEXT_PAST = 'Past';
+  static const String TEXT_TIME_OFF = 'Time off';
 }

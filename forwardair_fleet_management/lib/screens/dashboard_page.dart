@@ -189,6 +189,16 @@ class DashboardState extends State<DashboardPage> {
     //To fetch the data Initially. Calling API.
     _dashboardBloc.dispatch(FetchDashboardEvent());
     //This is the main widget  in this page.
+    if (Platform.isIOS) {
+      return _scaffoldWidget();
+    } else {
+      return SafeArea(
+        child: _scaffoldWidget(),
+      );
+    }
+  }
+
+  Widget _scaffoldWidget() {
     return Scaffold(
       key: _scaffold,
       //This widget displays the App Bar
@@ -224,7 +234,7 @@ class DashboardState extends State<DashboardPage> {
       ),
       //To Show Page Background color
       backgroundColor: AppColors.colorDashboard_Bg,
-      //BlocListener
+      //BlocListener for navigation to other screens.
       body: BlocListener<DashboardBloc, dynamic>(
         bloc: _dashboardBloc,
         condition: (previousState, currentState) {
@@ -1122,10 +1132,9 @@ class DashboardState extends State<DashboardPage> {
 
   //To navigate to FeatureComingSoonPage
   void navigateToFeatureComingSoonPage() {
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade, child: FeaturesComingSoonPage()));
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => FeaturesComingSoonPage()),
+            (Route<dynamic> route) => false);
   }
 
   //To navigate to Drill Down

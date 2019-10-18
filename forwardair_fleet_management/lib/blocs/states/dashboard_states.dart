@@ -18,14 +18,12 @@ class DashboardError extends DashboardState {}
 //It will handle Loaded state for Dashboard page
 class DashboardLoaded extends DashboardState {
   final Dashboard_DB_Model dashboardData;
-
   DashboardLoaded({this.dashboardData}) : super([dashboardData]);
 }
 
 //It will handle bottom Sheet actions
 class OpenQuickContactsState extends DashboardState {
   final Dashboard_DB_Model dashboardData;
-
   OpenQuickContactsState({this.dashboardData}) : super([dashboardData]);
 }
 
@@ -34,7 +32,6 @@ class OpenQuickContactsState extends DashboardState {
 class DrillDownPageState extends DashboardState {
   final PageName pageName;
   final Dashboard_DB_Model dashboardData;
-
   DrillDownPageState({@required this.pageName, @required this.dashboardData})
       : super([pageName, dashboardData]);
 }

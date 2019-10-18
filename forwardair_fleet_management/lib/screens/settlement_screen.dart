@@ -66,12 +66,16 @@ class SettlementPageState extends State<SettlementPage> {
   }
 
   //To navigate to FeatureComingSoonPage
-  void navigateToSettlementDetailPage(SettlementCheck _checkModel, String appBarTitle) {
+  void navigateToSettlementDetailPage(
+      SettlementCheck _checkModel, String appBarTitle) {
     Navigator.push(
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: SettlementDetailsPage(settlementCheck: _checkModel,appBarTitle: appBarTitle,)));
+            child: SettlementDetailsPage(
+              settlementCheck: _checkModel,
+              appBarTitle: appBarTitle,
+            )));
   }
 
   //This is the main widget for this page
@@ -88,9 +92,12 @@ class SettlementPageState extends State<SettlementPage> {
           textType: TextType.TEXT_LARGE,
         ),
       ),
+      //Drawer Menu
       drawer: SideMenuPage(
         scaffold: _scaffold,
       ),
+      //BlocListener to check condition according to state
+      //Basically it used to navigate to page
       body: BlocListener<SettlementBloc, SettlementStates>(
         listener: (context, state) {
           if (state is PickedDateState) {
@@ -102,18 +109,23 @@ class SettlementPageState extends State<SettlementPage> {
           } else if (state is NavigateToDetailPageState) {
             //To navigate to Detail Page
             navigateToSettlementDetailPage(
-                _settlementModel.settlementChecks[state.selectedIndex], state.appBarTitle);
+                _settlementModel.settlementChecks[state.selectedIndex],
+                state.appBarTitle);
           }
         },
         bloc: _settlementBloc,
+        //BlocBuilder to check condition according to state
+        //Basically it used to update widget
         child: BlocBuilder<SettlementBloc, SettlementStates>(
             bloc: _settlementBloc,
             builder: (context, state) {
               print("State Settlement Screen $state");
               if (state is ErrorState) {
                 if (state.errorMessage == Constants.NO_INTERNET_FOUND) {
+                  //This displays No internet Found Widget
                   return NoInternetFoundWidget();
                 } else {
+                  //This displays No Result Found Widget
                   return NoResultFoundWidget();
                 }
               } else if (state is ShimmerState) {
@@ -126,29 +138,39 @@ class SettlementPageState extends State<SettlementPage> {
                     _settlementModel = state.settlementData;
                     return mainListWidget(_settlementModel.settlementChecks);
                   } else {
+                    //This displays No Result Found Widget
                     return NoResultFoundWidget();
                   }
                 } else {
+                  //This displays No Result Found Widget
                   return NoResultFoundWidget();
                 }
               } else if (state is PickedDateState) {
+                //Picked date from Month Picker
                 _fromDateTime = state.pickedDate;
                 if (filteredSettlementChecks.length == 0) {
-                  return ListView(
-                      scrollDirection: Axis.vertical,
-                      children: <Widget>[
-                        _buildThisWeekWidget(
-                            Utils.dateNowToFormat(_fromDateTime)),
-                        Center(child: (Text('No Matching Data Found.')))
-                      ]);
+                  //This displays all items without filter
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _buildThisWeekWidget(
+                          Utils.dateNowToFormat(_fromDateTime)),
+                      Expanded(
+                        child: NoResultFoundWidget(),
+                      )
+                    ],
+                  );
                 } else {
+                  //To display filtered Widget
                   return mainListWidget(filteredSettlementChecks);
                 }
               } else if (state is NavigateToDetailPageState) {
+                //To maintain a state while navigating to the Details Page.
                 _settlementModel = state.settlementModel;
                 return mainListWidget(_settlementModel.settlementChecks);
-              }
-              else {
+              } else {
+                //This displays No Result Found Widget
                 return NoResultFoundWidget();
               }
             }),
@@ -164,7 +186,7 @@ class SettlementPageState extends State<SettlementPage> {
     ]);
   }
 
-  //Month Picker
+  //This displays Month Picker
   Future<Null> _selectDate(BuildContext context) async {
     showMonthPicker(
             context: context,
@@ -173,12 +195,13 @@ class SettlementPageState extends State<SettlementPage> {
             initialDate: _fromDateTime)
         .then((picked) {
       if (picked != null && picked != _fromDateTime) {
+        //Picker Event
         _settlementBloc.dispatch(PickedDateEvent(pickedDate: picked));
       }
     });
   }
 
-  //List View
+  //This displays all items in settlements model in a List View.
   Widget _listViewWidget(List<SettlementCheck> settlementChecks) {
     return ListView.builder(
       shrinkWrap: true,

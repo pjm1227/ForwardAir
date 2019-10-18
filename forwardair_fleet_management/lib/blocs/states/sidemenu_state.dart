@@ -7,12 +7,12 @@ abstract class SideMenuStates extends Equatable {
   SideMenuStates([List list = const []]) : super(list);
 }
 
-//This is Side Menu InitialState
+//This is Side Menu FirstState
 class FirstState extends SideMenuStates {
   FirstState() : super([]);
 }
 
-//This is Side Menu InitialState
+//This is Side Menu Initial State
 class InitialState extends SideMenuStates {
   final int selectedIndex;
   final int expandedIndex;

@@ -235,15 +235,19 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
         drawerMenuItems.add(dashboard);
         drawerMenuItems.add(module);
       }
-      if (roleNm == Constants.TEXT_FLEET_TRACKER) {
-        drawerMenuItems.add(fleetTracker);
-      } else if (roleNm == Constants.TEXT_SETTLEMENTS_VIEW_ROLE) {
+
+      //Commented for time being. Becaz this data is not coming from API.
+//      if (roleNm == Constants.TEXT_FLEET_TRACKER) {
+//        drawerMenuItems.add(fleetTracker);
+//      }
+      else if (roleNm == Constants.TEXT_SETTLEMENTS_VIEW_ROLE) {
         drawerMenuItems.add(settlements);
       } else if (roleNm == Constants.TEST_UNAVAILABILITY_VIEW_ROLE) {
         drawerMenuItems.add(notificationOfUnavailabilty);
       } else if (roleNm == Constants.TEXT_COMPANY_NEWS_ROLE) {
         drawerMenuItems.add(companyNews);
       }
+
       //Safety & Incidents Items
       else if (roleNm == Constants.TEXT_SAFETY_REPORTING_ROLE) {
         expandedSafetyItems.add(reportAccident);
@@ -256,6 +260,12 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
         }
       }
     }
+
+    //Added for time being. Becaz this data is not coming from API.
+    if (userDetails.usertype == Constants.TEXT_FO_TYPE || userDetails.usertype == Constants.TEXT_FOD_TYPE) {
+      drawerMenuItems.insert(3, fleetTracker);
+    }
+
     expandedSafetyItems.sort((a, b) {
       int aData = a[Constants.TEXT_ID];
       int bData = b[Constants.TEXT_ID];
