@@ -18,7 +18,7 @@ class ReportAccidentPage extends StatefulWidget {
 }
 
 class ReportAccidentState extends State<ReportAccidentPage> {
-  final GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
+//  final GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -41,20 +41,20 @@ class ReportAccidentState extends State<ReportAccidentPage> {
   //It's the main widget for view history
   Widget _scaffoldWidget() {
     return Scaffold(
-        key: _scaffold,
-        appBar: new AppBar(
-          iconTheme: new IconThemeData(color: Colors.white),
-          centerTitle: false,
-          //AppBar Title
-          title: TextWidget(
-            text: 'Report Accident',
-            colorText: AppColors.colorWhite,
-            textType: TextType.TEXT_LARGE,
-          ),
-        ),
-        drawer: SideMenuPage(
-          scaffold: _scaffold,
-        ),
+       // key: _scaffold,
+//        appBar: new AppBar(
+//          iconTheme: new IconThemeData(color: Colors.white),
+//          centerTitle: false,
+//          //AppBar Title
+//          title: TextWidget(
+//            text: 'Report Accident',
+//            colorText: AppColors.colorWhite,
+//            textType: TextType.TEXT_LARGE,
+//          ),
+//        ),
+//        drawer: SideMenuPage(
+//          scaffold: _scaffold,
+//        ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[],

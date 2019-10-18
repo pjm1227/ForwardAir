@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/driving_conformation.dart';
 import 'package:forwardair_fleet_management/components/button_widget.dart';
 import 'package:forwardair_fleet_management/screens/home_page.dart';
+import 'package:forwardair_fleet_management/screens/sidemenu.dart';
 import 'package:forwardair_fleet_management/screens/terms_condition_screen.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
@@ -106,7 +107,7 @@ class DrivingState extends State<DrivingPage> {
         } else if (state is NotDrive) {
           //Move to Terms page according to condition
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => SideMenuPage()),
               (Route<dynamic> route) => false);
         }
       },
@@ -124,7 +125,7 @@ class DrivingState extends State<DrivingPage> {
               if (state.isTermsAccepted && !state.isUserLoggedIn) {
                 return LoginPage();
               } else if (state.isTermsAccepted && state.isUserLoggedIn) {
-                return HomePage();
+                return SideMenuPage();
               }
             }
             return _mainWidget();

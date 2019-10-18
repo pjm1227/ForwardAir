@@ -200,38 +200,38 @@ class DashboardState extends State<DashboardPage> {
 
   Widget _scaffoldWidget() {
     return Scaffold(
-      key: _scaffold,
+ //     key: _scaffold,
       //This widget displays the App Bar
-      appBar: new AppBar(
-        iconTheme: new IconThemeData(color: Colors.white),
-        centerTitle: false,
-        //This widget displays the AppBar Title
-        title: TextWidget(
-          text: Constants.TEXT_DASHBOARD,
-          colorText: AppColors.colorWhite,
-          textType: TextType.TEXT_LARGE,
-        ),
-        actions: <Widget>[
-          //To display the notification Icon widget
-          InkWell(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: Image.asset('images/ic_notfication_white.png')),
-            ),
-            onTap: () {
-              //To navigate to feature coming soon page.
-              navigateToFeatureComingSoonPage();
-            },
-          ),
-        ],
-      ),
+//      appBar: new AppBar(
+//        iconTheme: new IconThemeData(color: Colors.white),
+//        centerTitle: false,
+//        //This widget displays the AppBar Title
+//        title: TextWidget(
+//          text: Constants.TEXT_DASHBOARD,
+//          colorText: AppColors.colorWhite,
+//          textType: TextType.TEXT_LARGE,
+//        ),
+//        actions: <Widget>[
+//          //To display the notification Icon widget
+//          InkWell(
+//            child: Padding(
+//              padding: const EdgeInsets.only(right: 15.0),
+//              child: SizedBox(
+//                  width: 30,
+//                  height: 30,
+//                  child: Image.asset('images/ic_notfication_white.png')),
+//            ),
+//            onTap: () {
+//              //To navigate to feature coming soon page.
+//              navigateToFeatureComingSoonPage();
+//            },
+//          ),
+//        ],
+//      ),
       //This widget dispalys the SideMenu
-      drawer: SideMenuPage(
-        scaffold: _scaffold,
-      ),
+//      drawer: SideMenuPage(
+//        scaffold: _scaffold,
+//      ),
       //To Show Page Background color
       backgroundColor: AppColors.colorDashboard_Bg,
       //BlocListener for navigation to other screens.
@@ -1132,9 +1132,10 @@ class DashboardState extends State<DashboardPage> {
 
   //To navigate to FeatureComingSoonPage
   void navigateToFeatureComingSoonPage() {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => FeaturesComingSoonPage()),
-            (Route<dynamic> route) => false);
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade, child: FeaturesComingSoonPage(true)));
   }
 
   //To navigate to Drill Down

@@ -10,16 +10,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
+  //GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
 
   //Scaffold Widget
   Widget _scaffoldWidget() {
     return Scaffold(
-        key: _scaffold,
+       // key: _scaffold,
         //To Display the Dashboard
         body: DashboardPage(),
         //To Display the DrawerMenu
-        drawer: SideMenuPage(scaffold: _scaffold));
+       // drawer: SideMenuPage(scaffold: _scaffold)
+    );
   }
 
   //This return UI of Drawer Menu and Dasboard

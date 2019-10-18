@@ -39,15 +39,7 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
       await _fetchUserRoles();
       //Fetch SideMenu Items from DB and append with List
       drawerMenuItems = drawerMenuItemsBasedOnTheUserType();
-
-      if (Utils.selectedIndexInSideMenu == 0) {
-        //Fetching Stored Selected index, Expanded Item index and Expand Flag for Safety Incident.
-        yield InitialState(selectedIndex: Utils.selectedIndexInSideMenu,expandedIndex: Utils.expandedItemsIndex,isExpanded: Utils.isExpanded);
-      }
-      else {
-        //Fetching Stored Selected index for rest of the side menu items.
-        yield InitialState(selectedIndex: Utils.selectedIndexInSideMenu,expandedIndex: 0,isExpanded: false);
-      }
+      yield InitialState();
     }
     if (event is TappedOnLogoutEvent) {
       //If user taps on log out
@@ -55,12 +47,6 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
     }
     //To expand SafetyIncidents sub-items
     if (event is SafetyIncidentsEvent) {
-      //Storing expaned selected index
-      Utils.expandedItemsIndex = event.selectedIndex;
-      //Storing selected index
-      Utils.selectedIndexInSideMenu = 0;
-      //Storing Expand flag
-      Utils.isExpanded = event.expandFlag;
       yield SafetyIncidentState(selectedIndex: event.selectedIndex);
     }
     //To expanded items event
@@ -71,8 +57,7 @@ class SideMenuBloc extends Bloc<SideMenuEvents, SideMenuStates> {
     }
     //To navigate to other screens
     if (event is NavigationEvent) {
-      yield InitialState(selectedIndex: event.selectedIndex);
-      Utils.selectedIndexInSideMenu = event.selectedIndex;
+      yield FirstState();
       yield NavigationState(selectedIndex: event.selectedIndex);
     }
     //Logout Event

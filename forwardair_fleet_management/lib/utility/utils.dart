@@ -7,10 +7,6 @@ import 'dart:async';
 import 'colors.dart';
 
 class Utils {
-  static int selectedIndexInSideMenu = 1;
-  static int expandedItemsIndex = 0;
-  static bool isExpanded = false;
-
   static showToast(String text) {
     Fluttertoast.showToast(
       msg: text,

@@ -27,7 +27,7 @@ class SettlementPage extends StatefulWidget {
 }
 
 class SettlementPageState extends State<SettlementPage> {
-  GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
+ // GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
   //Settlement Bloc
   SettlementBloc _settlementBloc = SettlementBloc();
   //Settlement Model
@@ -81,21 +81,21 @@ class SettlementPageState extends State<SettlementPage> {
   //This is the main widget for this page
   Widget _mainWidget() {
     return Scaffold(
-      key: _scaffold,
-      appBar: new AppBar(
-        iconTheme: new IconThemeData(color: Colors.white),
-        centerTitle: false,
-        //AppBar Title
-        title: TextWidget(
-          text: Constants.TEXT_SETTLEMENTS,
-          colorText: AppColors.colorWhite,
-          textType: TextType.TEXT_LARGE,
-        ),
-      ),
+      //key: _scaffold,
+//      appBar: new AppBar(
+//        iconTheme: new IconThemeData(color: Colors.white),
+//        centerTitle: false,
+//        //AppBar Title
+//        title: TextWidget(
+//          text: Constants.TEXT_SETTLEMENTS,
+//          colorText: AppColors.colorWhite,
+//          textType: TextType.TEXT_LARGE,
+//        ),
+//      ),
       //Drawer Menu
-      drawer: SideMenuPage(
-        scaffold: _scaffold,
-      ),
+//      drawer: SideMenuPage(
+//        scaffold: _scaffold,
+//      ),
       //BlocListener to check condition according to state
       //Basically it used to navigate to page
       body: BlocListener<SettlementBloc, SettlementStates>(

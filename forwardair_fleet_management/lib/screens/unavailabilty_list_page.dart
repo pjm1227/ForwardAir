@@ -25,7 +25,7 @@ class UnavailabilityListPage extends StatefulWidget {
 class UnavailabilityListState extends State<UnavailabilityListPage>
     with SingleTickerProviderStateMixin {
   //Scaffold Global Key
-  GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
+ // GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
   //Tab bar Controller for Upcoming and Past Items.
   TabController _tabController;
   //UnavailabilityBloc
@@ -124,9 +124,9 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
         ],
       ),
       //Scaffold global key
-      key: _scaffold,
+      //key: _scaffold,
       //Side Menu
-      drawer: SideMenuPage(scaffold: _scaffold),
+     // drawer: SideMenuPage(),
       //BlocListener to check condition according to state
       //Basically it used to navigate to page
       body: BlocListener<UnavailabilityBloc, UnavailabilityStates>(

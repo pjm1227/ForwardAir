@@ -14,10 +14,7 @@ class FirstState extends SideMenuStates {
 
 //This is Side Menu Initial State
 class InitialState extends SideMenuStates {
-  final int selectedIndex;
-  final int expandedIndex;
-  final bool isExpanded;
-  InitialState({@required this.selectedIndex, this.expandedIndex, this.isExpanded}) : super([selectedIndex,expandedIndex, isExpanded]);
+
 }
 
 //This State for Logout
