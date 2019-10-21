@@ -12,13 +12,14 @@ class FetchTractorDataEvent extends LoadDetailEvents {
   final String weekStart, weekEnd, tractorId;
   final int month, year;
   final PageName pageName;
-
+  final String checkNbr;
   FetchTractorDataEvent(
       {@required this.tractorId,
       @required this.pageName,
       @required this.weekStart,
       @required this.weekEnd,
       @required this.month,
-      @required this.year})
+      @required this.year,
+      @required this.checkNbr})
       : super([]);
 }

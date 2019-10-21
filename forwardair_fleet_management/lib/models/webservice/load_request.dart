@@ -4,8 +4,9 @@ class LoadRequest {
   final int month;
   final int year;
   final String tractorId;
+  final String checkNbr;
 
-  LoadRequest({this.weekStart, this.weekEnd,this.month,this.year,this.tractorId});
+  LoadRequest({this.weekStart, this.weekEnd,this.month,this.year,this.tractorId,this.checkNbr});
   
   Map<String, dynamic> toJson() => {
     '"weekStart"': '"$weekStart"',
@@ -13,5 +14,6 @@ class LoadRequest {
     '"month"': '"$month"',
     '"year"': '"$year"',
     '"tractorId"': '"$tractorId"',
+    '"checkNbr"': '"$checkNbr"',
   };
 }

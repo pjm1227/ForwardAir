@@ -56,7 +56,7 @@ class _TractorRevenueDetailsState extends State<TractorRevenueDetails> {
         centerTitle: false,
         iconTheme: IconThemeData(color: AppColors.colorWhite),
         title: TextWidget(
-          text: 'Rvenue Details',
+          text: 'Revenue Details',
           colorText: AppColors.colorWhite,
           textType: TextType.TEXT_LARGE,
         ),

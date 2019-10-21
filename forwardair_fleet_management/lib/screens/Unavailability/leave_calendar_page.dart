@@ -7,7 +7,7 @@ import 'package:forwardair_fleet_management/blocs/unavailability_bloc.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/components/upcoming_and_past_leaves_item.dart';
 import 'package:forwardair_fleet_management/models/unavailability_data_model.dart';
-import 'package:forwardair_fleet_management/screens/unavailability_detail_page.dart';
+import 'package:forwardair_fleet_management/screens/Unavailability/unavailability_detail_page.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:table_calendar/table_calendar.dart';

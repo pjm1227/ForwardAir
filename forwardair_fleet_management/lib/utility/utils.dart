@@ -125,7 +125,7 @@ class Utils {
   }
 
   //Append $ after - sign
-  static String addDollarAfterMinusSign(String deductions) {
+    static String addDollarAfterMinusSign(String deductions) {
     String deduction = '';
     if (deductions != 'N/A') {
       deduction = '-\$' + deductions.replaceAll(RegExp('-'), '');

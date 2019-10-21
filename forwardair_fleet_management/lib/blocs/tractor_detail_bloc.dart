@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:forwardair_fleet_management/apirepo/repository.dart';
 import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
@@ -38,7 +40,8 @@ class TractorDetailBloc extends Bloc<LoadDetailEvents, TractorDetailsState> {
             weekEnd: event.weekEnd,
             year: event.year,
             tractorId: event.tractorId,
-            month: event.month);
+            month: event.month,
+            checkNbr: event.checkNbr);
         //Convert request model to json
         var body = request.toJson();
         print(body.toString());
@@ -52,7 +55,11 @@ class TractorDetailBloc extends Bloc<LoadDetailEvents, TractorDetailsState> {
         } else if (event.pageName == PageName.FUEL_PAGE) {
           result = await repository.makeTractorFuelDetailsRequest(
               body.toString(), userModel.token);
-        } else {
+        } else if (event.pageName == PageName.SETTLEMENTS_PAGE) {
+          result = await repository.makeSettlementDetailRequest(
+              body.toString(), userModel.token);
+        }
+        else {
           result = await repository.makeSettlementDetailRequest(
               body.toString(), userModel.token);
         }
@@ -71,6 +78,11 @@ class TractorDetailBloc extends Bloc<LoadDetailEvents, TractorDetailsState> {
               TractorFuelDetailsModel fuelDetailsModel =
                   fuelDetailFromJson(result);
               yield FuelSuccessState(fuelDetailsModel: fuelDetailsModel);
+            } else if (event.pageName == PageName.SETTLEMENTS_PAGE) {
+              TractorSettlementModel settlementModel =
+                  settlementFromJson(result);
+              yield SettlementSuccessState(
+                  settlementDetailsModel: settlementModel);
             } else {
               TractorSettlementModel settlementModel =
                   settlementFromJson(result);

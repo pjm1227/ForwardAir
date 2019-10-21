@@ -23,7 +23,7 @@ class SettlementBloc extends Bloc<SettlementEvents, SettlementStates> {
       yield PickedDateState(pickedDate: event.pickedDate);
     } else if (event is NavigateToDetailPageEvent) {
       yield SuccessState(settlementData: event.settlementModel);
-      yield NavigateToDetailPageState(selectedIndex: event.selectedIndex,appBarTitle: event.appBarTitle, settlementModel: event.settlementModel);
+      yield NavigateToDetailPageState(selectedIndex: event.selectedIndex, settlementModel: event.settlementModel);
     }
   }
 

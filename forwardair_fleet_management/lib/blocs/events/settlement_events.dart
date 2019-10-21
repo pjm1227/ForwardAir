@@ -24,8 +24,8 @@ class PickedDateEvent extends SettlementEvents {
 
 class NavigateToDetailPageEvent extends SettlementEvents {
   final int selectedIndex;
-  final String appBarTitle;
+  //final String appBarTitle;
   final SettlementModel settlementModel;
-  NavigateToDetailPageEvent({this.selectedIndex, this.appBarTitle, this.settlementModel})
-      : super([selectedIndex, appBarTitle, settlementModel]);
+  NavigateToDetailPageEvent({this.selectedIndex, this.settlementModel})
+      : super([selectedIndex, settlementModel]);
 }
