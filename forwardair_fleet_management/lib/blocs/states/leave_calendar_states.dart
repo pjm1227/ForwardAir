@@ -29,3 +29,9 @@ class TappedonDateState extends LeaveCalendarStates {
   final List events;
   TappedonDateState({@required this.events}) : super([]);
 }
+
+//This state to display the leave details
+class TappedonLeaveListItemState extends LeaveCalendarStates {
+  final UnavailabilityDataModelDetail dataModelDetail;
+  TappedonLeaveListItemState({@required this.dataModelDetail}) : super([]);
+}

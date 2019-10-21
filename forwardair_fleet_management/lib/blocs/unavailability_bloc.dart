@@ -22,6 +22,9 @@ class UnavailabilityBloc
   ) async* {
     if (event is GetUnavailabilityDataEvent) {
       yield* _makeApiCall(event);
+    } else if (event is TappedonLeaveListItemEvent) {
+      yield InitialState();
+      yield TappedonLeaveListItemState(dataModelDetail: event.dataModelDetail);
     }
   }
 

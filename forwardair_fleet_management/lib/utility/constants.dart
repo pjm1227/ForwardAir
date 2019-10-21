@@ -149,4 +149,6 @@ class Constants {
   static const String TEXT_UPCOMING = 'Upcoming';
   static const String TEXT_PAST = 'Past';
   static const String TEXT_TIME_OFF = 'Time off';
+  static const String TEXT_UNAVAILABILITY_DETAILS = 'Unavailability Details';
+  static const String TEXT_DETAILS_OF_UNAVAILABILITY = 'Details of Unavailability';
 }

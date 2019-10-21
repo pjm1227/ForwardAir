@@ -7,7 +7,9 @@ import 'package:forwardair_fleet_management/blocs/unavailability_bloc.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/components/upcoming_and_past_leaves_item.dart';
 import 'package:forwardair_fleet_management/models/unavailability_data_model.dart';
+import 'package:forwardair_fleet_management/screens/unavailability_detail_page.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/leave_calendar.dart';
 
@@ -24,7 +26,6 @@ class LeaveCalendarPage extends StatefulWidget {
 
 class LeaveCalendarState extends State<LeaveCalendarPage>
     with TickerProviderStateMixin {
-
   //LeaveCalendarBloc
   LeaveCalendarBloc _leaveCalendarBloc = LeaveCalendarBloc();
 
@@ -33,7 +34,8 @@ class LeaveCalendarState extends State<LeaveCalendarPage>
   //Constructor
   LeaveCalendarState(@required this.upcomingOrPastLeaves);
 
-  Map<DateTime, List<UnavailabilityDataModelDetail>> _events = Map<DateTime, List<UnavailabilityDataModelDetail>>();
+  Map<DateTime, List<UnavailabilityDataModelDetail>> _events =
+      Map<DateTime, List<UnavailabilityDataModelDetail>>();
   List _selectedEvents = [];
   AnimationController _animationController;
   CalendarController _calendarController;
@@ -41,28 +43,9 @@ class LeaveCalendarState extends State<LeaveCalendarPage>
   @override
   void initState() {
     super.initState();
-    /*
-    var _selectedDay = DateTime.now();
-
-    if (this.upcomingOrPastLeaves.length > 0) {
-      for (var event in upcomingOrPastLeaves) {
-        final date = DateTime.parse(event.leaveStartDate);
-        _selectedDay = date;
-        if (_events.containsKey(_selectedDay)) {
-          for (UnavailabilityDataModelDetail val in _events[_selectedDay]) {
-           _events[_selectedDay] = [val,event];
-          }
-        } else {
-          _events[_selectedDay] = [event];
-        }
-      }
-    }*/
     //Dispatching Event to get the Calendar events.
-    _leaveCalendarBloc.dispatch(GetLeaveCalendarDataEvent(upcomingOrPastLeaves: this.upcomingOrPastLeaves));
-
-//    if (_events.length > 0) {
-//      _selectedEvents = _events[DateTime.now()] ?? [];
-//    }
+    _leaveCalendarBloc.dispatch(GetLeaveCalendarDataEvent(
+        upcomingOrPastLeaves: this.upcomingOrPastLeaves));
     _calendarController = CalendarController();
     _animationController = AnimationController(
       vsync: this,
@@ -81,12 +64,7 @@ class LeaveCalendarState extends State<LeaveCalendarPage>
   }
 
   void _onDaySelected(DateTime day, List events) {
-    //To get the list of leaves from the calendar for selected date.
     _leaveCalendarBloc.dispatch(TappedonDateEvent(events: events));
-//    print('CALLBACK: _onDaySelected');
-//    setState(() {
-//      _selectedEvents = events;
-//    });
   }
 
   _scaffoldWidget() {
@@ -94,44 +72,49 @@ class LeaveCalendarState extends State<LeaveCalendarPage>
       appBar: AppBar(
         iconTheme: new IconThemeData(color: Colors.white),
         centerTitle: false,
-        title: TextWidget(text:'Leave Calendar', colorText: AppColors.colorWhite,textType: TextType.TEXT_LARGE,),
+        title: TextWidget(
+          text: 'Leave Calendar',
+          colorText: AppColors.colorWhite,
+          textType: TextType.TEXT_LARGE,
+        ),
       ),
       //BlocListener
       body: BlocListener<LeaveCalendarBloc, LeaveCalendarStates>(
-        listener: (context, state) {
-
-      }, bloc: _leaveCalendarBloc,
-      //To update the ui according to its  States.
-      child:  BlocBuilder<LeaveCalendarBloc, LeaveCalendarStates>(
+          listener: (context, state) {
+            if (state is TappedonLeaveListItemState) {
+              openLeaveDetailsPage(state.dataModelDetail);
+            }
+          },
           bloc: _leaveCalendarBloc,
-          builder: (context, state) {
-           print(state);
-           if (state is GetLeaveCalendarSate) {
-             if (state.events != null) {
-               if (state.events.length > 0) {
-                  this._events = state.events;
-                  if (_events.length > 0) {
-                    _selectedEvents = _events[DateTime.now()] ?? [];
+          //To update the ui according to its  States.
+          child: BlocBuilder<LeaveCalendarBloc, LeaveCalendarStates>(
+              bloc: _leaveCalendarBloc,
+              builder: (context, state) {
+                print(state);
+                if (state is GetLeaveCalendarSate) {
+                  if (state.events != null) {
+                    if (state.events.length > 0) {
+                      this._events = state.events;
+                      if (_events.length > 0) {
+                        _selectedEvents = _events[DateTime.now()] ?? [];
+                      }
+                    }
                   }
-               }
-             }
-           }
-           else if (state is TappedonDateState) {
-             _selectedEvents = state.events;
-           }
+                } else if (state is TappedonDateState) {
+                  _selectedEvents = state.events;
+                }
 
-            return Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                //To display Table Calendar
-                _buildTableCalendar(),
-                const SizedBox(height: 8.0),
-                //To display List of Leaves.
-                Expanded(child: _buildEventList()),
-              ],
-            );
-          })
-      ),
+                return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    //To display Table Calendar
+                    _buildTableCalendar(),
+                    const SizedBox(height: 8.0),
+                    //To display List of Leaves.
+                    Expanded(child: _buildEventList()),
+                  ],
+                );
+              })),
     );
   }
 
@@ -173,19 +156,31 @@ class LeaveCalendarState extends State<LeaveCalendarPage>
     );
   }
 
+  //Navigate to Leave Detail Page
+  void openLeaveDetailsPage(
+      UnavailabilityDataModelDetail unavailabilityDataModelDetail) {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: UnavailabilityDetailsPage(
+                unavailabilityDataModelDetail: unavailabilityDataModelDetail)));
+  }
+
   Widget _buildEventList() {
     return ListView(
       children: _selectedEvents
           .map((event) => Container(
               child: InkWell(
                   onTap: () {
+                    _leaveCalendarBloc.dispatch(
+                        TappedonLeaveListItemEvent(dataModelDetail: event));
                     print('$event tapped!');
                   },
                   child: UpcomingAndPastLeavesItem(
                     unavailabilityBloc: UnavailabilityBloc(),
                     unavailabilityDataModelDetail: event,
-                  ))
-              ))
+                  ))))
           .toList(),
     );
   }

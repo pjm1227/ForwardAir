@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/components/upcoming_and_past_leaves_item.dart';
+import 'package:forwardair_fleet_management/screens/unavailability_detail_page.dart';
 import 'package:forwardair_fleet_management/utility/theme.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -62,6 +63,17 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
     super.dispose();
   }
 
+  //Navigate to Leave Detail Page
+  void openLeaveDetailsPage(
+      UnavailabilityDataModelDetail unavailabilityDataModelDetail) {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: UnavailabilityDetailsPage(
+                unavailabilityDataModelDetail: unavailabilityDataModelDetail)));
+  }
+
   //Main Widget to hold the page of the unavailability
   _scaffoldWidget() {
     return Scaffold(
@@ -77,7 +89,11 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
       //BlocListener to check condition according to state
       //Basically it used to navigate to page
       body: BlocListener<UnavailabilityBloc, UnavailabilityStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is TappedonLeaveListItemState) {
+            openLeaveDetailsPage(state.dataModelDetail);
+          }
+        },
         bloc: _unavailabilityBloc,
         child: BlocBuilder<UnavailabilityBloc, UnavailabilityStates>(
           bloc: _unavailabilityBloc,
@@ -174,9 +190,16 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
     return ListView.builder(
         itemCount: upcomingOrPastItems.length,
         itemBuilder: (context, index) {
-          return UpcomingAndPastLeavesItem(
-            unavailabilityBloc: _unavailabilityBloc,
-            unavailabilityDataModelDetail: upcomingOrPastItems[index],
+          return InkWell(
+            onTap: () {
+              print(upcomingOrPastItems[index]);
+              _unavailabilityBloc.dispatch(
+                  TappedonLeaveListItemEvent(dataModelDetail: upcomingOrPastItems[index]));
+            },
+            child: UpcomingAndPastLeavesItem(
+              unavailabilityBloc: _unavailabilityBloc,
+              unavailabilityDataModelDetail: upcomingOrPastItems[index],
+            ),
           );
         });
   }

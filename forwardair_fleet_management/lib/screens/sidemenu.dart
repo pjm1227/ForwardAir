@@ -401,8 +401,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
             onTap: () {
               //To navigate to calendar page.
               globalKey.currentState.openLeaveCalendarBasedOnTheTabBarItem();
-            }
-        );
+            });
         break;
       default:
         return Container();
@@ -419,7 +418,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
           : title,
       widgets: <Widget>[
         //To display the notification Icon widget
-         _appBarActionWidget()
+        _appBarActionWidget()
       ],
     );
   }
@@ -434,7 +433,14 @@ class _SideMenuPageState extends State<SideMenuPage> {
         return SettlementPage();
         break;
       case Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY:
-        return UnavailabilityListPage(key: globalKey,usertype: _sideMenuBloc.userDetails != null ? _sideMenuBloc.userDetails.usertype != null ? _sideMenuBloc.userDetails.usertype : '' : '',);
+        return UnavailabilityListPage(
+          key: globalKey,
+          usertype: _sideMenuBloc.userDetails != null
+              ? _sideMenuBloc.userDetails.usertype != null
+                  ? _sideMenuBloc.userDetails.usertype
+                  : ''
+              : '',
+        );
         break;
       case Constants.TEXT_LOGOUT:
         break;

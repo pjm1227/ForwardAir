@@ -29,3 +29,9 @@ class SuccessState extends UnavailabilityStates {
   SuccessState({ this.unavailabilityDataModel, this.pastUnavailabilityList, this.upcomingUnavailabilityList})
       : super([unavailabilityDataModel]);
 }
+
+//This state to display the leave details
+class TappedonLeaveListItemState extends UnavailabilityStates {
+  final UnavailabilityDataModelDetail dataModelDetail;
+  TappedonLeaveListItemState({@required this.dataModelDetail}) : super([]);
+}

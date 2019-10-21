@@ -4,7 +4,6 @@ import 'package:forwardair_fleet_management/blocs/barrels/leave_calendar.dart';
 import 'package:forwardair_fleet_management/blocs/events/leave_calendar_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/leave_calendar_states.dart';
 import 'package:forwardair_fleet_management/models/unavailability_data_model.dart';
-import 'package:intl/intl.dart';
 
 class LeaveCalendarBloc extends Bloc<LeaveCalendarEvents, LeaveCalendarStates> {
   //It will call to map initial State
@@ -24,6 +23,9 @@ class LeaveCalendarBloc extends Bloc<LeaveCalendarEvents, LeaveCalendarStates> {
     else if (event is TappedonDateEvent) {
       yield InitialState();
       yield TappedonDateState(events: event.events);
+    } else if (event is TappedonLeaveListItemEvent){
+      yield InitialState();
+      yield TappedonLeaveListItemState(dataModelDetail: event.dataModelDetail);
     }
   }
 
