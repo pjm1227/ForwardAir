@@ -6,8 +6,7 @@ import 'package:forwardair_fleet_management/blocs/states/leave_calendar_states.d
 import 'package:forwardair_fleet_management/models/unavailability_data_model.dart';
 import 'package:intl/intl.dart';
 
-class LeaveCalendarBloc
-    extends Bloc<LeaveCalendarEvents,LeaveCalendarStates> {
+class LeaveCalendarBloc extends Bloc<LeaveCalendarEvents, LeaveCalendarStates> {
   //It will call to map initial State
   @override
   LeaveCalendarStates get initialState => InitialState();
@@ -15,37 +14,45 @@ class LeaveCalendarBloc
   //Here will map state according to event
   @override
   Stream<LeaveCalendarStates> mapEventToState(
-      LeaveCalendarEvents event,) async* {
+    LeaveCalendarEvents event,
+  ) async* {
     //To assign data to the Calendar
     if (event is GetLeaveCalendarDataEvent) {
-      yield GetLeaveCalendarSate(events: _assignDataToCalendarEvent(event));
-    }  //To fetch events for selected date in the Calendar
-    else if (event is TappedonDateEvent){
-       yield InitialState();
-       yield TappedonDateState(events: event.events);
+      //Add events to the calendar.
+      yield* _assignDataToCalendarEvent(event);
+    } //To fetch events for selected date in the Calendar
+    else if (event is TappedonDateEvent) {
+      yield InitialState();
+      yield TappedonDateState(events: event.events);
     }
   }
 
   //To Assign date and Events to the Calendar
-  Map<DateTime, List<UnavailabilityDataModelDetail>> _assignDataToCalendarEvent(LeaveCalendarEvents event) {
-    Map<DateTime, List<UnavailabilityDataModelDetail>> _events = Map<DateTime, List<UnavailabilityDataModelDetail>>();
-    var _selectedDay = DateTime.now();
+ Stream<LeaveCalendarStates> _assignDataToCalendarEvent(LeaveCalendarEvents event) async* {
     if (event is GetLeaveCalendarDataEvent) {
+      Map<DateTime, List<UnavailabilityDataModelDetail>> _events = Map<DateTime, List<UnavailabilityDataModelDetail>>();
+      var _selectedDay = DateTime.now();
       if (event.upcomingOrPastLeaves.length > 0) {
         for (var event in event.upcomingOrPastLeaves) {
           final date = DateTime.parse(event.leaveStartDate);
           _selectedDay = date;
           if (_events.containsKey(_selectedDay)) {
-            for (UnavailabilityDataModelDetail val in _events[_selectedDay]) {
-              _events[_selectedDay] = [val,event];
-            }
+            //Fetch Existing Items for the contains date in map
+            var existingitems = _events[_selectedDay];
+            existingitems.add(event);
+            //Add all Events into map for the selected day
+            _events[_selectedDay] = existingitems;
           } else {
+            //Add Events into map for the selected day
             _events[_selectedDay] = [event];
           }
         }
-        return _events;
+        //To add dates to the calendar.
+        yield GetLeaveCalendarSate(events: _events);
+      } else {
+        //If not events found.
+        yield GetLeaveCalendarSate(events: _events);
       }
     }
-
   }
 }

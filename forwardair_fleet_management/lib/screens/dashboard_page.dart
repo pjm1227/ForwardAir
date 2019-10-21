@@ -30,17 +30,13 @@ class DashboardPage extends StatefulWidget {
 }
 
 class DashboardState extends State<DashboardPage> {
-  //To set the Scaffold Key
-  GlobalKey<ScaffoldState> _scaffold = GlobalKey<ScaffoldState>();
   //Dashboard Bloc
   DashboardBloc _dashboardBloc = DashboardBloc();
 
   //To make a call and send mail
   var _service = CallsAndMailService();
-
   //Selected Index in Filter
   int _selectedIndex = 3;
-
   //Pull to refresh
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -58,7 +54,6 @@ class DashboardState extends State<DashboardPage> {
     Constants.TEXT_SAFETY_PHONENUMBER,
     Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER
   ];
-
   //To handle Call button Tap in Quick contacts
   bool _isTappable = false;
 
@@ -200,38 +195,6 @@ class DashboardState extends State<DashboardPage> {
 
   Widget _scaffoldWidget() {
     return Scaffold(
- //     key: _scaffold,
-      //This widget displays the App Bar
-//      appBar: new AppBar(
-//        iconTheme: new IconThemeData(color: Colors.white),
-//        centerTitle: false,
-//        //This widget displays the AppBar Title
-//        title: TextWidget(
-//          text: Constants.TEXT_DASHBOARD,
-//          colorText: AppColors.colorWhite,
-//          textType: TextType.TEXT_LARGE,
-//        ),
-//        actions: <Widget>[
-//          //To display the notification Icon widget
-//          InkWell(
-//            child: Padding(
-//              padding: const EdgeInsets.only(right: 15.0),
-//              child: SizedBox(
-//                  width: 30,
-//                  height: 30,
-//                  child: Image.asset('images/ic_notfication_white.png')),
-//            ),
-//            onTap: () {
-//              //To navigate to feature coming soon page.
-//              navigateToFeatureComingSoonPage();
-//            },
-//          ),
-//        ],
-//      ),
-      //This widget dispalys the SideMenu
-//      drawer: SideMenuPage(
-//        scaffold: _scaffold,
-//      ),
       //To Show Page Background color
       backgroundColor: AppColors.colorDashboard_Bg,
       //BlocListener for navigation to other screens.
@@ -289,7 +252,6 @@ class DashboardState extends State<DashboardPage> {
             //To Navigate to Drill Down Page
             navigateToDrillDownPage(state.pageName);
           }
-
           if (state is QuickContactsCallState) {
             //To Maintain Tap button State for different platforms.
             if (Platform.isIOS) {
@@ -1135,7 +1097,8 @@ class DashboardState extends State<DashboardPage> {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.fade, child: FeaturesComingSoonPage(true)));
+            type: PageTransitionType.fade,
+            child: FeaturesComingSoonPage(true)));
   }
 
   //To navigate to Drill Down

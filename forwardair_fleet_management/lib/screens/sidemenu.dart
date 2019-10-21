@@ -21,6 +21,8 @@ import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'safetyandincidents/report_accident_screen.dart';
 import 'safetyandincidents/view_history_screen.dart';
 
+GlobalKey<UnavailabilityListState> globalKey = GlobalKey();
+
 class SideMenuPage extends StatefulWidget {
   @override
   _SideMenuPageState createState() => new _SideMenuPageState();
@@ -127,7 +129,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          //This widget display leftside selected/unselected color
+                          //This widget display left side selected/unselected color
                           Container(
                             width: 5,
                             color: _selectedIndex != null &&
@@ -293,7 +295,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
           child: ListTile(
             title: TextWidget(
               text: _sideMenuBloc.drawerMenuItems[index]
-                  [Constants.TEXT_SIDE_MENU_TITLE], //_drawerMenuItems[index],
+                  [Constants.TEXT_SIDE_MENU_TITLE],
               colorText: AppColors.colorGrey,
             ),
           ),
@@ -363,15 +365,11 @@ class _SideMenuPageState extends State<SideMenuPage> {
     );
   }
 
-  _appBarWidget(String title) {
-
-    return BaseAppBar(
-      height: AppBar().preferredSize.height,
-      //This widget displays the AppBar Title
-      title: title == Constants.TEXT_VIEW_HISTORY ? 'Safety & Incident History' : title,
-      widgets: <Widget>[
-        //To display the notification Icon widget
-        title == Constants.TEXT_DASHBOARD ? InkWell(
+  //App Bar Action Items
+  Widget _appBarActionWidget() {
+    switch (sideMenuTitle) {
+      case Constants.TEXT_DASHBOARD:
+        return InkWell(
           child: Padding(
             padding: const EdgeInsets.only(right: 15.0),
             child: SizedBox(
@@ -380,9 +378,43 @@ class _SideMenuPageState extends State<SideMenuPage> {
                 child: Image.asset('images/ic_notfication_white.png')),
           ),
           onTap: () {
+            //To navigate to new feature page.
             navigateToFeatureComingSoonPage();
           },
-        ) : Container(),
+        );
+        break;
+      case Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY:
+        return InkWell(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Icon(
+                Icons.calendar_today,
+                color: AppColors.colorWhite,
+                size: 22,
+              ),
+            ),
+            onTap: () {
+              //To navigate to calendar page.
+              globalKey.currentState.openLeaveCalendarBasedOnTheTabBarItem();
+            }
+        );
+        break;
+      default:
+        return Container();
+        break;
+    }
+  }
+
+  _appBarWidget(String title) {
+    return BaseAppBar(
+      height: AppBar().preferredSize.height,
+      //This widget displays the AppBar Title
+      title: title == Constants.TEXT_VIEW_HISTORY
+          ? 'Safety & Incident History'
+          : title,
+      widgets: <Widget>[
+        //To display the notification Icon widget
+         _appBarActionWidget()
       ],
     );
   }
@@ -397,7 +429,7 @@ class _SideMenuPageState extends State<SideMenuPage> {
         return SettlementPage();
         break;
       case Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY:
-        return UnavailabilityListPage();
+        return UnavailabilityListPage(key: globalKey,usertype: _sideMenuBloc.userDetails != null ? _sideMenuBloc.userDetails.usertype != null ? _sideMenuBloc.userDetails.usertype : '' : '',);
         break;
       case Constants.TEXT_LOGOUT:
         break;
@@ -603,7 +635,6 @@ class _SideMenuPageState extends State<SideMenuPage> {
 
   showAlertDialog(BuildContext context) {
     Navigator.of(context).pop();
-    // scaffold.currentState.openEndDrawer();
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("No"),
@@ -652,10 +683,11 @@ class _SideMenuPageState extends State<SideMenuPage> {
 
   //To navigate to the Feature Coming soon page.
   void navigateToFeatureComingSoonPage() {
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade, child: FeaturesComingSoonPage(true)));
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: FeaturesComingSoonPage(true)));
   }
 
   //this method is used to navigate as per passed widget name

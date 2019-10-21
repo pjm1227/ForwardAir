@@ -1,12 +1,16 @@
 import 'package:bloc/bloc.dart';
 
 import 'package:forwardair_fleet_management/blocs/barrels/unavailability.dart';
+import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
+import 'package:forwardair_fleet_management/models/login_model.dart';
 import 'package:forwardair_fleet_management/models/unavailability_data_model.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
 class UnavailabilityBloc
     extends Bloc<UnavailabilityEvents, UnavailabilityStates> {
+
+
   //It will call to map initial State
   @override
   UnavailabilityStates get initialState => InitialState();
@@ -60,7 +64,7 @@ class UnavailabilityBloc
         submittedDateAndTime: '20191101',
         sumittedId: 'TRID7583');
     UnavailabilityDataModel dataModel = UnavailabilityDataModel(
-        unavailabilityDetails: [dataModelDetail, dataModelDetail2, dataModelDetail3,dataModelDetail4]);
+        unavailabilityDetails: [dataModelDetail, dataModelDetail2, dataModelDetail3,dataModelDetail4, ]);
     //Upcoming Unavailability List
     List<UnavailabilityDataModelDetail> upcomingUnavailabilityItems = [];
     //Past Unavailability List
