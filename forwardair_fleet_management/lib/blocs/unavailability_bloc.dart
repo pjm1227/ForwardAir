@@ -41,7 +41,7 @@ class UnavailabilityBloc
             state: 'FL',
             reason: 'Personal',
             submittedDateAndTime: '20191101',
-            sumittedId: 'TRID6532');
+            sumittedId: 'TRID6532',requestedBy: 'Jhon Doe');
     UnavailabilityDataModelDetail dataModelDetail2 =
         UnavailabilityDataModelDetail(
             leaveStartDate: '20191210',
@@ -49,7 +49,7 @@ class UnavailabilityBloc
             state: 'NY',
             reason: 'Going for family trip',
             submittedDateAndTime: '20191204',
-            sumittedId: 'TRID7583');
+            sumittedId: 'TRID7583', requestedBy: 'Jhon');
     UnavailabilityDataModelDetail dataModelDetail3 =
     UnavailabilityDataModelDetail(
         leaveStartDate: '20191017',
@@ -57,7 +57,7 @@ class UnavailabilityBloc
         state: 'NY',
         reason: 'I have to go to las vegas.',
         submittedDateAndTime: '20190903',
-        sumittedId: 'TRID7583');
+        sumittedId: 'TRID7583', requestedBy: 'Flora');
     UnavailabilityDataModelDetail dataModelDetail4 =
     UnavailabilityDataModelDetail(
         leaveStartDate: '20191207',
@@ -65,7 +65,7 @@ class UnavailabilityBloc
         state: 'NV',
         reason: 'Going for family trip',
         submittedDateAndTime: '20191101',
-        sumittedId: 'TRID7583');
+        sumittedId: 'TRID7583', requestedBy: 'Doe');
     UnavailabilityDataModel dataModel = UnavailabilityDataModel(
         unavailabilityDetails: [dataModelDetail, dataModelDetail2, dataModelDetail3,dataModelDetail4, ]);
     //Upcoming Unavailability List

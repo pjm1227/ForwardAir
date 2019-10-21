@@ -90,9 +90,10 @@ class Constants {
   static const String TEXT_REFERRAL_AND_DRIVERRELATION = 'Contractor Relations';
   static const String TEXT_THISWEEK = 'This Week';
   static const String TEXT_LASTWEEK = 'Last Week';
-  static const String TEXT_PREV_SETTLEMENT_PERIOD = 'Previous Settlement Period';
+  static const String TEXT_PREV_SETTLEMENT_PERIOD =
+      'Previous Settlement Period';
   static const String TEXT_THISMONTH = 'This Month';
-  static const String TEXT_CANCEL  =  'Cancel';
+  static const String TEXT_CANCEL = 'Cancel';
   static const String TEXT_TOTAL_LOADS = 'Total Loads';
   static const String TEXT_TOTAL_MILES = 'Total Miles';
   static const String TEXT_FUEL = 'Total Fuel';
@@ -107,21 +108,26 @@ class Constants {
   static const String TEXT_NO_RESULTS_FOUND = 'No Results Found.';
   //Quick Contact Details
   static const String TEXT_QC_DISPATCH_MAIL_SUBJECT = 'Note for Dispatch Team.';
-  static const String TEXT_QC_SAFETY_MAIL_SUBJECT = 'Reporting a safety incident.';
-  static const String TEXT_QC_DRIVER_RELATIONS_MAIL_SUBJECT = 'Note for Driver Relations.';
+  static const String TEXT_QC_SAFETY_MAIL_SUBJECT =
+      'Reporting a safety incident.';
+  static const String TEXT_QC_DRIVER_RELATIONS_MAIL_SUBJECT =
+      'Note for Driver Relations.';
   //1. Dispatch
-  static const String TEXT_DISPATCH_QUCKCONTACT_EMAIL = 'FA_dispatch@forwardair.com';
-  static const String TEXT_DISPATCH_PHONENUMBER =  '800-497-5012';
+  static const String TEXT_DISPATCH_QUCKCONTACT_EMAIL =
+      'FA_dispatch@forwardair.com';
+  static const String TEXT_DISPATCH_PHONENUMBER = '800-497-5012';
   //2. Safety
-  static const String TEXT_SAFETY_QUCKCONTACT_EMAIL = 'Safetyapp@forwardair.com';
-  static const String TEXT_SAFETY_PHONENUMBER =  '888-423-2472';
+  static const String TEXT_SAFETY_QUCKCONTACT_EMAIL =
+      'Safetyapp@forwardair.com';
+  static const String TEXT_SAFETY_PHONENUMBER = '888-423-2472';
   //2. Driver Relations
-  static const String TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL = 'contractorrelations@forwardair.com';
-  static const String TEXT_DRIVER_RELATIONS_PHONENUMBER =  '855-585-8574';
+  static const String TEXT_DRIVER_RELATIONS_QUCKCONTACT_EMAIL =
+      'contractorrelations@forwardair.com';
+  static const String TEXT_DRIVER_RELATIONS_PHONENUMBER = '855-585-8574';
   static const String TEXT_CONTENT_TYPE = 'application/json';
 
   //DrillDown Filter Option
-  static const String Text_SORT='Sort By';
+  static const String Text_SORT = 'Sort By';
   static const String TEXT_HIGHTOLOW = 'Contribution:High to Low';
   static const String TEXT_ASCENDING = 'Ascending Tractor ID';
   static const String TEXT_DESCENDING = 'Descending Tractor ID';
@@ -143,12 +149,21 @@ class Constants {
   static const String DEDUCTION_TEXT = 'D';
 
   //Report Accident
-  static const String TEXT_EMERGENCY_CALL = 'If you or anyone else involved in the accident are critically injured please dial 911 immediately';
+  static const String TEXT_EMERGENCY_CALL =
+      'If you or anyone else involved in the accident are critically injured please dial 911 immediately';
 
   //Unavailabilty
   static const String TEXT_UPCOMING = 'Upcoming';
   static const String TEXT_PAST = 'Past';
   static const String TEXT_TIME_OFF = 'Time off';
   static const String TEXT_UNAVAILABILITY_DETAILS = 'Unavailability Details';
-  static const String TEXT_DETAILS_OF_UNAVAILABILITY = 'Details of Unavailability';
+  static const String TEXT_DETAILS_OF_UNAVAILABILITY =
+      'Details of Unavailability';
+  static const String TEXT_REQUESTED_BY = 'Requested By';
+  static const String TEXT_START_DATE = 'Start Date';
+  static const String TEXT_END_DATE = 'End Date';
+  static const String TEXT_START_LOCATION = 'Start Location';
+  static const String TEXT_REASON_OF_UNAVAILABILITY = 'Reason Of Unavailability';
+  static const String TEXT_NOTE = 'Note';
+  static const String TEXT_NOTE_CONTENT = 'To update or cancel request, please call dispatch';
 }

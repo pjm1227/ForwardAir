@@ -1,6 +1,4 @@
 // To parse this JSON data, do
-//
-//     final welcome = welcomeFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -38,6 +36,7 @@ class UnavailabilityDataModelDetail {
   String reason;
   String submittedDateAndTime;
   String sumittedId;
+  String requestedBy;
 
   UnavailabilityDataModelDetail({
     this.leaveStartDate,
@@ -47,6 +46,7 @@ class UnavailabilityDataModelDetail {
     this.reason,
     this.submittedDateAndTime,
     this.sumittedId,
+    this.requestedBy
   });
 
   factory UnavailabilityDataModelDetail.fromJson(Map<String, dynamic> json) =>
@@ -59,6 +59,7 @@ class UnavailabilityDataModelDetail {
         json["reason"] == null ? null : json["reason"],
         submittedDateAndTime: json["submittedDateAndTime"] == null ? null : json["submittedDateAndTime"],
         sumittedId: json["sumittedId"] == null ? null : json["sumittedId"],
+        requestedBy: json["requestedBy"] == null ? null : json["requestedBy"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -69,5 +70,6 @@ class UnavailabilityDataModelDetail {
     "reason": reason == null ? null : reason,
     "submittedDateAndTime": submittedDateAndTime == null ? null : submittedDateAndTime,
     "sumittedId": sumittedId == null ? null : sumittedId,
+    "requestedBy": requestedBy == null ? null : requestedBy,
   };
 }

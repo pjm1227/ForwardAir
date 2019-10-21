@@ -67,7 +67,7 @@ class Utils {
     return time;
   }
 
-  //Format Date for Date
+  //Format Date to MM/dd/yyyy
   static String formatDateFromString(String dateString) {
     try {
       var formattedString = '';

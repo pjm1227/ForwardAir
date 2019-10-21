@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:forwardair_fleet_management/blocs/barrels/unavailability.dart';
 
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/models/unavailability_data_model.dart';
@@ -40,65 +41,57 @@ class UnavailabilityDetailsPage extends StatelessWidget {
         body: ListView(children: <Widget>[
           _timeOffWidget(),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextWidget(text: Constants.TEXT_DETAILS_OF_UNAVAILABILITY,),
+            padding: const EdgeInsets.only(left: 15.0, top: 20, bottom: 15),
+            child: TextWidget(text: Constants.TEXT_DETAILS_OF_UNAVAILABILITY,textType: TextType.TEXT_MEDIUM,),
           ),
-          _rowWidgetHolder(Constants.TEXT_TRACTORID, '1108', true),
-          _rowWidgetHolder(Constants.TEXT_DATE,
-              Utils.formatDateFromString(unavailabilityDataModelDetail.leaveStartDate), false),
-          _rowWidgetHolder(Constants.TEXT_DEDUCTION_TYPE, 'Recurring', false),
-          _rowWidgetHolder(Constants.TEXT_DRIVER_CONTRIBUTION,
-              Utils.appendDollarSymbol(0), false),
-          _rowWidgetHolder(Constants.TEXT_ORIGINAL_BALANCE,
-              Utils.appendDollarSymbol(0), false),
-          _rowWidgetHolder(
-              Constants.TEXT_DRIVER_OWING, Utils.appendDollarSymbol(0), false),
-          _rowWidgetHolder(Constants.TEXT_SERVICE_CHARGE,
-              Utils.appendDollarSymbol(0), false),
-          _rowWidgetHolder(Constants.TEXT_PAYMENT,
-              Utils.addDollarAfterMinusSign('7.36'), false),
+          Padding(
+            padding: const EdgeInsets.only(top:0.0),
+            child: _descriptionWidget(
+                Constants.TEXT_REQUESTED_BY, unavailabilityDataModelDetail.requestedBy, true),
+          ),
+          _descriptionWidget(Constants.TEXT_START_DATE,Utils.formatDateFromString(unavailabilityDataModelDetail.leaveStartDate), false),
           _descriptionWidget(
-              Constants.TEXT_DESCRIPTION, 'True North Iurance', false),
-          _descriptionWidget(Constants.TEXT_COMMENTS, 'Comments', true)
+              Constants.TEXT_END_DATE,Utils.formatDateFromString(unavailabilityDataModelDetail.leaveEndDate), false),
+          _descriptionWidget(
+               Constants.TEXT_START_LOCATION, UnavailabilityBloc().combineCityAndState(unavailabilityDataModelDetail.city, unavailabilityDataModelDetail.state), false),
+          _descriptionWidget(
+              Constants.TEXT_REASON_OF_UNAVAILABILITY,unavailabilityDataModelDetail.reason, false),
+          Padding(
+            padding: const EdgeInsets.only(top: 15, bottom: 15),
+            child: _descriptionWidget(Constants.TEXT_NOTE,Constants.TEXT_NOTE_CONTENT, true),
+          ),
         ]));
   }
 
   //Description Widget
-  Widget _descriptionWidget(String title, String description, bool isLast) {
+  Widget _descriptionWidget(String title, String description, bool isFirst) {
     return Container(
-      margin: new EdgeInsets.only(
-          bottom: isLast == true ? 15 : 0, left: 15, right: 15, top: 0),
       decoration: new BoxDecoration(
         color: Colors.white,
         shape: BoxShape.rectangle,
-        borderRadius: isLast == true
-            ? new BorderRadius.only(
-            bottomRight: Radius.circular(5), bottomLeft: Radius.circular(5))
-            : new BorderRadius.all(Radius.circular(0)),
         boxShadow: <BoxShadow>[
           new BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.16),
+            color: Color.fromRGBO(0, 0, 0, 0.09),
             blurRadius: 10.0,
-            offset: isLast == true ? Offset(0.0, 10.0) : Offset(0.0, 10.0),
+            offset: isFirst == true ? Offset(10.0, 0.0) : Offset(0.0, 10.0),
           )
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.only(right: 10, left: 10),
+        padding: const EdgeInsets.only(right: 10, left: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Divider(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 5.0, bottom: 8.0),
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                   child: _textWidgetForLeftSideTitle(title),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.only(bottom: 10.0),
                   child: _textWidgetForRightSideTitle(description),
                 ),
               ],
@@ -114,18 +107,16 @@ class UnavailabilityDetailsPage extends StatelessWidget {
     return Container(
       height: 50,
       decoration: new BoxDecoration(
-        color: AppColors.colorBlue,
+        color: AppColors.colorWhite,
         shape: BoxShape.rectangle,
-        borderRadius: new BorderRadius.all(Radius.circular(5)),
         boxShadow: <BoxShadow>[
           new BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.16),
+            color: Color.fromRGBO(0, 0, 0, 0.09),
             blurRadius: 10.0,
             offset: new Offset(0.0, 10.0),
           ),
         ],
       ),
-      margin: new EdgeInsets.only(top: 10, left: 10.0, bottom: 5, right: 10),
       child: Container(
         child: Material(
           color: Colors.transparent,
@@ -136,43 +127,9 @@ class UnavailabilityDetailsPage extends StatelessWidget {
                 text: Constants.TEXT_TIME_OFF,
                 textType: TextType.TEXT_MEDIUM,
                 isBold: true,
-                colorText: AppColors.colorWhite),
+                colorText: AppColors.colorBlue),
           ),
         ),
-      ),
-    );
-  }
-
-  //List Tile Widget
-  Widget _rowWidgetHolder(
-      String leftSideText, String RightSideText, bool isFirst) {
-    return Container(
-      margin: new EdgeInsets.only(
-          top: isFirst == true ? 15 : 0, left: 15, right: 15),
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.rectangle,
-        borderRadius: isFirst == true
-            ? new BorderRadius.only(
-            topRight: Radius.circular(5), topLeft: Radius.circular(5))
-            : new BorderRadius.all(Radius.circular(0)),
-        boxShadow: <BoxShadow>[
-          new BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.16),
-            blurRadius: 10.0,
-            offset: isFirst == true ? Offset(0.0, 0.0) : Offset(0.0, 10.0),
-          )
-        ],
-      ),
-      child: Padding(
-        padding:
-        const EdgeInsets.only(right: 10.0, left: 10, top: 10, bottom: 10),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _textWidgetForLeftSideTitle(leftSideText),
-              _textWidgetForRightSideTitle(RightSideText),
-            ]),
       ),
     );
   }
@@ -190,6 +147,6 @@ class UnavailabilityDetailsPage extends StatelessWidget {
     return TextWidget(
         text: rightSideTitle,
         colorText: AppColors.colorBlack,
-        textType: TextType.TEXT_SMALL);
+        textType: TextType.TEXT_MEDIUM);
   }
 }
