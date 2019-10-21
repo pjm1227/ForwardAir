@@ -56,7 +56,7 @@ class _TractorRevenueDetailsState extends State<TractorRevenueDetails> {
         centerTitle: false,
         iconTheme: IconThemeData(color: AppColors.colorWhite),
         title: TextWidget(
-          text: 'Rvenue Details',
+          text: 'Revenue Details',
           colorText: AppColors.colorWhite,
           textType: TextType.TEXT_LARGE,
         ),
@@ -106,7 +106,7 @@ class _TractorRevenueDetailsState extends State<TractorRevenueDetails> {
     return Column(
       children: <Widget>[
         RevenueItemWidget(
-            tagName: 'Tractor Id', tagValue: data.tractorId.toString()),
+            tagName: 'Tractor ID', tagValue: data.tractorId.toString()),
         RevenueItemWidget(
             tagName: 'Date',
             tagValue: Utils.formatDateFromString(data.transactionDt)),
@@ -147,12 +147,12 @@ class _TractorRevenueDetailsState extends State<TractorRevenueDetails> {
             tagName: 'Driver Contribution',
             tagValue: '\$${data.drivercontribution}'),
         RevenueItemWidget(
-            tagName: 'Original Balance', tagValue: '\$${data.originalbalance}'),
+            tagName: 'Original Balance', tagValue: '${Utils.addDollarAfterMinusSign(data.originalbalance)}'),
         RevenueItemWidget(
             tagName: 'Driver Owing', tagValue: '\$${data.driverowing}'),
         RevenueItemWidget(
             tagName: 'Service Charge', tagValue: '\$${data.servicecharge}'),
-        RevenueItemWidget(tagName: 'Payment', tagValue: '\$${data.payment}'),
+        RevenueItemWidget(tagName: 'Payment', tagValue: '${Utils.addDollarAfterMinusSign(data.payment)}'),
         _descriptionWidget(data.description, 'N/A')
       ],
     );

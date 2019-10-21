@@ -430,26 +430,31 @@ class _SideMenuPageState extends State<SideMenuPage> {
         return DashboardPage();
         break;
       case Constants.TEXT_SETTLEMENTS:
-        return SettlementPage();
+       // return SettlementPage();
+        return FeaturesComingSoonPage(false);
         break;
       case Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY:
-        return UnavailabilityListPage(
+      /*  return UnavailabilityListPage(
           key: globalKey,
           usertype: _sideMenuBloc.userDetails != null
               ? _sideMenuBloc.userDetails.usertype != null
                   ? _sideMenuBloc.userDetails.usertype
                   : ''
               : '',
-        );
+        );*/
+        return FeaturesComingSoonPage(false);
         break;
       case Constants.TEXT_LOGOUT:
         break;
       case Constants.TEXT_VIEW_HISTORY:
-        return ViewHistoryPage();
+        return FeaturesComingSoonPage(false);
+      //  return ViewHistoryPage();
       case Constants.TEXT_REPORT_ACCIDENT:
-        return ReportAccidentPage();
+      return FeaturesComingSoonPage(false);
+        //return ReportAccidentPage();
       case Constants.TEXT_REPORT_BREAKDOWN:
-        return ReportBreakdownPage();
+       // return ReportBreakdownPage();
+      return FeaturesComingSoonPage(false);
       default:
         return FeaturesComingSoonPage(false);
         break;

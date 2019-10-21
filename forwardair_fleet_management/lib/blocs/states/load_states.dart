@@ -20,7 +20,7 @@ class ShimmerState extends LoadStates {}
 class ErrorState extends LoadStates {
   final String errorMessage;
 
-  ErrorState({@required this.errorMessage});
+  ErrorState({@required this.errorMessage}) :super([errorMessage]);
 }
 
 //This state is called when API return data

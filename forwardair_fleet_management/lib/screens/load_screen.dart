@@ -111,9 +111,7 @@ class LoadScreen extends State<LoadPage> {
           weekEnd: dashboardData.weekEnd,
           weekStart: dashboardData.weekStart));
     }
-    loadBloc.dispatch(
-        FuelGallonsEvent(isGallonClicked: true, isTotalAmountClicked: false));
-    // loadBloc.dispatch(GetTractorDataEvent());
+
     super.initState();
   }
 
@@ -150,6 +148,7 @@ class LoadScreen extends State<LoadPage> {
       ),
       body: BlocListener<LoadBloc, LoadStates>(
         listener: (context, state) {
+          print('Load screen Bloc State is $state');
           if (state is SuccessState) {
             //Get tractor model from state
             _tractorData = state.tractorData;
@@ -161,7 +160,11 @@ class LoadScreen extends State<LoadPage> {
             if (_tractorData.tractors != null) createPieChart(true);
             //Set data in Stacked Bar chart
             if (_chartData != null) createDataForBarChart(true);
-
+            if (pageName == PageName.FUEL_PAGE) {
+              loadBloc.dispatch(FuelGallonsEvent(
+                  isGallonClicked: true, isTotalAmountClicked: false));
+              // loadBloc.dispatch(GetTractorDataEvent());
+            }
             //Event to show High to Low sorting by default
             loadBloc.dispatch(SortHighToLowEvent(
                 pageName: pageName, tractorData: listTractorData));
@@ -190,7 +193,7 @@ class LoadScreen extends State<LoadPage> {
         child: BlocBuilder<LoadBloc, LoadStates>(
             bloc: loadBloc,
             builder: (context, state) {
-              print("State Load Scree $state");
+              print("State Load Screen $state");
               if (state is ErrorState) {
                 if (state.errorMessage == Constants.NO_INTERNET_FOUND) {
                   return NoInternetFoundWidget();
@@ -565,7 +568,7 @@ class LoadScreen extends State<LoadPage> {
         weekData.forEach((item) {
           var chartModelLoaded = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost) : ''}',
+                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.loadedLoads
                   : pageName == PageName.MILES_PAGE
@@ -577,7 +580,7 @@ class LoadScreen extends State<LoadPage> {
                           : item.totalFuelCost.toInt());
           var chartModelEmpty = ChartDataModel(
               name: weekList[count] +
-                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost) : ''}',
+                  '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.emptyLoads
                   : pageName == PageName.MILES_PAGE
@@ -598,7 +601,7 @@ class LoadScreen extends State<LoadPage> {
       monthData.forEach((item) {
         var chartModelLoaded = ChartDataModel(
             name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost) : ''}',
+                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.loadedLoads
                 : pageName == PageName.MILES_PAGE
@@ -610,7 +613,7 @@ class LoadScreen extends State<LoadPage> {
                         : item.totalFuelCost.toInt());
         var chartModelEmpty = ChartDataModel(
             name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons) : Utils.formatDecimalToWholeNumber(item.totalFuelCost) : ''}',
+                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
             loadsValue: pageName == PageName.LOAD_PAGE
                 ? item.emptyLoads
                 : pageName == PageName.MILES_PAGE
@@ -651,6 +654,7 @@ class LoadScreen extends State<LoadPage> {
     //Check if List have more then 10 data, then take a sublist if first 10 elements
     // And show them into pie chart
     //first clear the series List for pie chart
+    try {
     seriesListPieChart.clear();
     //Clear the tractor data list
     listTractorData.clear();
@@ -685,18 +689,28 @@ class LoadScreen extends State<LoadPage> {
           _tractorData.tractors.sublist(10, _tractorData.tractors.length);
 
       double sum = 0.0;
+
       remainingItemList.forEach((item) {
         sum = sum +
             (pageName == PageName.LOAD_PAGE
-                ? item.totalLoadsPercent
+                ? item.totalLoadsPercent == null ? 0.0 : item.totalLoadsPercent
                 : pageName == PageName.MILES_PAGE
-                    ? item.totalMilesPercent
+                    ? item.totalMilesPercent == null
+                        ? 0.0
+                        : item.totalMilesPercent
                     : pageName == PageName.FUEL_PAGE
                         ? isFuelGallons
-                            ? item.totalGallonsPercent
-                            : item.totalFuelCost
-                        : item.totalNetPercent);
+                            ? item.totalGallonsPercent == null
+                                ? 0.0
+                                : item.totalGallonsPercent
+                            : item.totalFuelCost == null
+                                ? 0.0
+                                : item.totalFuelCost
+                        : item.totalNetPercent == null
+                            ? 0.0
+                            : item.totalNetPercent);
       });
+
       //Add the sum of remaining loads in to data map list for pie chart
       chartDataList.add(ChartDataModel(
           value: num.parse(sum.toStringAsFixed(2)),
@@ -747,6 +761,7 @@ class LoadScreen extends State<LoadPage> {
     );
     //Add chart data into series list
     seriesListPieChart.add(pieChart);
+    } catch (_) {}
   }
 
   //This method returns the list of widgets for PagerView
@@ -756,7 +771,7 @@ class LoadScreen extends State<LoadPage> {
     var userManager = UserManager();
     //Get Data from User Table
     var userModel = await userManager.getData();
-    print('User Type is ${userModel.usertype}');
+    //  print('User Type is ${userModel.usertype}');
     //Create a list of widgets that would be change dynamically based on user type
     var listOfWidgets = List<Widget>();
     //Create Widgets the would be show in pager

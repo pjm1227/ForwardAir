@@ -92,15 +92,25 @@ class TractorListWidget extends StatelessWidget {
                                     textType: TextType.TEXT_MEDIUM,
                                     text: pageName == PageName.LOAD_PAGE
                                         ? '${tractorList[index].keys.first.totalLoadsPercent}%'
-                                       // ? 'Contribution(%) :  ${tractorList[index].keys.first.totalLoadsPercent}'
-                                        : pageName == PageName.LOAD_PAGE
-                                        ? '${tractorList[index].keys.first.totalMilesPercent}%'
-                                           // ? 'Contribution(%) :  ${tractorList[index].keys.first.totalMilesPercent}'
+                                        // ? 'Contribution(%) :  ${tractorList[index].keys.first.totalLoadsPercent}'
+                                        : pageName == PageName.MILES_PAGE
+                                            ? '${tractorList[index].keys.first.totalMilesPercent}%'
+                                            // ? 'Contribution(%) :  ${tractorList[index].keys.first.totalMilesPercent}'
                                             : pageName == PageName.FUEL_PAGE
-                                               // ? 'Contribution(%) :  ${tractorList[index].keys.first.totalGallonsPercent}'
-                                               // : 'Contribution(%) :  ${tractorList[index].keys.first.totalNetPercent}',
-                                                  ? '${tractorList[index].keys.first.totalGallonsPercent}%'
-                                                  : '${tractorList[index].keys.first.totalNetPercent}%',
+                                                ? tractorList[index]
+                                                            .keys
+                                                            .first
+                                                            .totalGallonsPercent ==
+                                                        null
+                                                    ? 'N/A'
+                                                    : '${tractorList[index].keys.first.totalGallonsPercent}%'
+                                                : tractorList[index]
+                                                            .keys
+                                                            .first
+                                                            .totalNetPercent ==
+                                                        null
+                                                    ? 'N/A'
+                                                    : '${tractorList[index].keys.first.totalNetPercent}%',
                                   ),
                                 )
                               ],
