@@ -13,6 +13,7 @@ class AppColors {
   static const redColorWithTwentyOpacity = Color.fromRGBO(207, 29, 43, 0.2);
   static const colorAppBar = Color.fromRGBO(15, 43, 52, 1);
   static const colorGrey = Color.fromRGBO(118, 119, 120, 1);
+  static const colorLightGrey = Color(0xFFf9f9f9);
   static const colorBlack = Color.fromRGBO(0, 0, 0, 1);
 
   //Dashboard
@@ -38,8 +39,8 @@ class AppColors {
     charts.Color(r: 140, g: 234, b: 255),
     charts.Color(r: 255, g: 127, b: 0),
     charts.Color(r: 255, g: 255, b: 255),
-
   ];
+
   //color list which is used for dots color
   static const List<Color> colorListForDots = [
     Color.fromRGBO(227, 26, 28, 1),

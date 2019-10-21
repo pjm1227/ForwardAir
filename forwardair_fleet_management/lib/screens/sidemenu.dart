@@ -19,6 +19,7 @@ import 'package:forwardair_fleet_management/blocs/sidemenu_bloc.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 
 import 'safetyandincidents/report_accident_screen.dart';
+import 'safetyandincidents/report_breakdown_screen.dart';
 import 'safetyandincidents/view_history_screen.dart';
 
 GlobalKey<UnavailabilityListState> globalKey = GlobalKey();
@@ -33,12 +34,16 @@ class _SideMenuPageState extends State<SideMenuPage> {
 
   //SideMenu Bloc
   SideMenuBloc _sideMenuBloc = SideMenuBloc();
+
   //Selected index
   int _selectedIndex = 1;
+
   //Expand Flag
   bool expandFlag = false;
+
   //Expanded List index
   int _expandedListIndex = 0;
+
   //Menu Title
   String sideMenuTitle = Constants.TEXT_DASHBOARD;
 
@@ -437,6 +442,8 @@ class _SideMenuPageState extends State<SideMenuPage> {
         return ViewHistoryPage();
       case Constants.TEXT_REPORT_ACCIDENT:
         return ReportAccidentPage();
+      case Constants.TEXT_REPORT_BREAKDOWN:
+        return ReportBreakdownPage();
       default:
         return FeaturesComingSoonPage(false);
         break;
