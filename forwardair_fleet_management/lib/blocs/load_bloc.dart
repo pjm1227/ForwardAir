@@ -31,21 +31,21 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
     if (event is SortHighToLowEvent) {
       //Sort data model in high to low
       // And return Sort state
-      yield ShimmerState();
+      yield InitialState();
       yield SortState(
           tractorData: sortHighToLow(event.pageName, event.tractorData));
     }
     if (event is SortLowToHighEvent) {
       //Sort data model in low to high
       // And return Sort state
-      yield ShimmerState();
+      yield InitialState();
       yield SortState(
           tractorData: sortLowToHigh(event.pageName, event.tractorData));
     }
     if (event is SortAscendingTractorIDEvent) {
       //Sort data model in Ascending order using Tractor Id
       // And return Sort state
-      yield ShimmerState();
+      yield InitialState();
       yield SortState(
           tractorData:
               sortAscendingTractorId(event.pageName, event.tractorData));
@@ -53,7 +53,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
     if (event is SortDescendingTractorIDEvent) {
       //Sort data model Descending order using Tractor Id
       // And return Sort state
-      yield ShimmerState();
+      yield InitialState();
       yield SortState(
           tractorData:
               sortDescendingTractorId(event.pageName, event.tractorData));
@@ -95,7 +95,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
         //If it's TractorModel then insert data into DB else show error message
         if (result is ErrorModel) {
           print('Error found in Tractor API');
-          yield InitialState();
+          //  yield InitialState();
           //Show some error
           yield ErrorState(errorMessage: result.errorMessage);
         } else {
@@ -135,11 +135,12 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
                 // Handle type error
               } catch (_) {
                 print("Exception found in chart API");
-                yield ErrorState(errorMessage: "");
+                yield ErrorState(errorMessage: Constants.SOMETHING_WRONG);
               }
             }
           } catch (_) {
-            yield ErrorState(errorMessage: result.errorMessage);
+            yield ErrorState(errorMessage: Constants.SOMETHING_WRONG);
+
             print("db Exception");
           }
         }
@@ -154,42 +155,54 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
 
   //This method sort top contributors
   TractorData topContributorData(PageName pageName, TractorData tractorModel) {
-    tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
-        ? b.totalLoads.compareTo(a.totalLoads)
-        : pageName == PageName.MILES_PAGE
-            ? b.totalMiles.compareTo(a.totalMiles)
-            : pageName == PageName.FUEL_PAGE
-                ? b.totalTractorGallons.compareTo(a.totalTractorGallons)
-                : b.totalNet.compareTo(a.totalNet));
-    return tractorModel;
+    try {
+      tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
+          ? b.totalLoads.compareTo(a.totalLoads)
+          : pageName == PageName.MILES_PAGE
+              ? b.totalMiles.compareTo(a.totalMiles)
+              : pageName == PageName.FUEL_PAGE
+                  ? b.totalTractorGallons.compareTo(a.totalTractorGallons)
+                  : b.totalNet.compareTo(a.totalNet));
+      return tractorModel;
+    } catch (_) {
+      return tractorModel;
+    }
   }
 
   //This method sort Tractors data High to low
   List<Map<Tractor, Color>> sortHighToLow(
       PageName pageName, List<Map<Tractor, Color>> tractorModel) {
-    tractorModel.sort((a, b) => pageName == PageName.LOAD_PAGE
-        ? b.keys.first.totalLoads.compareTo(a.keys.first.totalLoads)
-        : pageName == PageName.MILES_PAGE
-            ? b.keys.first.totalMiles.compareTo(a.keys.first.totalMiles)
-            : pageName == PageName.FUEL_PAGE
-                ? b.keys.first.totalTractorGallons
-                    .compareTo(a.keys.first.totalTractorGallons)
-                : b.keys.first.totalNet.compareTo(a.keys.first.totalNet));
-    return tractorModel;
+    try {
+      tractorModel.sort((a, b) => pageName == PageName.LOAD_PAGE
+          ? b.keys.first.totalLoads.compareTo(a.keys.first.totalLoads)
+          : pageName == PageName.MILES_PAGE
+              ? b.keys.first.totalMiles.compareTo(a.keys.first.totalMiles)
+              : pageName == PageName.FUEL_PAGE
+                  ? b.keys.first.totalTractorGallons
+                      .compareTo(a.keys.first.totalTractorGallons)
+                  : b.keys.first.totalNet.compareTo(a.keys.first.totalNet));
+      return tractorModel;
+    } catch (_) {
+      return tractorModel;
+    }
   }
 
   //This method sort Tractors data low to high
   List<Map<Tractor, Color>> sortLowToHigh(
       PageName pageName, List<Map<Tractor, Color>> tractorModel) {
-    tractorModel.sort((a, b) => pageName == PageName.LOAD_PAGE
-        ? a.keys.first.totalLoads.compareTo(b.keys.first.totalLoads)
-        : pageName == PageName.MILES_PAGE
-            ? a.keys.first.totalMiles.compareTo(b.keys.first.totalMiles)
-            : pageName == PageName.FUEL_PAGE
-                ? a.keys.first.totalTractorGallons
-                    .compareTo(b.keys.first.totalTractorGallons)
-                : a.keys.first.totalNet.compareTo(b.keys.first.totalNet));
-    return tractorModel;
+    try {
+      tractorModel.sort((a, b) => pageName == PageName.LOAD_PAGE
+          ? a.keys.first.totalLoads.compareTo(b.keys.first.totalLoads)
+          : pageName == PageName.MILES_PAGE
+              ? a.keys.first.totalMiles.compareTo(b.keys.first.totalMiles)
+              : pageName == PageName.FUEL_PAGE
+                  ? a.keys.first.totalTractorGallons
+                      .compareTo(b.keys.first.totalTractorGallons)
+                  : a.keys.first.totalNet.compareTo(b.keys.first.totalNet));
+      return tractorModel;
+    } catch (_) {
+      return tractorModel;
+    }
   }
 
   //This method sort Tractors data in ascending tractor id
@@ -203,9 +216,13 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
   //This method sort Tractors data according to miles and loads
   List<Map<Tractor, Color>> sortDescendingTractorId(
       PageName pageName, List<Map<Tractor, Color>> tractorModel) {
-    tractorModel.sort((a, b) => int.parse(b.keys.first.tractorId)
-        .compareTo(int.parse(a.keys.first.tractorId)));
-    return tractorModel;
+    try {
+      tractorModel.sort((a, b) => int.parse(b.keys.first.tractorId)
+          .compareTo(int.parse(a.keys.first.tractorId)));
+      return tractorModel;
+    } catch (_) {
+      return tractorModel;
+    }
   }
 
   _insertIntoDB(TractorData tractorModel) {}

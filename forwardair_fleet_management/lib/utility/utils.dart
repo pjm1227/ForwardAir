@@ -43,7 +43,7 @@ class Utils {
 
   //Number formatting
   String formatDecimalsNumber(double decimalNumber) {
-    if (decimalNumber == 0 ) {
+    if (decimalNumber == 0) {
       return '0';
     }
     final formatter = new NumberFormat("#,###.00");
@@ -53,17 +53,19 @@ class Utils {
 
   //Decimals to whole number
   static String formatDecimalToWholeNumber(dynamic decimalNumber) {
-    final formatter = new NumberFormat("#,###");
-    String formattedNumber = formatter.format(decimalNumber);
-    return formattedNumber;
+    try {
+      final formatter = new NumberFormat("#,###");
+      String formattedNumber = formatter.format(decimalNumber);
+      return formattedNumber;
+    } catch (_) {
+      return 'N/A';
+    }
   }
 
   //Date Formatter
   static String formatTimeFromString(String timeString) {
     String time = '';
-    time = timeString.substring(9, 11) +
-        ':' +
-        timeString.substring(11, 13);
+    time = timeString.substring(9, 11) + ':' + timeString.substring(11, 13);
     return time;
   }
 
@@ -85,7 +87,7 @@ class Utils {
   //Format Start and End Date String
   static String formatStringDateToDateAndMonth(String dateString) {
     var formattedString = '';
-    if (dateString != '')  {
+    if (dateString != '') {
       final date = DateTime.parse(dateString);
       final f = new DateFormat('dd MMM');
       formattedString = f.format(date);
@@ -96,7 +98,7 @@ class Utils {
   //Date Format like 'MMMM, yyyy'
   static String dateNowToFormat(DateTime date) {
     var formattedString = '';
-    if (date != null)  {
+    if (date != null) {
       final format = new DateFormat('MMMM, yyyy');
       formattedString = format.format(date);
     }
@@ -106,7 +108,7 @@ class Utils {
   //Date Format like 'MM'
   static String pickerDateToFormat(DateTime date) {
     var formattedString = '';
-    if (date != null)  {
+    if (date != null) {
       final format = new DateFormat('MM');
       formattedString = format.format(date);
     }
@@ -116,7 +118,7 @@ class Utils {
   //To pick only month from String
   static String pickOnlyMonthInCheckList(String dateString) {
     var formattedString = '';
-    if (dateString != '')  {
+    if (dateString != '') {
       final date = DateTime.parse(dateString);
       final f = new DateFormat('MM');
       formattedString = f.format(date);
@@ -138,10 +140,10 @@ class Utils {
   //Append $ Sign
   static String appendDollarSymbol(double value) {
     if (value == 0.0) {
-      return  '\$' + value.toString();
+      return '\$' + value.toString();
     }
-    var commaAddedText = Utils().formatDecimalsNumber(
-        value != null ? value : '');
+    var commaAddedText =
+        Utils().formatDecimalsNumber(value != null ? value : '');
     if (commaAddedText != '') {
       return '\$' + commaAddedText;
     } else {
@@ -150,23 +152,23 @@ class Utils {
   }
 
   //Findout past and upcoming dates with today's date
- static bool findOutDateIsPastAndFuture(String inDate) {
+  static bool findOutDateIsPastAndFuture(String inDate) {
     final date = DateTime.parse(inDate);
     final formatter = new DateFormat('yyyyMMdd');
     final inputDate = formatter.format(date);
     final todayDate = formatter.format(DateTime.now());
     final iDate = DateTime.parse(inputDate);
     final tDate = DateTime.parse(todayDate);
-   if (iDate.isBefore(tDate)) {
-     return true;
-   }
-   return false;
- }
+    if (iDate.isBefore(tDate)) {
+      return true;
+    }
+    return false;
+  }
 
- //Date format like 'dd MMM yyyy'
+  //Date format like 'dd MMM yyyy'
   static String formatStartAndEndDate(String dateString) {
     var formattedString = '';
-    if (dateString != '')  {
+    if (dateString != '') {
       final date = DateTime.parse(dateString);
       final f = new DateFormat('dd MMM yyyy');
       formattedString = f.format(date);
@@ -177,7 +179,7 @@ class Utils {
   //Date and Time format like dd MMMM HH:mm aa
   static String formatDateAndTime(String dateString) {
     var formattedString = '';
-    if (dateString != '')  {
+    if (dateString != '') {
       final date = DateTime.parse(dateString);
       final f = new DateFormat('dd MMMM HH:mm aa');
       formattedString = f.format(date);
@@ -189,6 +191,4 @@ class Utils {
   static bool isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
-
 }
-
