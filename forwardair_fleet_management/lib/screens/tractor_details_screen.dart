@@ -14,6 +14,7 @@ import 'package:forwardair_fleet_management/components/tractor_loads_details_ite
 import 'package:forwardair_fleet_management/models/Tractor_settlement_model.dart';
 import 'package:forwardair_fleet_management/models/database/dashboard_db_model.dart';
 import 'package:forwardair_fleet_management/models/enums/page_names.dart';
+import 'package:forwardair_fleet_management/models/settlement_data_model.dart';
 import 'package:forwardair_fleet_management/models/tractor_model.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
@@ -25,14 +26,24 @@ class TractorDetailsPage extends StatefulWidget {
   //Dashboard data model
   final Dashboard_DB_Model dashboardData;
 
+  //Settlement Check Model
+  final SettlementCheck settlementCheck;
+  //To get the month and year of Settlement Model
+  final SettlementModel settlementModel;
+
   // Page name
   final PageName pageName;
 
-  TractorDetailsPage(this.pageName, this.tractorData, this.dashboardData);
+  TractorDetailsPage(this.pageName, this.tractorData, this.dashboardData,
+      {this.settlementModel, this.settlementCheck});
 
   @override
   _TractorDetailsPageState createState() => _TractorDetailsPageState(
-      this.pageName, this.tractorData, this.dashboardData);
+      this.pageName,
+      this.tractorData,
+      this.dashboardData,
+      this.settlementModel,
+      this.settlementCheck);
 }
 
 class _TractorDetailsPageState extends State<TractorDetailsPage> {
@@ -42,36 +53,58 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
   //tractor data model
   Tractor tractorData;
 
+  //Settlement Data Model
+  SettlementCheck settlementCheck;
+
+  //To get the month and year of Settlement Model
+  final SettlementModel settlementModel;
+
   //Dashboard data model
   Dashboard_DB_Model dashboardData;
 
   //Bloc object
   TractorDetailBloc _loadDetailsBloc = TractorDetailBloc();
 
-  _TractorDetailsPageState(this.pageName, this.tractorData, this.dashboardData);
+  _TractorDetailsPageState(this.pageName, this.tractorData, this.dashboardData,
+      this.settlementModel, this.settlementCheck);
 
   @override
   void initState() {
     //Call Api For Tractor data and Chart data
     //Check condition i.e for week data or month data
-    if (dashboardData != null &&
-        (dashboardData.dashboardPeriod ==
-            Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH)) {
-      _loadDetailsBloc.dispatch(FetchTractorDataEvent(
+    if (pageName == PageName.SETTLEMENTS_PAGE) {
+      if (settlementModel != null && settlementCheck != null) {
+        _loadDetailsBloc.dispatch(FetchTractorDataEvent(
+          pageName: pageName,
+          checkNbr: settlementCheck.checkNbr,
+          tractorId: null,
+          month: settlementModel.month,
+          year: int.parse(settlementModel.year),
+          weekEnd: null,
+          weekStart: null,
+        ));
+      }
+    } else {
+      if (dashboardData != null &&
+          (dashboardData.dashboardPeriod ==
+              Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH)) {
+        _loadDetailsBloc.dispatch(FetchTractorDataEvent(
           pageName: pageName,
           tractorId: tractorData.tractorId,
           month: dashboardData.month,
           year: int.parse(dashboardData.year),
           weekEnd: null,
-          weekStart: null));
-    } else {
-      _loadDetailsBloc.dispatch(FetchTractorDataEvent(
-          tractorId: tractorData.tractorId,
-          pageName: pageName,
-          month: 0,
-          year: 0,
-          weekEnd: dashboardData.weekEnd,
-          weekStart: dashboardData.weekStart));
+          weekStart: null,
+        ));
+      } else {
+        _loadDetailsBloc.dispatch(FetchTractorDataEvent(
+            tractorId: tractorData.tractorId,
+            pageName: pageName,
+            month: 0,
+            year: 0,
+            weekEnd: dashboardData.weekEnd,
+            weekStart: dashboardData.weekStart));
+      }
     }
     super.initState();
   }
@@ -222,8 +255,8 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
   //Widget to set TOTAL, EMPTY and LOADED Data
   Widget _topWidget(TractorDetailsState state) {
     TractorSettlementModel data;
-    if(state is SettlementSuccessState ){
-      data=state.settlementDetailsModel;
+    if (state is SettlementSuccessState) {
+      data = state.settlementDetailsModel;
     }
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -244,10 +277,22 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
                   )
                 : TopWidgetForFuel(
                     pageName: pageName,
-                    totalTractorGallons: tractorData.totalTractorGallons,
-                    totalFuelCost: tractorData.totalFuelCost,
-                    deductions: pageName==PageName.COMPENSATION_PAGE?_loadDetailsBloc.getDeduction(data.settlementDetails):0.0,
-                    grossAmount: pageName==PageName.COMPENSATION_PAGE? _loadDetailsBloc.getEarning(data.settlementDetails):0.0,
+                    totalTractorGallons: tractorData != null
+                        ? tractorData.totalTractorGallons == null
+                            ? null
+                            : tractorData.totalTractorGallons
+                        : null,
+                    totalFuelCost: tractorData != null
+                        ? tractorData.totalFuelCost == null
+                            ? tractorData.totalTractorGallons
+                            : null
+                        : null,
+                    deductions: pageName == PageName.COMPENSATION_PAGE
+                        ? _loadDetailsBloc.getDeduction(data.settlementDetails)
+                        : _loadDetailsBloc.getDeduction(data.settlementDetails),
+                    grossAmount: pageName == PageName.COMPENSATION_PAGE
+                        ? _loadDetailsBloc.getEarning(data.settlementDetails)
+                        : _loadDetailsBloc.getEarning(data.settlementDetails),
                   ),
           )
         ],

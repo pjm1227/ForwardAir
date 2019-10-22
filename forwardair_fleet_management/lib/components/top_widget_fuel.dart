@@ -20,6 +20,23 @@ class TopWidgetForFuel extends StatelessWidget {
       this.deductions})
       : super(key: key);
 
+  Widget _roundedRedColorWidget(PageName pageName, Color color) {
+    if (pageName == PageName.COMPENSATION_PAGE ||
+        pageName == PageName.SETTLEMENTS_PAGE) {
+      return Container(
+        child: ClipOval(
+          child: Container(
+            color: color,
+            height: 8.0,
+            width: 8.0,
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(children: <Widget>[
@@ -31,17 +48,18 @@ class TopWidgetForFuel extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Container(
-                  child: pageName == PageName.COMPENSATION_PAGE
-                      ? ClipOval(
-                          child: Container(
-                            color: Colors.teal,
-                            height: 8.0,
-                            width: 8.0,
-                          ),
-                        )
-                      : null,
-                ),
+                _roundedRedColorWidget(pageName, Colors.teal),
+//                Container(
+//                  child: pageName == PageName.COMPENSATION_PAGE
+//                      ? ClipOval(
+//                          child: Container(
+//                            color: Colors.teal,
+//                            height: 8.0,
+//                            width: 8.0,
+//                          ),
+//                        )
+//                      : null,
+//                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 4.0, right: 8.0),
                   child: TextWidget(
@@ -93,17 +111,18 @@ class TopWidgetForFuel extends StatelessWidget {
               children: <Widget>[
                 //Show and hide Dot based on condition
                 //On Fuel page we don't require dot
-                Container(
-                  child: pageName == PageName.COMPENSATION_PAGE
-                      ? ClipOval(
-                          child: Container(
-                            color: Colors.red,
-                            height: 8.0,
-                            width: 8.0,
-                          ),
-                        )
-                      : null,
-                ),
+                _roundedRedColorWidget(pageName, Colors.red),
+//                Container(
+//                  child: pageName == PageName.COMPENSATION_PAGE
+//                      ? ClipOval(
+//                          child: Container(
+//                            color: Colors.red,
+//                            height: 8.0,
+//                            width: 8.0,
+//                          ),
+//                        )
+//                      : null,
+//                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: TextWidget(

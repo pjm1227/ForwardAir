@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/components/upcoming_and_past_leaves_item.dart';
-import 'package:forwardair_fleet_management/screens/unavailability_detail_page.dart';
+import 'package:forwardair_fleet_management/screens/Unavailability/unavailability_detail_page.dart';
 import 'package:forwardair_fleet_management/utility/theme.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -10,7 +10,7 @@ import 'package:forwardair_fleet_management/blocs/barrels/unavailability.dart';
 import 'package:forwardair_fleet_management/components/no_result_found.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/models/unavailability_data_model.dart';
-import 'package:forwardair_fleet_management/screens/leave_calendar_page.dart';
+import 'package:forwardair_fleet_management/screens/Unavailability/leave_calendar_page.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 

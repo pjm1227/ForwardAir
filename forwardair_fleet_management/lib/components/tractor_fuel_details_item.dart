@@ -125,15 +125,26 @@ class TractorFuelDetailsList extends StatelessWidget {
                 )
               ],
             )),
-        onTap: () => pageName == PageName.COMPENSATION_PAGE
-            ? Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade,
-                    child: TractorRevenueDetails(
-                      transactionType: settlementModel.transType,
-                      oid: settlementModel.oid,
-                    )))
-            : null);
+        onTap: () {
+          if (pageName == PageName.COMPENSATION_PAGE || pageName == PageName.SETTLEMENTS_PAGE) {
+            Navigator.push(context,  PageTransition(
+                type: PageTransitionType.fade,
+                child: TractorRevenueDetails(
+                  transactionType: settlementModel.transType,
+                  oid: settlementModel.oid,
+                )));
+          }
+        });
+
+//        onTap: () => pageName == PageName.COMPENSATION_PAGE
+//            ? Navigator.push(
+//                context,
+//                PageTransition(
+//                    type: PageTransitionType.fade,
+//                    child: TractorRevenueDetails(
+//                      transactionType: settlementModel.transType,
+//                      oid: settlementModel.oid,
+//                    )))
+//            : null);
   }
 }
