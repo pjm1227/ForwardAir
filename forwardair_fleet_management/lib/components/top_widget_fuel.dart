@@ -65,7 +65,7 @@ class TopWidgetForFuel extends StatelessWidget {
                   child: TextWidget(
                     text: pageName == PageName.FUEL_PAGE
                         ? Utils.formatDecimalToWholeNumber(totalTractorGallons) == 'N/A' ? 'N/A'
-                            : '\$${Utils.formatDecimalToWholeNumber(totalTractorGallons)}'
+                            : '${Utils.formatDecimalToWholeNumber(totalTractorGallons)}'
                         : Utils.formatDecimalToWholeNumber(grossAmount) == 'N/A'
                             ? 'N/A'
                             : '\$${Utils.formatDecimalToWholeNumber(grossAmount)}',

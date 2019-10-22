@@ -138,7 +138,7 @@ class _TractorRevenueDetailsState extends State<TractorRevenueDetails> {
     return Column(
       children: <Widget>[
         RevenueItemWidget(
-            tagName: 'Tractor Id', tagValue: data.tractorId.toString()),
+            tagName: 'Tractor ID', tagValue: data.tractorId.toString()),
         RevenueItemWidget(
             tagName: 'Date',
             tagValue: Utils.formatDateFromString(data.transactionDt)),
