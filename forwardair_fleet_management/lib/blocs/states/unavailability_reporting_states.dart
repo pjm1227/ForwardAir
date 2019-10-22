@@ -10,3 +10,11 @@ abstract class UnavailabilityReportingStates extends Equatable {
 
 //It will handle Initial state
 class InitialState extends UnavailabilityReportingStates {}
+
+//To update Picked Date UI
+class PickedDateState extends UnavailabilityReportingStates {
+  final DateTime pickedDate;
+
+  PickedDateState({this.pickedDate})
+      : super([pickedDate]);
+}

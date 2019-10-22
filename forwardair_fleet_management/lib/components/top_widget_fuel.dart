@@ -49,17 +49,6 @@ class TopWidgetForFuel extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 _roundedRedColorWidget(pageName, Colors.teal),
-//                Container(
-//                  child: pageName == PageName.COMPENSATION_PAGE
-//                      ? ClipOval(
-//                          child: Container(
-//                            color: Colors.teal,
-//                            height: 8.0,
-//                            width: 8.0,
-//                          ),
-//                        )
-//                      : null,
-//                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 4.0, right: 8.0),
                   child: TextWidget(
@@ -109,17 +98,6 @@ class TopWidgetForFuel extends StatelessWidget {
                 //Show and hide Dot based on condition
                 //On Fuel page we don't require dot
                 _roundedRedColorWidget(pageName, Colors.red),
-//                Container(
-//                  child: pageName == PageName.COMPENSATION_PAGE
-//                      ? ClipOval(
-//                          child: Container(
-//                            color: Colors.red,
-//                            height: 8.0,
-//                            width: 8.0,
-//                          ),
-//                        )
-//                      : null,
-//                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: TextWidget(

@@ -16,6 +16,8 @@ class UnavailabilityReportingBloc
   ) async* {
     if (event is DisplayInitiallyEvent) {
       yield InitialState();
+    } else if (event is PickedDateEvent) {
+      yield PickedDateState(pickedDate: event.pickedDate);
     }
   }
 }

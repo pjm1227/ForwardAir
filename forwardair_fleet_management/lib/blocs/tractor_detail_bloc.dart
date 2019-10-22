@@ -46,6 +46,7 @@ class TractorDetailBloc extends Bloc<LoadDetailEvents, TractorDetailsState> {
             year: event.year,
             tractorId: event.tractorId,
             month: event.month,
+            checkNbr: event.checkNbr
            );
         //Convert request model to json
         var body = event.pageName == PageName.SETTLEMENTS_PAGE ? (request as SettlementsDetailsRequest).toJson() : (request as LoadRequest).toJson();

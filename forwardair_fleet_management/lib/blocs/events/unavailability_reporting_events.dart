@@ -9,3 +9,10 @@ abstract class UnavailabilityReportingEvents extends Equatable {
 
 class DisplayInitiallyEvent extends UnavailabilityReportingEvents {}
 
+//Picked Date Event
+class PickedDateEvent extends UnavailabilityReportingEvents {
+  final DateTime pickedDate;
+
+  PickedDateEvent({this.pickedDate})
+      : super([pickedDate]);
+}

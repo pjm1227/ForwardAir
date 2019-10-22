@@ -299,7 +299,7 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
                         ? _loadDetailsBloc.getEarning(data.settlementDetails)
                         : pageName == PageName.SETTLEMENTS_PAGE
                             ? _loadDetailsBloc
-                                .getDeduction(data.settlementDetails)
+                                .getEarning(data.settlementDetails)
                             : 0.0,
                   ),
           )

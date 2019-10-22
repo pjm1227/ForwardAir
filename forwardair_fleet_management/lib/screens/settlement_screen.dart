@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/models/enums/page_names.dart';
-import 'package:forwardair_fleet_management/models/tractor_model.dart';
 import 'package:forwardair_fleet_management/screens/tractor_details_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
@@ -110,9 +109,6 @@ class SettlementPageState extends State<SettlementPage> {
           } else if (state is NavigateToDetailPageState) {
             //To navigate to Detail Page
             _navigateToSettlementDetailsPage( _settlementModel.settlementChecks[state.selectedIndex]);
-//            navigateToSettlementDetailPage(
-//                _settlementModel.settlementChecks[state.selectedIndex],
-//                state.appBarTitle);
           }
         },
         bloc: _settlementBloc,
@@ -327,7 +323,6 @@ class SettlementPageState extends State<SettlementPage> {
     );
   }
 
-  //TractorDetailsPage(this.pageName, this.tractorData, this.dashboardData, {this.settlementCheck, this.settlementModel});
   _navigateToSettlementDetailsPage(SettlementCheck settlementCheck) {
     Navigator.push(
         context,
