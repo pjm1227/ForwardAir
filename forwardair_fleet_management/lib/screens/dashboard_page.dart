@@ -166,13 +166,13 @@ class DashboardState extends State<DashboardPage> {
           return _buildNetCompensationWidget(
               Constants.TEXT_NET_CONPENSATION,
               _dashboardDataModel.netAmt != null
-                  ? '${Utils().formatDecimalsNumber(_dashboardDataModel.netAmt)}'
+                  ? '${Utils.formatDecimalsNumber(_dashboardDataModel.netAmt)}'
                   : 'N/A',
               _dashboardDataModel.grossAmt != null
-                  ? '${Utils().formatDecimalsNumber(_dashboardDataModel.grossAmt)}'
+                  ? '${Utils.formatDecimalsNumber(_dashboardDataModel.grossAmt)}'
                   : 'N/A',
               _dashboardDataModel.deductions != null
-                  ? '${Utils().formatDecimalsNumber(_dashboardDataModel.deductions)}'
+                  ? '${Utils.formatDecimalsNumber(_dashboardDataModel.deductions)}'
                   : 'N/A');
         }
       },

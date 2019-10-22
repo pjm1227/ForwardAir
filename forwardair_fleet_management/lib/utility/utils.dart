@@ -42,13 +42,17 @@ class Utils {
   }
 
   //Number formatting
-  String formatDecimalsNumber(double decimalNumber) {
+  static String formatDecimalsNumber(double decimalNumber) {
     if (decimalNumber == 0) {
       return '0';
     }
-    final formatter = new NumberFormat("#,###.00");
-    String formattedNumber = formatter.format(decimalNumber);
-    return formattedNumber;
+    try {
+      final formatter = new NumberFormat("#,###.00");
+      String formattedNumber = formatter.format(decimalNumber);
+      return formattedNumber;
+    }catch(_){
+      return 'N/A';
+    }
   }
 
   //Decimals to whole number
@@ -143,7 +147,7 @@ class Utils {
       return '\$' + value.toString();
     }
     var commaAddedText =
-        Utils().formatDecimalsNumber(value != null ? value : '');
+        formatDecimalsNumber(value != null ? value : '');
     if (commaAddedText != '') {
       return '\$' + commaAddedText;
     } else {

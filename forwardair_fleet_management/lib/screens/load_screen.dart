@@ -541,33 +541,67 @@ class LoadScreen extends State<LoadPage> {
   //This method called when we set data in bar chart, Firstly we will check data
   //Type i.e weeks data or month data
   void createDataForBarChart(bool isFuelGallons) {
-    //clear the list first
-    seriesListBarChart.clear();
-    //Create loaded data List
-    var loadedDataList = List<ChartDataModel>();
-    //Create Empty data List
-    var emptyDataList = List<ChartDataModel>();
-    //Create a list with the week names, as we are not getting week names from
-    //API
-    var weekList = List<String>();
-    //Add week names in List
-    weekList.add("Su");
-    weekList.add("Mo");
-    weekList.add("Tu");
-    weekList.add("We");
-    weekList.add("Th");
-    weekList.add("Fr");
-    weekList.add("Sa");
-    var count = 0; // will use in for each loop
-    //Check if we get data for weeks
-    if (_chartData is ChartDataWeeks) {
-      //Here data belongs to weeks
-      var weekData = _chartData.days;
-      //Create chart data model for empty data, loaded data and Total
-      if (weekData != null) {
-        weekData.forEach((item) {
+    try {
+      //clear the list first
+      seriesListBarChart.clear();
+      //Create loaded data List
+      var loadedDataList = List<ChartDataModel>();
+      //Create Empty data List
+      var emptyDataList = List<ChartDataModel>();
+      //Create a list with the week names, as we are not getting week names from
+      //API
+      var weekList = List<String>();
+      //Add week names in List
+      weekList.add("Su");
+      weekList.add("Mo");
+      weekList.add("Tu");
+      weekList.add("We");
+      weekList.add("Th");
+      weekList.add("Fr");
+      weekList.add("Sa");
+      var count = 0; // will use in for each loop
+      //Check if we get data for weeks
+      if (_chartData is ChartDataWeeks) {
+        //Here data belongs to weeks
+        var weekData = _chartData.days;
+        //Create chart data model for empty data, loaded data and Total
+        if (weekData != null) {
+          weekData.forEach((item) {
+            var chartModelLoaded = ChartDataModel(
+                name: weekList[count] +
+                    '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
+                loadsValue: pageName == PageName.LOAD_PAGE
+                    ? item.loadedLoads
+                    : pageName == PageName.MILES_PAGE
+                        ? item.loadedMiles
+                        : pageName == PageName.FUEL_PAGE
+                            ? isFuelGallons
+                                ? item.totalTractorGallons.toInt()
+                                : item.totalFuelCost.toInt()
+                            : item.totalFuelCost.toInt());
+            var chartModelEmpty = ChartDataModel(
+                name: weekList[count] +
+                    '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
+                loadsValue: pageName == PageName.LOAD_PAGE
+                    ? item.emptyLoads
+                    : pageName == PageName.MILES_PAGE
+                        ? item.emptyMiles
+                        : pageName == PageName.FUEL_PAGE ? 0 : 0);
+            //Add data models into respective list
+            loadedDataList.add(chartModelLoaded);
+            emptyDataList.add(chartModelEmpty);
+            // totalDataList.add(chartModelTotal);
+            count++;
+          });
+        }
+        //Check if chart data is for month
+      } else if (_chartData is ChartDataMonth) {
+        //Here data belongs to weeks
+        var monthData = _chartData.weeks;
+        //Create chart data model for empty data, loaded data and total
+        monthData.forEach((item) {
           var chartModelLoaded = ChartDataModel(
-              name: weekList[count] +
+              name: 'Week ${count + 1}' +
                   '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.loadedLoads
@@ -579,7 +613,7 @@ class LoadScreen extends State<LoadPage> {
                               : item.totalFuelCost.toInt()
                           : item.totalFuelCost.toInt());
           var chartModelEmpty = ChartDataModel(
-              name: weekList[count] +
+              name: 'Week ${count + 1}' +
                   '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
               loadsValue: pageName == PageName.LOAD_PAGE
                   ? item.emptyLoads
@@ -593,57 +627,27 @@ class LoadScreen extends State<LoadPage> {
           count++;
         });
       }
-      //Check if chart data is for month
-    } else if (_chartData is ChartDataMonth) {
-      //Here data belongs to weeks
-      var monthData = _chartData.weeks;
-      //Create chart data model for empty data, loaded data and total
-      monthData.forEach((item) {
-        var chartModelLoaded = ChartDataModel(
-            name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
-            loadsValue: pageName == PageName.LOAD_PAGE
-                ? item.loadedLoads
-                : pageName == PageName.MILES_PAGE
-                    ? item.loadedMiles
-                    : pageName == PageName.FUEL_PAGE
-                        ? isFuelGallons
-                            ? item.totalTractorGallons.toInt()
-                            : item.totalFuelCost.toInt()
-                        : item.totalFuelCost.toInt());
-        var chartModelEmpty = ChartDataModel(
-            name: 'Week ${count + 1}' +
-                '\n${pageName == PageName.LOAD_PAGE ? Utils.formatDecimalToWholeNumber(item.totalLoads) : pageName == PageName.MILES_PAGE ? Utils.formatDecimalToWholeNumber(item.totalMiles) : pageName == PageName.FUEL_PAGE ? isFuelGallons ? Utils.formatDecimalToWholeNumber(item.totalTractorGallons.toInt()) : Utils.formatDecimalToWholeNumber(item.totalFuelCost.toInt()) : ''}',
-            loadsValue: pageName == PageName.LOAD_PAGE
-                ? item.emptyLoads
-                : pageName == PageName.MILES_PAGE
-                    ? item.emptyMiles
-                    : pageName == PageName.FUEL_PAGE ? 0 : 0);
-        //Add data models into respective list
-        loadedDataList.add(chartModelLoaded);
-        emptyDataList.add(chartModelEmpty);
-        // totalDataList.add(chartModelTotal);
-        count++;
-      });
-    }
-    var emptyChartData = charts.Series<ChartDataModel, String>(
-      id: 'Empty',
-      domainFn: (ChartDataModel chartData, _) => chartData.name,
-      measureFn: (ChartDataModel chartData, _) => chartData.loadsValue,
-      colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-      data: emptyDataList,
-    );
-    var loadedChartData = charts.Series<ChartDataModel, String>(
-      id: 'Loaded',
-      domainFn: (ChartDataModel chartData, _) => chartData.name,
-      measureFn: (ChartDataModel chartData, _) => chartData.loadsValue,
-      colorFn: (_, __) => charts.MaterialPalette.teal.shadeDefault,
-      data: loadedDataList,
-    );
+      var emptyChartData = charts.Series<ChartDataModel, String>(
+        id: 'Empty',
+        domainFn: (ChartDataModel chartData, _) => chartData.name,
+        measureFn: (ChartDataModel chartData, _) => chartData.loadsValue,
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+        data: emptyDataList,
+      );
+      var loadedChartData = charts.Series<ChartDataModel, String>(
+        id: 'Loaded',
+        domainFn: (ChartDataModel chartData, _) => chartData.name,
+        measureFn: (ChartDataModel chartData, _) => chartData.loadsValue,
+        colorFn: (_, __) => charts.MaterialPalette.teal.shadeDefault,
+        data: loadedDataList,
+      );
 //Add final model data in series list to show chart
-    seriesListBarChart.add(loadedChartData);
-    seriesListBarChart.add(emptyChartData);
-    //seriesList.add(totalChartData);
+      seriesListBarChart.add(loadedChartData);
+      seriesListBarChart.add(emptyChartData);
+      //seriesList.add(totalChartData);
+    } catch (_) {
+      print('Exception caught in Bar chart');
+    }
   }
 
   //This method is used to set data in pie chart
@@ -655,113 +659,117 @@ class LoadScreen extends State<LoadPage> {
     // And show them into pie chart
     //first clear the series List for pie chart
     try {
-    seriesListPieChart.clear();
-    //Clear the tractor data list
-    listTractorData.clear();
-    //Create  data List
-    var chartDataList = List<ChartDataModel>();
-    if (_tractorData.tractors.length > 10) {
-      var subTractorList = _tractorData.tractors.sublist(0, 10);
-      for (int i = 0; i < subTractorList.length; i++) {
-        var chartModel = ChartDataModel(
-            name: subTractorList[i].tractorId,
-            value: pageName == PageName.LOAD_PAGE
-                ? subTractorList[i].totalLoadsPercent
-                : pageName == PageName.MILES_PAGE
-                    ? subTractorList[i].totalMilesPercent
-                    : pageName == PageName.FUEL_PAGE
-                        ? isFuelGallons
-                            ? subTractorList[i].totalGallonsPercent
-                            : subTractorList[i].totalFuelCost
-                        : subTractorList[i].totalNetPercent,
-            color: AppColors.colorListPieChart[i]);
-        chartDataList.add(chartModel);
-        //Create a map object to map Tractor data with color code for dot
-        var mapOBJ = Map<Tractor, Color>();
-        mapOBJ.putIfAbsent(
-            subTractorList[i], () => AppColors.colorListForDots[i]);
-        //Add data in Tractor list to show in list view
-        listTractorData.add(mapOBJ);
+      seriesListPieChart.clear();
+      //Clear the tractor data list
+      listTractorData.clear();
+      //Create  data List
+      var chartDataList = List<ChartDataModel>();
+      if (_tractorData.tractors.length > 10) {
+        var subTractorList = _tractorData.tractors.sublist(0, 10);
+        for (int i = 0; i < subTractorList.length; i++) {
+          var chartModel = ChartDataModel(
+              name: subTractorList[i].tractorId,
+              value: pageName == PageName.LOAD_PAGE
+                  ? subTractorList[i].totalLoadsPercent
+                  : pageName == PageName.MILES_PAGE
+                      ? subTractorList[i].totalMilesPercent
+                      : pageName == PageName.FUEL_PAGE
+                          ? isFuelGallons
+                              ? subTractorList[i].totalGallonsPercent
+                              : subTractorList[i].totalFuelCost
+                          : subTractorList[i].totalNetPercent,
+              color: AppColors.colorListPieChart[i]);
+          chartDataList.add(chartModel);
+          //Create a map object to map Tractor data with color code for dot
+          var mapOBJ = Map<Tractor, Color>();
+          mapOBJ.putIfAbsent(
+              subTractorList[i], () => AppColors.colorListForDots[i]);
+          //Add data in Tractor list to show in list view
+          listTractorData.add(mapOBJ);
+        }
+        //Now we have to show 11th division of pie chart, i.e the total percentage
+        // of remaining items, So check first if we have items in list
+        var remainingItemList =
+            _tractorData.tractors.sublist(10, _tractorData.tractors.length);
+
+        double sum = 0.0;
+
+        remainingItemList.forEach((item) {
+          sum = sum +
+              (pageName == PageName.LOAD_PAGE
+                  ? item.totalLoadsPercent == null
+                      ? 0.0
+                      : item.totalLoadsPercent
+                  : pageName == PageName.MILES_PAGE
+                      ? item.totalMilesPercent == null
+                          ? 0.0
+                          : item.totalMilesPercent
+                      : pageName == PageName.FUEL_PAGE
+                          ? isFuelGallons
+                              ? item.totalGallonsPercent == null
+                                  ? 0.0
+                                  : item.totalGallonsPercent
+                              : item.totalFuelCost == null
+                                  ? 0.0
+                                  : item.totalFuelCost
+                          : item.totalNetPercent == null
+                              ? 0.0
+                              : item.totalNetPercent);
+        });
+
+        //Add the sum of remaining loads in to data map list for pie chart
+        chartDataList.add(ChartDataModel(
+            value: num.parse(sum.toStringAsFixed(2)),
+            name: "11th",
+            color: charts.Color(r: 255, g: 255, b: 255)));
+        //Now Add remaining Items in Tractor list to show data data
+        remainingItemList.forEach((item) {
+          var mapOBJ = Map<Tractor, Color>();
+          mapOBJ.putIfAbsent(item, () => AppColors.colorWhite);
+          //Add data in Tractor list to show in list view
+          listTractorData.add(mapOBJ);
+        });
+        //If list size if less then 10 then set the list data in chart
+      } else {
+        //For loop to add tractor data into list for chart
+        for (int i = 0; i < _tractorData.tractors.length; i++) {
+          var chartModel = ChartDataModel(
+              name: _tractorData.tractors[i].tractorId,
+              value: pageName == PageName.LOAD_PAGE
+                  ? _tractorData.tractors[i].totalLoadsPercent
+                  : _tractorData.tractors[i].totalMilesPercent,
+              color: AppColors.colorListPieChart[i]);
+          chartDataList.add(chartModel);
+          //Create a map object to map Tractor data with color code for dot
+          var mapOBJ = Map<Tractor, Color>();
+          mapOBJ.putIfAbsent(
+              _tractorData.tractors[i], () => AppColors.colorListForDots[i]);
+          //Add data in Tractor list to show in list view
+          listTractorData.add(mapOBJ);
+        }
       }
-      //Now we have to show 11th division of pie chart, i.e the total percentage
-      // of remaining items, So check first if we have items in list
-      var remainingItemList =
-          _tractorData.tractors.sublist(10, _tractorData.tractors.length);
 
-      double sum = 0.0;
-
-      remainingItemList.forEach((item) {
-        sum = sum +
-            (pageName == PageName.LOAD_PAGE
-                ? item.totalLoadsPercent == null ? 0.0 : item.totalLoadsPercent
-                : pageName == PageName.MILES_PAGE
-                    ? item.totalMilesPercent == null
-                        ? 0.0
-                        : item.totalMilesPercent
-                    : pageName == PageName.FUEL_PAGE
-                        ? isFuelGallons
-                            ? item.totalGallonsPercent == null
-                                ? 0.0
-                                : item.totalGallonsPercent
-                            : item.totalFuelCost == null
-                                ? 0.0
-                                : item.totalFuelCost
-                        : item.totalNetPercent == null
-                            ? 0.0
-                            : item.totalNetPercent);
-      });
-
-      //Add the sum of remaining loads in to data map list for pie chart
-      chartDataList.add(ChartDataModel(
-          value: num.parse(sum.toStringAsFixed(2)),
-          name: "11th",
-          color: charts.Color(r: 255, g: 255, b: 255)));
-      //Now Add remaining Items in Tractor list to show data data
-      remainingItemList.forEach((item) {
-        var mapOBJ = Map<Tractor, Color>();
-        mapOBJ.putIfAbsent(item, () => AppColors.colorWhite);
-        //Add data in Tractor list to show in list view
-        listTractorData.add(mapOBJ);
-      });
-      //If list size if less then 10 then set the list data in chart
-    } else {
-      //For loop to add tractor data into list for chart
-      for (int i = 0; i < _tractorData.tractors.length; i++) {
-        var chartModel = ChartDataModel(
-            name: _tractorData.tractors[i].tractorId,
-            value: pageName == PageName.LOAD_PAGE
-                ? _tractorData.tractors[i].totalLoadsPercent
-                : _tractorData.tractors[i].totalMilesPercent,
-            color: AppColors.colorListPieChart[i]);
-        chartDataList.add(chartModel);
-        //Create a map object to map Tractor data with color code for dot
-        var mapOBJ = Map<Tractor, Color>();
-        mapOBJ.putIfAbsent(
-            _tractorData.tractors[i], () => AppColors.colorListForDots[i]);
-        //Add data in Tractor list to show in list view
-        listTractorData.add(mapOBJ);
-      }
+      //Create pie chart basic properties here
+      var pieChart = charts.Series<ChartDataModel, String>(
+        id: 'TopContributor',
+        domainFn: (ChartDataModel sales, _) => sales.name,
+        measureFn: (ChartDataModel sales, _) => sales.value,
+        data: chartDataList,
+        // Set a label accessor to control the text of the arc label.
+        labelAccessorFn: (ChartDataModel row, _) => '${row.value}',
+        colorFn: (ChartDataModel clickData, _) => clickData.color,
+        insideLabelStyleAccessorFn: (_, __) =>
+            charts.TextStyleSpec(color: charts.Color(r: 255, g: 255, b: 255)),
+        outsideLabelStyleAccessorFn: (ChartDataModel sales, _) {
+          return new charts.TextStyleSpec(
+              color: charts.Color(r: 255, g: 255, b: 255));
+        },
+      );
+      //Add chart data into series list
+      seriesListPieChart.add(pieChart);
+    } catch (_) {
+      print('Exception caught in Pie chart');
     }
-
-    //Create pie chart basic properties here
-    var pieChart = charts.Series<ChartDataModel, String>(
-      id: 'TopContributor',
-      domainFn: (ChartDataModel sales, _) => sales.name,
-      measureFn: (ChartDataModel sales, _) => sales.value,
-      data: chartDataList,
-      // Set a label accessor to control the text of the arc label.
-      labelAccessorFn: (ChartDataModel row, _) => '${row.value}',
-      colorFn: (ChartDataModel clickData, _) => clickData.color,
-      insideLabelStyleAccessorFn: (_, __) =>
-          charts.TextStyleSpec(color: charts.Color(r: 255, g: 255, b: 255)),
-      outsideLabelStyleAccessorFn: (ChartDataModel sales, _) {
-        return new charts.TextStyleSpec(
-            color: charts.Color(r: 255, g: 255, b: 255));
-      },
-    );
-    //Add chart data into series list
-    seriesListPieChart.add(pieChart);
-    } catch (_) {}
   }
 
   //This method returns the list of widgets for PagerView
@@ -775,7 +783,6 @@ class LoadScreen extends State<LoadPage> {
     //Create a list of widgets that would be change dynamically based on user type
     var listOfWidgets = List<Widget>();
     //Create Widgets the would be show in pager
-
     var pieChartWidget = Column(
       children: <Widget>[
         SizedBox(
@@ -796,10 +803,12 @@ class LoadScreen extends State<LoadPage> {
     var barChartWidget = Padding(
       padding: const EdgeInsets.all(8.0),
       child: pageName == PageName.COMPENSATION_PAGE
-          ? DonutPieChart(
-              grossAmount: dashboardData.grossAmt,
-              deductions: dashboardData.deductions,
-            )
+          ? dashboardData.deductions == null
+              ? Container()
+              : DonutPieChart(
+                  grossAmount: dashboardData.grossAmt,
+                  deductions: dashboardData.deductions,
+                )
           : StackedBarChart(
               pageName: pageName,
               seriesList: seriesListBarChart,

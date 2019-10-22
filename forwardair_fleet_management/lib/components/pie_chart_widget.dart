@@ -10,13 +10,31 @@ class PieChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart(
-      seriesList,
-      animate: animate,
-      defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
-        new charts.ArcLabelDecorator(
-            labelPosition: charts.ArcLabelPosition.outside)
-      ]),
+    return Container(
+      child: isAllNull()
+          ? Container()
+          : new charts.PieChart(
+              seriesList,
+              animate: animate,
+              defaultRenderer: new charts.ArcRendererConfig(
+                  arcRendererDecorators: [
+                    new charts.ArcLabelDecorator(
+                        labelPosition: charts.ArcLabelPosition.outside)
+                  ]),
+            ),
     );
+  }
+
+  bool isAllNull() {
+    var isShowPieChart = false;
+    if (seriesList.length > 0) {
+      seriesList[0].data.forEach((item) {
+        if ((item.loadsValue == null) && (item.value == null)) {
+          isShowPieChart = true;
+        }
+      });
+    }
+
+    return isShowPieChart;
   }
 }
