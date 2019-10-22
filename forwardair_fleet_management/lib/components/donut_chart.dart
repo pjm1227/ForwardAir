@@ -3,6 +3,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:forwardair_fleet_management/models/chart_data_model.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
+import 'package:forwardair_fleet_management/utility/utils.dart';
 
 class DonutPieChart extends StatelessWidget {
   final double grossAmount, deductions;
@@ -56,7 +57,7 @@ class DonutPieChart extends StatelessWidget {
       measureFn: (ChartDataModel sales, _) => sales.value,
       data: chartDataList,
       // Set a label accessor to control the text of the arc label.
-      labelAccessorFn: (ChartDataModel row, _) => '\$${row.value}',
+      labelAccessorFn: (ChartDataModel row, _) => '\$${Utils.formatDecimalToWholeNumber(row.value)}',
       colorFn: (ChartDataModel clickData, _) => clickData.color,
       insideLabelStyleAccessorFn: (_, __) =>
           charts.TextStyleSpec(color: charts.Color(r: 255, g: 255, b: 255)),
