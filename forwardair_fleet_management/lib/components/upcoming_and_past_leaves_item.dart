@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/unavailability.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
-import 'package:forwardair_fleet_management/models/enums/page_names.dart';
-import 'package:forwardair_fleet_management/models/loadDetails/load_detail_model.dart';
 import 'package:forwardair_fleet_management/models/unavailability_data_model.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
-import 'package:forwardair_fleet_management/utility/utils.dart';
 
 //This class is called to Upcoming and Past Leave Item in Unavailability
 class UpcomingAndPastLeavesItem extends StatelessWidget {
@@ -19,6 +16,7 @@ class UpcomingAndPastLeavesItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = Color.fromRGBO(147, 216, 228, 1);
     return Container(
       padding: EdgeInsets.all(10),
       margin: new EdgeInsets.only(
@@ -50,7 +48,7 @@ class UpcomingAndPastLeavesItem extends StatelessWidget {
               Icon(
                 Icons.calendar_today,
                 size: 15,
-                color: AppColors.colorBlue,
+                color: iconColor,
               ),
               unavailabilityBloc.combineStartAndEndDate(
                   unavailabilityDataModelDetail.leaveStartDate,
@@ -60,7 +58,7 @@ class UpcomingAndPastLeavesItem extends StatelessWidget {
           _displayIconAndTextInRow(
               Icon(
                 Icons.location_on,
-                color: AppColors.colorBlue,
+                color: iconColor,
                 size: 15,
               ),
               unavailabilityBloc.combineCityAndState(
@@ -71,7 +69,7 @@ class UpcomingAndPastLeavesItem extends StatelessWidget {
           _displayIconAndTextInRow(
               Icon(
                 Icons.description,
-                color: AppColors.colorBlue,
+                color: iconColor,
                 size: 15,
               ),
               unavailabilityDataModelDetail.reason,
@@ -80,7 +78,7 @@ class UpcomingAndPastLeavesItem extends StatelessWidget {
           _displayIconAndTextInRow(
               Icon(
                 Icons.person_outline,
-                color: AppColors.colorBlue,
+                color: iconColor,
                 size: 15,
               ),
               unavailabilityBloc.combineSubmittedDateTimeAndId(

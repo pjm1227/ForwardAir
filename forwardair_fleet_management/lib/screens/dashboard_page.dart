@@ -16,7 +16,6 @@ import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/dashboard.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
-import 'sidemenu.dart';
 import 'load_screen.dart';
 
 //This widget dashboard page

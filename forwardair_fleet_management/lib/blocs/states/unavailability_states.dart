@@ -35,3 +35,6 @@ class TappedonLeaveListItemState extends UnavailabilityStates {
   final UnavailabilityDataModelDetail dataModelDetail;
   TappedonLeaveListItemState({@required this.dataModelDetail}) : super([]);
 }
+
+//This will handle state when page navigate to Leave Reporting page.
+class NavigateToLeaveReportingPageState extends UnavailabilityStates {}

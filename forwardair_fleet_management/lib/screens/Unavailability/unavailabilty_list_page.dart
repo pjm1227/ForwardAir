@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forwardair_fleet_management/components/upcoming_and_past_leaves_item.dart';
+import 'package:forwardair_fleet_management/screens/Unavailability/report_unavailability_page.dart';
 import 'package:forwardair_fleet_management/screens/Unavailability/unavailability_detail_page.dart';
 import 'package:forwardair_fleet_management/utility/theme.dart';
 import 'package:page_transition/page_transition.dart';
@@ -63,15 +64,17 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
     super.dispose();
   }
 
-  //Navigate to Leave Detail Page
-  void openLeaveDetailsPage(
-      UnavailabilityDataModelDetail unavailabilityDataModelDetail) {
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: UnavailabilityDetailsPage(
-                unavailabilityDataModelDetail: unavailabilityDataModelDetail)));
+  //Main Widget of the page.
+  @override
+  Widget build(BuildContext context) {
+    //Platform Checking for Safearea.
+    if (Platform.isAndroid) {
+      return SafeArea(
+        child: _scaffoldWidget(),
+      );
+    } else {
+      return _scaffoldWidget();
+    }
   }
 
   //Main Widget to hold the page of the unavailability
@@ -79,7 +82,9 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
     return Scaffold(
       //To display Plus button widget
       floatingActionButton: usertype == '' ? Container() : this.usertype != Constants.TEXT_FO_TYPE ? FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _unavailabilityBloc.dispatch(TappedOnLeaveReportingEvent());
+        },
         child: Icon(
           Icons.add,
           color: AppColors.colorWhite,
@@ -92,6 +97,8 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
         listener: (context, state) {
           if (state is TappedonLeaveListItemState) {
             openLeaveDetailsPage(state.dataModelDetail);
+          } else if (state is NavigateToLeaveReportingPageState) {
+            navigateToLeaveReportPage();
           }
         },
         bloc: _unavailabilityBloc,
@@ -120,6 +127,7 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
                 pastItems = [];
               }
             }
+
             return Column(
               children: <Widget>[
                 Material(
@@ -158,6 +166,27 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
     );
   }
 
+  //Navigate to Leave Reporting Page
+  void navigateToLeaveReportPage() {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: UnavailabilityReportPage()));
+  }
+
+  //Navigate to Leave Detail Page
+  void openLeaveDetailsPage(
+      UnavailabilityDataModelDetail unavailabilityDataModelDetail) {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: UnavailabilityDetailsPage(
+                unavailabilityDataModelDetail: unavailabilityDataModelDetail)));
+  }
+
+  //To navigate to calendar page
   void openLeaveCalendarBasedOnTheTabBarItem() {
     Navigator.push(
         context,
@@ -172,17 +201,6 @@ class UnavailabilityListState extends State<UnavailabilityListPage>
                   )));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    //Platform Checking for Safearea.
-    if (Platform.isAndroid) {
-      return SafeArea(
-        child: _scaffoldWidget(),
-      );
-    } else {
-      return _scaffoldWidget();
-    }
-  }
 
   //This widget display Upcoming and Past List items
   Widget upcomingAndPastListView(

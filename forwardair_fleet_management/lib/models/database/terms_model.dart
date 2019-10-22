@@ -2,8 +2,6 @@
 //
 //     final termsModel = termsModelFromJson(jsonString);
 
-import 'dart:convert';
-
 class TermsModel {
   int id;
   bool isTermsAccepted;

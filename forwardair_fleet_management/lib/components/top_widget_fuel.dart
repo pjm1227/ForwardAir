@@ -144,6 +144,5 @@ class TopWidgetForFuel extends StatelessWidget {
         ),
       ),
     ]);
-    ;
   }
 }

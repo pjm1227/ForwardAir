@@ -224,8 +224,6 @@ class SettlementPageState extends State<SettlementPage> {
         onTap: () {
           _settlementBloc.dispatch(NavigateToDetailPageEvent(
               selectedIndex: index,
-//              appBarTitle:
-//                  _settlementBloc.startAndEndDateCheckDate(_settlementCheck),
               settlementModel: _settlementModel));
         },
         child: Column(

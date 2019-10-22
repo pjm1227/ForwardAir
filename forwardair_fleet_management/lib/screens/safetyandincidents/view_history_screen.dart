@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 
-import '../sidemenu.dart';
 
 //This class is used to call API for view history inside safety and incidents module
 class ViewHistoryPage extends StatelessWidget {

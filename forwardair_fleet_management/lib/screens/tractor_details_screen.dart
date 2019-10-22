@@ -89,6 +89,7 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
           (dashboardData.dashboardPeriod ==
               Constants.TEXT_DASHBOARD_PERIOD_THIS_MONTH)) {
         _loadDetailsBloc.dispatch(FetchTractorDataEvent(
+          checkNbr: null,
           pageName: pageName,
           tractorId: tractorData.tractorId,
           month: dashboardData.month,
@@ -98,6 +99,7 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
         ));
       } else {
         _loadDetailsBloc.dispatch(FetchTractorDataEvent(
+            checkNbr: null,
             tractorId: tractorData.tractorId,
             pageName: pageName,
             month: 0,
@@ -220,7 +222,6 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
                             settlementModel: state.settlementDetailsModel
                                 .settlementDetails[index],
                           );
-                          ;
                         },
                       )
                     : NoResultFoundWidget());

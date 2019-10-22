@@ -15,8 +15,13 @@ class GetUnavailabilityDataEvent extends UnavailabilityEvents {
 
 }
 
-//This state to display the leave details
+//This event to display the leave details
 class TappedonLeaveListItemEvent extends UnavailabilityEvents {
   final UnavailabilityDataModelDetail dataModelDetail;
   TappedonLeaveListItemEvent({@required this.dataModelDetail}) : super([]);
+}
+
+//This event to display the leave reporting
+class TappedOnLeaveReportingEvent extends UnavailabilityEvents {
+
 }

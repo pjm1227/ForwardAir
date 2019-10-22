@@ -1,15 +1,12 @@
 import 'package:bloc/bloc.dart';
 
 import 'package:forwardair_fleet_management/blocs/barrels/unavailability.dart';
-import 'package:forwardair_fleet_management/databasemanager/user_manager.dart';
-import 'package:forwardair_fleet_management/models/login_model.dart';
 import 'package:forwardair_fleet_management/models/unavailability_data_model.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
 class UnavailabilityBloc
     extends Bloc<UnavailabilityEvents, UnavailabilityStates> {
-
 
   //It will call to map initial State
   @override
@@ -25,6 +22,9 @@ class UnavailabilityBloc
     } else if (event is TappedonLeaveListItemEvent) {
       yield InitialState();
       yield TappedonLeaveListItemState(dataModelDetail: event.dataModelDetail);
+    } else if (event is TappedOnLeaveReportingEvent) {
+      yield InitialState();
+      yield NavigateToLeaveReportingPageState();
     }
   }
 

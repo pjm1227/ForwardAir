@@ -1,16 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-
-//import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:forwardair_fleet_management/blocs/barrels/login.dart';
 import 'package:forwardair_fleet_management/components/button_widget.dart';
 import 'package:forwardair_fleet_management/screens/terms_condition_screen.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
-import 'sidemenu.dart';
 
 /*class LoginPage extends StatelessWidget {
   // This widget is the root of your application.
