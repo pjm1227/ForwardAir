@@ -24,24 +24,28 @@ class DonutPieChart extends StatelessWidget {
   }
 
   List<charts.Series> createChartData() {
-    // convert double to string to remove - sign from deductions
-    var deductionString = deductions.toString();
-    if (deductionString.contains('-')) {
-      deductionString = deductionString.substring(1, deductionString.length);
-    }
-    var finalDeduction = double.parse(deductionString);
 
+    // convert double to string to remove - sign from deductions
+    var finalDeduction;
+    if(deductions !=null) {
+      var deductionString = deductions.toString();
+      if (deductionString.contains('-')) {
+        deductionString = deductionString.substring(1, deductionString.length);
+      }
+
+     finalDeduction = double.parse(deductionString);
+    }
     List<charts.Series<ChartDataModel, String>> seriesListPieChart =
         List<charts.Series<ChartDataModel, String>>();
     var chartDataList = List<ChartDataModel>();
 
     var chartModelGrossAmount = ChartDataModel(
         name: 'gross_amount',
-        value: grossAmount,
+        value: grossAmount == null ? 0.0 : grossAmount,
         color: charts.Color(r: 0, g: 128, b: 129));
     var chartModelDeductions = ChartDataModel(
         name: 'deductions',
-        value: finalDeduction,
+        value: finalDeduction == null ? 0.0 : finalDeduction,
         color: AppColors.colorListPieChart[0]);
     chartDataList.add(chartModelGrossAmount);
     chartDataList.add(chartModelDeductions);

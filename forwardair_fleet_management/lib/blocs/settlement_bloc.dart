@@ -94,7 +94,7 @@ class SettlementBloc extends Bloc<SettlementEvents, SettlementStates> {
   }
 
   String getCheckAmount(SettlementCheck _settlementCheck) {
-    var commaAddedText = Utils().formatDecimalsNumber(
+    var commaAddedText = Utils.formatDecimalsNumber(
         double.parse(_settlementCheck.checkAmt) != null ? double.parse(_settlementCheck.checkAmt) : '');
     if (commaAddedText != '') {
       return '\$' + commaAddedText;

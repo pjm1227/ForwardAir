@@ -156,6 +156,43 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
   //This method sort top contributors
   TractorData topContributorData(PageName pageName, TractorData tractorModel) {
     try {
+      //Create a temp list to check for tractor list
+      //In this list we'll add empty items, so that we can manage exception
+      //for null
+      var tempTractorList = List<Tractor>();
+      tractorModel.tractors.forEach((item) {
+        if (pageName == PageName.FUEL_PAGE) {
+          if (item.totalTractorGallons == null) {
+            //If item is null then add it into tempTractorList
+            tempTractorList.add(item);
+          }
+        } else if (pageName == PageName.COMPENSATION_PAGE) {
+          if (item.totalNet == null) {
+            //If item is null then add it into tempTractorList
+            tempTractorList.add(item);
+          }
+        } else if (pageName == PageName.LOAD_PAGE) {
+          if (item.totalLoads == null) {
+            //If item is null then add it into tempTractorList
+            tempTractorList.add(item);
+          }
+        } else {
+          if (item.totalMiles == null) {
+            //If item is null then add it into tempTractorList
+            //And remove it from TractorModel
+            tempTractorList.add(item);
+          }
+        }
+      });
+      //Now remove element from Tractor List where elements are null based on page name
+      tractorModel.tractors.removeWhere((item) => pageName == PageName.FUEL_PAGE
+          ? item.totalTractorGallons == null
+          : pageName == PageName.COMPENSATION_PAGE
+              ? item.totalNet == null
+              : pageName == PageName.LOAD_PAGE
+                  ? item.totalLoads == null
+                  : item.totalMiles == null);
+      //We have removed all null items from TractorModel, Now do sorting for top contributor
       tractorModel.tractors.sort((a, b) => pageName == PageName.LOAD_PAGE
           ? b.totalLoads.compareTo(a.totalLoads)
           : pageName == PageName.MILES_PAGE
@@ -163,6 +200,8 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
               : pageName == PageName.FUEL_PAGE
                   ? b.totalTractorGallons.compareTo(a.totalTractorGallons)
                   : b.totalNet.compareTo(a.totalNet));
+      //Sorting is done now add empty item in the list of tractor model and return
+      tractorModel.tractors.addAll(tempTractorList);
       return tractorModel;
     } catch (_) {
       return tractorModel;

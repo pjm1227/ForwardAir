@@ -64,8 +64,14 @@ class TopWidgetForFuel extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 4.0, right: 8.0),
                   child: TextWidget(
                     text: pageName == PageName.FUEL_PAGE
-                        ? '${Utils.formatDecimalToWholeNumber(totalTractorGallons)}'
-                        : '\$${Utils.formatDecimalToWholeNumber(grossAmount)}',
+                        ? Utils.formatDecimalToWholeNumber(
+                                    totalTractorGallons) ==
+                                'N/A'
+                            ? 'N/A'
+                            : '\$${Utils.formatDecimalToWholeNumber(totalTractorGallons)}'
+                        : Utils.formatDecimalToWholeNumber(grossAmount) == 'N/A'
+                            ? 'N/A'
+                            : '\$${Utils.formatDecimalToWholeNumber(grossAmount)}',
                     textAlign: TextAlign.center,
                     colorText: AppColors.colorWhite,
                     textType: TextType.TEXT_MEDIUM,
@@ -121,8 +127,11 @@ class TopWidgetForFuel extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: TextWidget(
                     text: pageName == PageName.FUEL_PAGE
-                        ? '\$${Utils.formatDecimalToWholeNumber(totalFuelCost)}'
-                        : '\$${Utils.formatDecimalToWholeNumber(deductions)}',
+                        ? Utils.formatDecimalToWholeNumber(totalFuelCost) ==
+                                'N/A'
+                            ? 'N/A'
+                            : '\$${Utils.formatDecimalToWholeNumber(totalFuelCost)}'
+                        : '${Utils.addDollarAfterMinusSign(Utils.formatDecimalsNumber(deductions))}',
                     textAlign: TextAlign.center,
                     colorText: AppColors.colorWhite,
                     textType: TextType.TEXT_MEDIUM,
