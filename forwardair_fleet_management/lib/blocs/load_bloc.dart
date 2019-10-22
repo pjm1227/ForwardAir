@@ -212,6 +212,43 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
   List<Map<Tractor, Color>> sortHighToLow(
       PageName pageName, List<Map<Tractor, Color>> tractorModel) {
     try {
+      //Create a temp list to check for tractor list
+      //In this list we'll add empty items, so that we can manage exception
+      //for null
+      var tempTractorList = List<Map<Tractor, Color>>();
+      tractorModel.forEach((item) {
+        if (pageName == PageName.FUEL_PAGE) {
+          if (item.keys.first.totalTractorGallons == null) {
+            //If item is null then add it into tempTractorList
+            tempTractorList.add(item);
+          }
+        } else if (pageName == PageName.COMPENSATION_PAGE) {
+          if (item.keys.first.totalNet == null) {
+            //If item is null then add it into tempTractorList
+            tempTractorList.add(item);
+          }
+        } else if (pageName == PageName.LOAD_PAGE) {
+          if (item.keys.first.totalLoads == null) {
+            //If item is null then add it into tempTractorList
+            tempTractorList.add(item);
+          }
+        } else {
+          if (item.keys.first.totalMiles == null) {
+            //If item is null then add it into tempTractorList
+            //And remove it from TractorModel
+            tempTractorList.add(item);
+          }
+        }
+      });
+      //Now remove element from Tractor List where elements are null based on page name
+      tractorModel.removeWhere((item) => pageName == PageName.FUEL_PAGE
+          ? item.keys.first.totalTractorGallons == null
+          : pageName == PageName.COMPENSATION_PAGE
+              ? item.keys.first.totalNet == null
+              : pageName == PageName.LOAD_PAGE
+                  ? item.keys.first.totalLoads == null
+                  : item.keys.first.totalMiles == null);
+
       tractorModel.sort((a, b) => pageName == PageName.LOAD_PAGE
           ? b.keys.first.totalLoads.compareTo(a.keys.first.totalLoads)
           : pageName == PageName.MILES_PAGE
@@ -220,6 +257,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
                   ? b.keys.first.totalTractorGallons
                       .compareTo(a.keys.first.totalTractorGallons)
                   : b.keys.first.totalNet.compareTo(a.keys.first.totalNet));
+      tractorModel.addAll(tempTractorList);
       return tractorModel;
     } catch (_) {
       return tractorModel;
@@ -230,6 +268,43 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
   List<Map<Tractor, Color>> sortLowToHigh(
       PageName pageName, List<Map<Tractor, Color>> tractorModel) {
     try {
+      //Create a temp list to check for tractor list
+      //In this list we'll add empty items, so that we can manage exception
+      //for null
+      var tempTractorList = List<Map<Tractor, Color>>();
+      tractorModel.forEach((item) {
+        if (pageName == PageName.FUEL_PAGE) {
+          if (item.keys.first.totalTractorGallons == null) {
+            //If item is null then add it into tempTractorList
+            tempTractorList.add(item);
+          }
+        } else if (pageName == PageName.COMPENSATION_PAGE) {
+          if (item.keys.first.totalNet == null) {
+            //If item is null then add it into tempTractorList
+            tempTractorList.add(item);
+          }
+        } else if (pageName == PageName.LOAD_PAGE) {
+          if (item.keys.first.totalLoads == null) {
+            //If item is null then add it into tempTractorList
+            tempTractorList.add(item);
+          }
+        } else {
+          if (item.keys.first.totalMiles == null) {
+            //If item is null then add it into tempTractorList
+            //And remove it from TractorModel
+            tempTractorList.add(item);
+          }
+        }
+      });
+      //Now remove element from Tractor List where elements are null based on page name
+      tractorModel.removeWhere((item) => pageName == PageName.FUEL_PAGE
+          ? item.keys.first.totalTractorGallons == null
+          : pageName == PageName.COMPENSATION_PAGE
+              ? item.keys.first.totalNet == null
+              : pageName == PageName.LOAD_PAGE
+                  ? item.keys.first.totalLoads == null
+                  : item.keys.first.totalMiles == null);
+
       tractorModel.sort((a, b) => pageName == PageName.LOAD_PAGE
           ? a.keys.first.totalLoads.compareTo(b.keys.first.totalLoads)
           : pageName == PageName.MILES_PAGE
@@ -238,6 +313,7 @@ class LoadBloc extends Bloc<LoadEvents, LoadStates> {
                   ? a.keys.first.totalTractorGallons
                       .compareTo(b.keys.first.totalTractorGallons)
                   : a.keys.first.totalNet.compareTo(b.keys.first.totalNet));
+      tractorModel.addAll(tempTractorList);
       return tractorModel;
     } catch (_) {
       return tractorModel;

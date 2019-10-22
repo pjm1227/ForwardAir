@@ -790,7 +790,7 @@ class LoadScreen extends State<LoadPage> {
         Expanded(
           child: PieChartWidget(
             seriesListPieChart,
-            animate: true,
+            animate: isAnimate,
           ),
         ),
         SizedBox(
