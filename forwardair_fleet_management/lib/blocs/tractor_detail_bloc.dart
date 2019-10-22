@@ -9,6 +9,7 @@ import 'package:forwardair_fleet_management/models/error_model.dart';
 import 'package:forwardair_fleet_management/models/loadDetails/load_detail_model.dart';
 import 'package:forwardair_fleet_management/models/tractor_fuel_details_model.dart';
 import 'package:forwardair_fleet_management/models/webservice/load_request.dart';
+import 'package:forwardair_fleet_management/models/webservice/settlements_details_request.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'barrels/load_details.dart';
@@ -35,15 +36,19 @@ class TractorDetailBloc extends Bloc<LoadDetailEvents, TractorDetailsState> {
       if (userModel.token != null) {
         var repository = Repository();
         //Create a request Model
-        var request = LoadRequest(
+        var request = event.pageName != PageName.SETTLEMENTS_PAGE ? LoadRequest(
             weekStart: event.weekStart,
+            weekEnd: event.weekEnd,
+            year: event.year,
+            tractorId: event.tractorId,
+            month: event.month) : SettlementsDetailsRequest(weekStart: event.weekStart,
             weekEnd: event.weekEnd,
             year: event.year,
             tractorId: event.tractorId,
             month: event.month,
             checkNbr: event.checkNbr);
         //Convert request model to json
-        var body = request.toJson();
+        var body = event.pageName == PageName.SETTLEMENTS_PAGE ? (request as SettlementsDetailsRequest).toJson() : (request as LoadRequest).toJson();
         print(body.toString());
         //Call API according to page Name
         var result;

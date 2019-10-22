@@ -65,7 +65,9 @@ class TractorFuelDetailsList extends StatelessWidget {
                         child: TextWidget(
                           text: pageName == PageName.FUEL_PAGE
                               ? '\$${fuelModel.tractorFuelCost}'
-                              : '\$${settlementModel.amt}',
+                              : settlementModel.transType != 'E'
+                                  ? '${Utils.addDollarAfterMinusSign(Utils.formatDecimalsNumber(double.parse(settlementModel.amt)))}'
+                                  : '\$${Utils.formatDecimalsNumber(double.parse(settlementModel.amt))}',
                           textAlign: TextAlign.end,
                           colorText: AppColors.colorAppBar,
                           isBold: true,
@@ -126,13 +128,16 @@ class TractorFuelDetailsList extends StatelessWidget {
               ],
             )),
         onTap: () {
-          if (pageName == PageName.COMPENSATION_PAGE || pageName == PageName.SETTLEMENTS_PAGE) {
-            Navigator.push(context,  PageTransition(
-                type: PageTransitionType.fade,
-                child: TractorRevenueDetails(
-                  transactionType: settlementModel.transType,
-                  oid: settlementModel.oid,
-                )));
+          if (pageName == PageName.COMPENSATION_PAGE ||
+              pageName == PageName.SETTLEMENTS_PAGE) {
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade,
+                    child: TractorRevenueDetails(
+                      transactionType: settlementModel.transType,
+                      oid: settlementModel.oid,
+                    )));
           }
         });
 

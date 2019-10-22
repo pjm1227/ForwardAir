@@ -64,10 +64,7 @@ class TopWidgetForFuel extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 4.0, right: 8.0),
                   child: TextWidget(
                     text: pageName == PageName.FUEL_PAGE
-                        ? Utils.formatDecimalToWholeNumber(
-                                    totalTractorGallons) ==
-                                'N/A'
-                            ? 'N/A'
+                        ? Utils.formatDecimalToWholeNumber(totalTractorGallons) == 'N/A' ? 'N/A'
                             : '\$${Utils.formatDecimalToWholeNumber(totalTractorGallons)}'
                         : Utils.formatDecimalToWholeNumber(grossAmount) == 'N/A'
                             ? 'N/A'

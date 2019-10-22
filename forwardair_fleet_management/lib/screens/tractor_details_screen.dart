@@ -142,6 +142,7 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
       body: BlocBuilder<TractorDetailBloc, dynamic>(
         bloc: _loadDetailsBloc,
         builder: (context, state) {
+          print(state);
           if (state is DetailsErrorState) {
             if (state.errorMessage == Constants.NO_INTERNET_FOUND) {
               return NoInternetFoundWidget();
@@ -284,16 +285,22 @@ class _TractorDetailsPageState extends State<TractorDetailsPage> {
                             : tractorData.totalTractorGallons
                         : null,
                     totalFuelCost: tractorData != null
-                        ? tractorData.totalFuelCost == null
-                            ? tractorData.totalTractorGallons
+                        ? tractorData.totalFuelCost != null
+                            ? tractorData.totalFuelCost
                             : null
                         : null,
                     deductions: pageName == PageName.COMPENSATION_PAGE
                         ? _loadDetailsBloc.getDeduction(data.settlementDetails)
-                        : _loadDetailsBloc.getDeduction(data.settlementDetails),
+                        : pageName == PageName.SETTLEMENTS_PAGE
+                            ? _loadDetailsBloc
+                                .getDeduction(data.settlementDetails)
+                            : 0.0,
                     grossAmount: pageName == PageName.COMPENSATION_PAGE
                         ? _loadDetailsBloc.getEarning(data.settlementDetails)
-                        : _loadDetailsBloc.getEarning(data.settlementDetails),
+                        : pageName == PageName.SETTLEMENTS_PAGE
+                            ? _loadDetailsBloc
+                                .getDeduction(data.settlementDetails)
+                            : 0.0,
                   ),
           )
         ],
