@@ -37,7 +37,6 @@ class _LocationPage extends State<LocationPage> {
 
 
    void initState(){
-
      _mapBloc.dispatch(FetchLocationEvent(latitude: fleetData.latitude,longitude: fleetData.longitude));
 //     getLocationAddress(); //this method will initialize the streetAddress based on lat,long using geoCoder
      super.initState();
@@ -47,7 +46,6 @@ class _LocationPage extends State<LocationPage> {
   @override
   Widget build(BuildContext context) {
     _createMarkerImageFromAsset(context); //this method called for creating custom marker
-
 
 
     if (Platform.isAndroid) {
@@ -62,7 +60,6 @@ class _LocationPage extends State<LocationPage> {
 
   Widget _mainWidget(){
     return Scaffold(
-
       body: BlocListener<MapBloc, MapState>(
         listener: (context, state) {},
         bloc: _mapBloc,
@@ -80,9 +77,7 @@ class _LocationPage extends State<LocationPage> {
             if (state is LocationSuccessState) {
               if (state.address != null) {
                 streetAddress=state.address;
-                  return SafeArea(
-                    child: _mapWidget(),
-                  );
+                 return _mapWidget();
               } else {
                 return NoResultFoundWidget();
               }

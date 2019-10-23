@@ -41,6 +41,7 @@ class ApiMethods {
       var map = '{"errorMessage": "Timeout"}';
       responseJson = ErrorModel.fromJson(json.decode(map));
     } on TimeoutException catch (_) {
+      print('Time out');
       var map = '{"errorMessage": "Timeout"}';
       responseJson = ErrorModel.fromJson(json.decode(map));
     } catch (_) {

@@ -43,7 +43,6 @@ class _FleetTrackerPage extends State<FleetTrackerPage> {
 
   Widget _scaffoldWidget(){
     return Scaffold(
-
       body: BlocListener<FleetTrackerBloc, FleetTrackerState>(
         listener: (context, state) {},
         bloc: _fleetBloc,
@@ -60,13 +59,7 @@ class _FleetTrackerPage extends State<FleetTrackerPage> {
             //If state is success then show data in list
             if (state is FleetSuccessState) {
               if (state.fleetModel != null) {
-                if (Platform.isAndroid) {
-                  return SafeArea(
-                    child: _mainWidget(state.fleetModel),
-                  );
-                } else {
-                  return _mainWidget(state.fleetModel);
-                }
+                return _mainWidget(state.fleetModel);
               } else {
                 return NoResultFoundWidget();
               }

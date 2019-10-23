@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:forwardair_fleet_management/components/appbar_widget.dart';
-import 'package:forwardair_fleet_management/screens/Unavailability/unavailabilty_list_page.dart';
-import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
 
+import 'package:forwardair_fleet_management/components/appbar_widget.dart';
+import 'package:forwardair_fleet_management/screens/Unavailability/unavailabilty_list_page.dart';
+import 'package:forwardair_fleet_management/screens/fleet_tracker_screen.dart';
 import 'package:forwardair_fleet_management/screens/settlement_screen.dart';
 import 'package:forwardair_fleet_management/blocs/events/sidemenu_events.dart';
 import 'package:forwardair_fleet_management/blocs/states/sidemenu_state.dart';
@@ -431,18 +431,17 @@ class _SideMenuPageState extends State<SideMenuPage> {
         break;
       case Constants.TEXT_SETTLEMENTS:
         return SettlementPage();
-       // return FeaturesComingSoonPage(false);
         break;
       case Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY:
-        return UnavailabilityListPage(
-          key: globalKey,
-          usertype: _sideMenuBloc.userDetails != null
-              ? _sideMenuBloc.userDetails.usertype != null
-                  ? _sideMenuBloc.userDetails.usertype
-                  : ''
-              : '',
-        );
-       // return FeaturesComingSoonPage(false);
+//        return UnavailabilityListPage(
+//          key: globalKey,
+//          usertype: _sideMenuBloc.userDetails != null
+//              ? _sideMenuBloc.userDetails.usertype != null
+//                  ? _sideMenuBloc.userDetails.usertype
+//                  : ''
+//              : '',
+//        );
+        return FeaturesComingSoonPage(false);
         break;
       case Constants.TEXT_LOGOUT:
         break;
@@ -455,6 +454,9 @@ class _SideMenuPageState extends State<SideMenuPage> {
       case Constants.TEXT_REPORT_BREAKDOWN:
        // return ReportBreakdownPage();
       return FeaturesComingSoonPage(false);
+      case Constants.TEXT_FLEET_TRACKER:
+        return FleetTrackerPage();
+        break;
       default:
         return FeaturesComingSoonPage(false);
         break;
