@@ -6,6 +6,7 @@ import 'package:forwardair_fleet_management/blocs/barrels/unavailability_reporti
 import 'package:forwardair_fleet_management/components/text_widget.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
+import 'package:forwardair_fleet_management/utility/theme.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
 
 class UnavailabilityReportPage extends StatefulWidget {
@@ -24,7 +25,9 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
   var _textControllerReason;
   final focus = FocusNode();
   DateTime _startDate = DateTime.now();
-  DateTime _endDate = DateTime.now();
+  DateTime _endDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1);
+  TimeOfDay _startTime = TimeOfDay.now();
+  TimeOfDay _endTime = TimeOfDay.now();
 
   @override
   void initState() {
@@ -52,19 +55,69 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
   }
 
   //This displays Month Picker
-  Future<Null> _selectDatePicker(BuildContext context) async {
+  Future<Null> _selectStartDatePicker(BuildContext context) async {
     showDatePicker(
         context: context,
         firstDate: DateTime(DateTime.now().year - 2, 5),
         lastDate: DateTime(DateTime.now().year + 1, 9),
         initialDate: _startDate)
         .then((picked) {
-      if (picked != null && picked != _startDate) {
+      if (picked != null) {
         //Picker Event
-        _startDate = picked;
-        _reportingBloc.dispatch(PickedDateEvent(pickedDate: picked));
+        _reportingBloc.dispatch(PickedStartDateEvent(pickedDate: picked));
       }
     });
+  }
+
+  //This displays Month Picker
+  Future<Null> _selectEndDatePicker(BuildContext context) async {
+    showDatePicker(
+        context: context,
+        firstDate: DateTime(DateTime.now().year - 2, 5),
+        lastDate: DateTime(DateTime.now().year + 1, 9),
+        initialDate: _endDate)
+        .then((picked) {
+      if (picked != null) {
+        //Picker Event
+        _reportingBloc.dispatch(PickedEndDateEvent(pickedDate: picked));
+      }
+    });
+  }
+
+  //This displays Month Picker
+  Future<Null> _selectStartTimePicker(BuildContext context) async {
+    _startTime = await showTimePicker(
+      context: context,
+      initialTime: _startTime != null ? _startTime : TimeOfDay.now(),
+      builder: (BuildContext context, Widget child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child,
+        );
+      },
+    );
+      //Picker Event
+    if (_startTime != null) {
+      _reportingBloc.dispatch(PickedStartTimeEvent(pickedTime: _startTime));
+    }
+  }
+
+  //This displays Month Picker
+  Future<Null> _selectEndTimePicker(BuildContext context) async {
+    _endTime = await showTimePicker(
+      context: context,
+      initialTime: _endTime != null ? _endTime : TimeOfDay.now(),
+      builder: (BuildContext context, Widget child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child,
+        );
+      },
+    );
+    if (_endTime != null) {
+      //Picker Event
+      _reportingBloc.dispatch(PickedEndTimeEvent(pickedTime: _endTime));
+    }
   }
 
   _scaffoldWidget() {
@@ -89,10 +142,17 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
             UnavailabilityReportingStates>(
           bloc: _reportingBloc,
           builder: (context, state) {
-            if (state is PickedDateState) {
+            if (state is PickedStartDateState) {
               _startDate = state.pickedDate;
+            } else if (state is PickedEndDateState) {
+              _endDate = state.pickedDate;
+            } else if (state is PickedStartTimeState) {
+              _startTime = state.pickedTime;
+            } else if (state is PickedEndTimeState) {
+              _endTime = state.pickedTime;
             }
             return ListView(children: <Widget>[
+              //Top Widget
               Container(
                 decoration: BoxDecoration(
                   color: AppColors.colorGrey.withOpacity(0.1),
@@ -106,6 +166,7 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
                   ),
                 ),
               ),
+              //Start and End Date Widget
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: new Row(
@@ -113,12 +174,13 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
                     children: [
                       _pickerWiget(
                           Image(image: new AssetImage('images/ic_date_range.png'), fit: BoxFit.fill),
-                          _startDate.toString(), Constants.TEXT_START_DATE),
+                         Utils.formatDateFromString(_startDate.toString()), Constants.TEXT_START_DATE),
                       _pickerWiget(
                           Image(image: new AssetImage('images/ic_date_range.png'), fit: BoxFit.fill),
-                          _startDate.toString(), Constants.TEXT_END_DATE),
+                          Utils.formatDateFromString(_endDate.toString()), Constants.TEXT_END_DATE),
                     ]),
               ),
+              //Number of days widget
               Padding(
                 padding:
                     const EdgeInsets.only(left: 20.0, top: 15, bottom: 10),
@@ -127,6 +189,8 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
                   textType: TextType.TEXT_MEDIUM,
                 ),
               ),
+
+              //Start and End Time Widget
               new Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -134,60 +198,60 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
                         Image(
                             image: new AssetImage('images/ic_timer.png'),
                             fit: BoxFit.fill),
-                        DateTime.now().toString(),
+                        Utils.formatTimeOfDay(_startTime != null ? _startTime : TimeOfDay.now()),
                         Constants.TEXT_START_TIME),
                     _pickerWiget(
                         Image(
                             image: new AssetImage('images/ic_timer.png'),
                             fit: BoxFit.fill),
-                        DateTime.now().toString(),
+                        Utils.formatTimeOfDay(_endTime != null ? _endTime : TimeOfDay.now()),
                         Constants.TEXT_END_TIME),
                   ]),
-              //To display the Text Field for Location UI.
-              Container(
-                margin:
-                    EdgeInsets.only(top: 10, bottom: 5, right: 20, left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextWidget(
-                      textType: TextType.TEXT_SMALL,
-                      text: Constants.TEXT_START_LOCATION,
-                      colorText: AppColors.lightBlack,
-                    ),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      autofocus: true,
-                      onFieldSubmitted: (v) {
-                        FocusScope.of(context).requestFocus(focus);
-                      },
-                      controller: _textControllerLocation,
-                      keyboardType: TextInputType.text,
-                    ),
-                  ],
-                ),
-              ),
-              //To display the Text Field for Reason UI.
-              Container(
-                margin:
-                    EdgeInsets.only(top: 10, bottom: 5, right: 20, left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextWidget(
-                      textType: TextType.TEXT_SMALL,
-                      text: Constants.TEXT_REASON_OPTIONAL,
-                      colorText: AppColors.lightBlack,
-                    ),
-                    TextFormField(
-                      focusNode: focus,
-                      textInputAction: TextInputAction.done,
-                      controller: _textControllerReason,
-                      keyboardType: TextInputType.text,
-                    ),
-                  ],
-                ),
-              ),
+//              //To display the Text Field for Location UI.
+//              Container(
+//                margin:
+//                    EdgeInsets.only(top: 10, bottom: 5, right: 20, left: 20),
+//                child: Column(
+//                  crossAxisAlignment: CrossAxisAlignment.start,
+//                  children: <Widget>[
+//                    TextWidget(
+//                      textType: TextType.TEXT_SMALL,
+//                      text: Constants.TEXT_START_LOCATION,
+//                      colorText: AppColors.lightBlack,
+//                    ),
+//                    TextFormField(
+//                      textInputAction: TextInputAction.next,
+//                      autofocus: true,
+//                      onFieldSubmitted: (v) {
+//                        FocusScope.of(context).requestFocus(focus);
+//                      },
+//                      controller: _textControllerLocation,
+//                      keyboardType: TextInputType.text,
+//                    ),
+//                  ],
+//                ),
+//              ),
+//              //To display the Text Field for Reason UI.
+//              Container(
+//                margin:
+//                    EdgeInsets.only(top: 10, bottom: 5, right: 20, left: 20),
+//                child: Column(
+//                  crossAxisAlignment: CrossAxisAlignment.start,
+//                  children: <Widget>[
+//                    TextWidget(
+//                      textType: TextType.TEXT_SMALL,
+//                      text: Constants.TEXT_REASON_OPTIONAL,
+//                      colorText: AppColors.lightBlack,
+//                    ),
+//                    TextFormField(
+//                      focusNode: focus,
+//                      textInputAction: TextInputAction.done,
+//                      controller: _textControllerReason,
+//                      keyboardType: TextInputType.text,
+//                    ),
+//                  ],
+//                ),
+//              ),
             ]);
           },
         ),
@@ -210,55 +274,62 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
 
   //This display the Date and Time Picker widget.
   Widget _pickerWiget(Image imageWidget, String timeOrDataText, String title) {
+
     return Expanded(
-      child: InkWell(
-        onTap: () {
-          if (title == Constants.TEXT_START_DATE) {
-            _selectDatePicker(context);
-          }
-        },
-        child: Container(
-          margin: marginToThePickerHolderWidget(title),
-          decoration: new BoxDecoration(
-            color: AppColors.colorGreyInBottomSheet.withOpacity(0.17),
-            border: Border(
-              bottom: BorderSide(width: 0.5, color: AppColors.colorBlack),
+        child: InkWell(
+          onTap: () {
+            if (title == Constants.TEXT_START_DATE) {
+              _selectStartDatePicker(context);
+            } else if (title == Constants.TEXT_END_DATE) {
+              _selectEndDatePicker(context);
+            } else if(title == Constants.TEXT_START_TIME) {
+              _selectStartTimePicker(context);
+            } else {
+              _selectEndTimePicker(context);
+            }
+          },
+          child: Container(
+            margin: marginToThePickerHolderWidget(title),
+            decoration: new BoxDecoration(
+              color: AppColors.colorGreyInBottomSheet.withOpacity(0.17),
+              border: Border(
+                bottom: BorderSide(width: 0.5, color: AppColors.colorBlack),
+              ),
+            ),
+            padding: EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                TextWidget(
+                  textType: TextType.TEXT_SMALL,
+                  text: title,
+                  colorText: AppColors.lightBlack,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 8.0,
+                      ),
+                      child: TextWidget(
+                        textType: TextType.TEXT_MEDIUM,
+                        text:timeOrDataText,
+                        colorText: AppColors.colorBlack,
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 8.0, right: 5.0, bottom: 2.0),
+                      child: SizedBox(height: 20, width: 20, child: imageWidget),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          padding: EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              TextWidget(
-                textType: TextType.TEXT_SMALL,
-                text: title,
-                colorText: AppColors.lightBlack,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8.0,
-                    ),
-                    child: TextWidget(
-                      textType: TextType.TEXT_MEDIUM,
-                      text: Utils.formatDateFromString(timeOrDataText),
-                      colorText: AppColors.colorBlack,
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 8.0, right: 5.0, bottom: 2.0),
-                    child: SizedBox(height: 20, width: 20, child: imageWidget),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
-      ),
     );
   }
 }

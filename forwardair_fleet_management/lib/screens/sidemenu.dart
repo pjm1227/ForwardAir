@@ -430,19 +430,19 @@ class _SideMenuPageState extends State<SideMenuPage> {
         return DashboardPage();
         break;
       case Constants.TEXT_SETTLEMENTS:
-       // return SettlementPage();
-        return FeaturesComingSoonPage(false);
+        return SettlementPage();
+       // return FeaturesComingSoonPage(false);
         break;
       case Constants.TEXT_NOTIFICATION_OF_UNAVALIABILITY:
-      /*  return UnavailabilityListPage(
+        return UnavailabilityListPage(
           key: globalKey,
           usertype: _sideMenuBloc.userDetails != null
               ? _sideMenuBloc.userDetails.usertype != null
                   ? _sideMenuBloc.userDetails.usertype
                   : ''
               : '',
-        );*/
-        return FeaturesComingSoonPage(false);
+        );
+       // return FeaturesComingSoonPage(false);
         break;
       case Constants.TEXT_LOGOUT:
         break;

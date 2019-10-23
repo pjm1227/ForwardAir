@@ -6,12 +6,13 @@ import 'colors.dart';
 /*This class is used to customization for app theme.
 * */
 final ThemeData customThemeData = new ThemeData(
+  buttonTheme: ButtonThemeData(buttonColor: CustomColors.blue[900], textTheme: ButtonTextTheme.accent),
   brightness: Brightness.light,
   primarySwatch: MaterialColor(CustomColors.blue[900].value, CustomColors.blue),
   primaryColor: CustomColors.blue[900],
-  primaryColorBrightness: Platform.isAndroid ? Brightness.light : Brightness.dark,
+ // primaryColorBrightness: Platform.isAndroid ? Brightness.light : Brightness.dark,
   accentColor: CustomColors.blue[600],
-  accentColorBrightness: Brightness.light,
+ // accentColorBrightness: Brightness.light,
   primaryColorDark: Colors.red,
 );
 

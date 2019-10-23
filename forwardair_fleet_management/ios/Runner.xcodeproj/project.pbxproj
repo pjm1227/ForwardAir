@@ -553,7 +553,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.do.forwardair;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = ForwardAir_Adhoc_Profile_New;
+				PROVISIONING_PROFILE_SPECIFIER = ForwardAir_Distribution_Profile;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

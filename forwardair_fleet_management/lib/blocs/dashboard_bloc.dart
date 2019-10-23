@@ -129,8 +129,8 @@ class DashboardBloc extends Bloc<DashboardEvents, DashboardState> {
     var userManager = UserManager();
     var userModel = await userManager.getData();
     //Check internet connection
-    var isConnection = await Utils.isConnectionAvailable();
-    if (isConnection) {
+    var isInternetConnectioned = await Utils.isConnectionAvailable();
+    if (isInternetConnectioned) {
       // If device is in online
       try {
         //Making API Call
