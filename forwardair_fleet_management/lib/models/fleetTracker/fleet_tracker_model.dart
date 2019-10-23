@@ -33,7 +33,7 @@ class FleetTrackerModel {
         "contractorCd": contractorCd == null ? null : contractorCd,
         "currentPositions": currentPositions == null
             ? null
-            : List<dynamic>.from(currentPositions.map((x) => x.toJson())),
+            : List<CurrentPositions>.from(currentPositions.map((x) => x.toJson())),
       };
 }
 
@@ -107,8 +107,8 @@ class CurrentPositions {
         placeName: json["placeName"] == null ? null : json["placeName"],
         ignitionOnOff:
             json["ignitionOnOff"] == null ? null : json["ignitionOnOff"],
-        trip: json["trip"] == null ? null : json["latitude"],
-        latitude: json["latitude"] == null ? null : json["placeName"],
+        trip: json["trip"] == null ? null : json["trip"],
+        latitude: json["latitude"] == null ?null : json["latitude"],
         longitude: json["longitude"] == null ? null : json["longitude"],
         phone: json["phone"] == null ? null : json["phone"],
         order: json["order"] == null ? null : json["order"],

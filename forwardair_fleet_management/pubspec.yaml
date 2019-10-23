@@ -30,6 +30,8 @@ dependencies:
   charts_flutter:
   month_picker_dialog:
   table_calendar:
+  google_maps_flutter:
+  geocoder:
 
 dev_dependencies:
   flutter_test:

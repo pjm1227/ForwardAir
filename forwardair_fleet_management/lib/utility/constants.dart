@@ -171,4 +171,7 @@ class Constants {
   static const String TEXT_START_TIME = 'Start Time';
   static const String TEXT_END_TIME = 'End Time';
   static const String TEXT_REASON_OPTIONAL = 'Reason (Optional)';
+
+  //google map
+  static const String TEXT_LOCATION_ERROR="Unable to fetch location! Please Try again";
 }
