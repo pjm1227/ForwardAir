@@ -153,7 +153,7 @@ class _FleetTrackerPage extends State<FleetTrackerPage> {
                         child: TextWidget(
                           text: (fleetData.Driver1NextTimeOffBeginDt == null ||fleetData.Driver1NexTimeOffEndDt==null)
                               ? ""
-                              : _fleetBloc.compareDate(fleetData.Driver1NextTimeOffBeginDt,fleetData.Driver1NexTimeOffEndDt)?"active":"Unavailable", //'\$' + amount,
+                              : _fleetBloc.compareDate(fleetData.Driver1NextTimeOffBeginDt,fleetData.Driver1NexTimeOffEndDt)?"Active":"Unavailable", //'\$' + amount,
                           colorText: (fleetData.Driver1NextTimeOffBeginDt == null ||fleetData.Driver1NexTimeOffEndDt==null)
                               ? Colors.yellow
                               : _fleetBloc.compareDate(fleetData.Driver1NextTimeOffBeginDt,fleetData.Driver1NexTimeOffEndDt)? Colors.green:AppColors.colorRed,
@@ -211,7 +211,7 @@ class _FleetTrackerPage extends State<FleetTrackerPage> {
                     Expanded(
                       flex: 3,
                       child: TextWidget(
-                        text: 'Destination:',
+                        text: 'Destination',
                         colorText: AppColors.colorGrey,
                       ),
                     ),
