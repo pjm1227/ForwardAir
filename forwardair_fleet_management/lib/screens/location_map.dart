@@ -60,6 +60,12 @@ class _LocationPage extends State<LocationPage> {
 
   Widget _mainWidget(){
     return Scaffold(
+      appBar:AppBar(
+        iconTheme: IconThemeData(color: AppColors.colorWhite),
+        title: TextWidget(text:'Location - ${fleetData.unitNbr} ',
+            textType: TextType.TEXT_LARGE,
+            colorText: AppColors.colorWhite),
+      ),
       body: BlocListener<MapBloc, MapState>(
         listener: (context, state) {},
         bloc: _mapBloc,
@@ -100,14 +106,7 @@ class _LocationPage extends State<LocationPage> {
 
   //this is mapWidget which will be called after successState
   Widget _mapWidget(){
-    return new Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: AppColors.colorWhite),
-        title: TextWidget(text:'Location - ${fleetData.unitNbr} ',
-        textType: TextType.TEXT_LARGE,
-        colorText: AppColors.colorWhite),
-      ),
-      body: Column(
+    return  Column(
         children: <Widget>[
           Expanded(
             child: GoogleMap(
@@ -127,8 +126,8 @@ class _LocationPage extends State<LocationPage> {
                 child:TextWidget(text: streetAddress,colorText: AppColors.colorWhite,)),
           ),
         ],
-      ),
-    );
+      );
+
   }
 
 
