@@ -103,24 +103,30 @@ class _LocationPage extends State<LocationPage> {
     return new Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: AppColors.colorWhite),
-        title: TextWidget(text:'Location- ${fleetData.unitNbr} ',
+        title: TextWidget(text:'Location - ${fleetData.unitNbr} ',
         textType: TextType.TEXT_LARGE,
         colorText: AppColors.colorWhite),
       ),
-      body: GoogleMap(
-            markers: _createMarker(),
-            initialCameraPosition: currentLocation,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: GoogleMap(
+                  markers: _createMarker(),
+                  initialCameraPosition: currentLocation,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
 
-            },
+                  },
+                ),
           ),
-      bottomSheet: Container(
-        color: AppColors.colorAppBar,
-        width:  MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: EdgeInsets.all(12.0),
-            child:TextWidget(text: streetAddress,colorText: AppColors.colorWhite,)),
+          Container(
+            color: AppColors.colorAppBar,
+            width:  MediaQuery.of(context).size.width,
+            child: Padding(
+                padding: EdgeInsets.all(12.0),
+                child:TextWidget(text: streetAddress,colorText: AppColors.colorWhite,)),
+          ),
+        ],
       ),
     );
   }
