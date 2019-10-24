@@ -8,7 +8,7 @@ abstract class MapState extends Equatable {
 //It will handle Initial state
 class InitialState extends MapState{}
 
-//It will handle Error state for fleet tracker page
+//It will handle Error state for Map page
 class LocationErrorState extends MapState {
   final String errorMessage;
 
