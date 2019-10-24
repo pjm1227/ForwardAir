@@ -50,7 +50,7 @@ class Utils {
       final formatter = new NumberFormat("#,###.00");
       String formattedNumber = formatter.format(decimalNumber);
       return formattedNumber;
-    }catch(_){
+    } catch (_) {
       return 'N/A';
     }
   }
@@ -131,7 +131,7 @@ class Utils {
   }
 
   //Append $ after - sign
-    static String addDollarAfterMinusSign(String deductions) {
+  static String addDollarAfterMinusSign(String deductions) {
     String deduction = '';
     if (deductions != 'N/A') {
       deduction = '-\$' + deductions.replaceAll(RegExp('-'), '');
@@ -146,8 +146,7 @@ class Utils {
     if (value == 0.0) {
       return '\$' + value.toString();
     }
-    var commaAddedText =
-        formatDecimalsNumber(value != null ? value : '');
+    var commaAddedText = formatDecimalsNumber(value != null ? value : '');
     if (commaAddedText != '') {
       return '\$' + commaAddedText;
     } else {
@@ -200,25 +199,83 @@ class Utils {
   static String formatTimeOfDay(TimeOfDay tod) {
     if (tod != null) {
       final now = new DateTime.now();
+      tod.periodOffset.abs();
+      String amOrPmText = '';
+      if (tod.period == DayPeriod.am) {
+        amOrPmText = ' AM';
+      } else {
+        amOrPmText = ' PM';
+      }
       final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
-     // final format = DateFormat.jm(); for 12 Hr format
-       final format = DateFormat.Hm(); //for 24 Hr format
-      return format.format(dt);
+      // final format = DateFormat.jm(); for 12 Hr format
+      final format = DateFormat.Hm(); //for 24 Hr format
+     return format.format(dt) + amOrPmText;
     } else {
       return 'N/A';
     }
   }
 
-  static validateStartAndEndDate(DateTime startDate, DateTime endDate) {
-    bool isValid = false;
-    if (startDate.isAfter(endDate)) {
-       isValid = false;
-    } else if (startDate.isBefore(endDate)) {
-      isValid = true;
-    } else if (startDate.isAtSameMomentAs(endDate)) {
-      isValid = true;
+  //Compare Start/End Date with Today date
+  static compareStartandDateWithToday(DateTime inDate) {
+    final formatter = new DateFormat('yyyyMMdd');
+    final inputDate = formatter.format(inDate);
+    final todayDate = formatter.format(DateTime.now());
+    final iDate = DateTime.parse(inputDate);
+    final tDate = DateTime.parse(todayDate);
+    if (iDate.isBefore(tDate)) {
+      return false;
     }
-    return isValid;
+    return true;
   }
 
+  //Validation for start and end date
+  static validateStartAndEndDate(DateTime startDate, DateTime endDate) {
+    bool isValid = false;
+     if (startDate.isAfter(endDate)) {
+       isValid =  false;
+     }
+     else if (startDate.isBefore(endDate)) {
+      if ( isValid = compareStartandDateWithToday(startDate)) {
+        isValid = true;
+      } else {
+        return false;
+      }
+      if ( isValid = compareStartandDateWithToday(endDate)) {
+        isValid = true;
+      } else {
+        return false;
+      }
+    } else if (startDate.isAtSameMomentAs(endDate)) {
+       isValid = true;
+    }
+     return isValid;
+  }
+
+  //Find number of days b/w start and end date
+  static int findNumberOfDaysBetweenStartAndEndDate(DateTime startDate, DateTime endDate) {
+    if (startDate != null && endDate != null) {
+      final difference = endDate.difference(startDate).inDays;
+      return difference;
+    } else {
+      return 0;
+    }
+  }
+
+  static double convertTimeToDouble(TimeOfDay myTime) {
+    return myTime.hour + myTime.minute/60.0;
+  }
+
+  static bool validateStartAndEndTime(TimeOfDay startTime, TimeOfDay endTime) {
+    bool isValidTime = false;
+    if (startTime != null && endTime != null) {
+      if (convertTimeToDouble(startTime) == convertTimeToDouble(endTime)) {
+        isValidTime  = true;
+      } else if (convertTimeToDouble(startTime) > convertTimeToDouble(endTime)) {
+        isValidTime  = false;
+      } else if (convertTimeToDouble(startTime) < convertTimeToDouble(endTime)) {
+        isValidTime  = true;
+      }
+    }
+    return isValidTime;
+  }
 }

@@ -163,16 +163,29 @@ class Constants {
   static const String TEXT_START_DATE = 'Start Date';
   static const String TEXT_END_DATE = 'End Date';
   static const String TEXT_START_LOCATION = 'Start Location';
-  static const String TEXT_REASON_OF_UNAVAILABILITY = 'Reason Of Unavailability';
+  static const String TEXT_REASON_OF_UNAVAILABILITY =
+      'Reason Of Unavailability';
   static const String TEXT_NOTE = 'Note';
-  static const String TEXT_NOTE_CONTENT = 'To update or cancel request, please call dispatch';
+  static const String TEXT_NOTE_CONTENT =
+      'To update or cancel request, please call dispatch';
   static const String TEXT_NOTIFY_UNAVAILABILITY = 'Notify Unavailability';
   static const String TEXT_NUMBER_OF_DAYS = 'No. of day(s):';
   static const String TEXT_START_TIME = 'Start Time';
   static const String TEXT_END_TIME = 'End Time';
   static const String TEXT_REASON_OPTIONAL = 'Reason (Optional)';
   static const String TEXT_SUBMIT = 'SUBMIT';
-
+  static const String TEXT_CANNOT_COMPLETE_REQUEST =
+      'Cannot complete request. Please contact contractor relations directly for unavailability > 30 days';
+  static const String TEXT_START_DATE_VALIDATION_MESSAGE = 'Please select a valid start date.';
+  static const String TEXT_END_DATE_VALIDATION_MESSAGE = 'Please select a valid end date.';
+  static const String TEXT_START_TIME_VALIDATION_MESSAGE = 'Please select a valid start time.';
+  static const String TEXT_END_TIME_VALIDATION_MESSAGE = 'Please select a valid end time.';
+  static const String TEXT_START_DATE_SELECT_MESSAGE = 'Please select a start date.';
+  static const String TEXT_START_LOCATION_VALIDATION = 'Please enter a valid start location.';
+  static const String TEXT_CLOSE = 'CANCEL';
+  static const String TEXT_CALL = 'CALL 656456456456';
+  static const String TEXT_OK = 'OK';
   //google map
-  static const String TEXT_LOCATION_ERROR="Unable to fetch location! Please Try again";
+  static const String TEXT_LOCATION_ERROR =
+      "Unable to fetch location! Please Try again";
 }

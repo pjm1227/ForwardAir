@@ -41,3 +41,16 @@ class PickedEndTimeEvent extends UnavailabilityReportingEvents {
   PickedEndTimeEvent({this.pickedTime})
       : super([pickedTime]);
 }
+
+//Submit Leave Event
+class TappedOnSubmitButtonEvent extends UnavailabilityReportingEvents {
+  final DateTime startDate;
+  final DateTime endDate;
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
+  final String reason;
+  final int numberOfDays;
+  final String startLocation;
+  TappedOnSubmitButtonEvent({this.startDate, this.endDate, this.startTime, this.endTime, this.reason, this.startLocation, this.numberOfDays})
+      : super([]);
+}
