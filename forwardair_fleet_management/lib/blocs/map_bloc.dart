@@ -24,11 +24,11 @@ class MapBloc extends Bloc<MapEvents, MapState> {
         var addresses = await Geocoder.local.findAddressesFromCoordinates(
             coordinates); //this address holds list of Addresses based on coordinates
         var first = addresses.first; //this will hold the first index from list of addresses
-        String streetAddress = " ${first.addressLine}"; //this streetAddress holds the addressLine
+        String streetAddress = "${first.addressLine}"; //this streetAddress holds the addressLine
         yield LocationSuccessState(address: streetAddress);
       } catch (_) {
         yield LocationErrorState(errorMessage: Constants.SOMETHING_WRONG);
-        print("db Exception");
+        print("Exception");
       }
     } else {
       yield LocationErrorState(errorMessage: Constants.SOMETHING_WRONG);

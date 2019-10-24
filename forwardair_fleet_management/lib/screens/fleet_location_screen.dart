@@ -16,42 +16,46 @@ import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoder/geocoder.dart';
 
-class LocationPage extends StatefulWidget {
+class FleetLocationPage extends StatefulWidget {
   final CurrentPositions fleetData;
 
-  const LocationPage({Key key, this.fleetData}) : super(key: key);
+  const FleetLocationPage({Key key, this.fleetData}) : super(key: key);
+
   @override
-  State<LocationPage> createState() => _LocationPage(this.fleetData);
+  State<FleetLocationPage> createState() => _LocationPage(this.fleetData);
 }
 
-class _LocationPage extends State<LocationPage> {
-  final CurrentPositions
-      fleetData; //variable carrying from fleet tracker page which will be used to retrieve lat,long,place,id
+class _LocationPage extends State<FleetLocationPage> {
+  //Fleet Data
+  final CurrentPositions fleetData;
+//Constructor
+  _LocationPage(this.fleetData);
 
-  _LocationPage(
-      this.fleetData); //creating constructor with parameter to initialize the fleetdata and streetAddress variable
-  Completer<GoogleMapController> _controller =
-      Completer(); //controller is required for the map if any further changes needed in location
-  BitmapDescriptor
-      markerIcon; //this variable initialized with the icon which is used as marker
-  CameraPosition
-      currentLocation; //this is cameraposition of google map needed to zoom camera on specified location
+  Completer<GoogleMapController> _controller = Completer();
+
+  BitmapDescriptor markerIcon;
+
+  CameraPosition currentLocation;
+
   MapBloc _mapBloc = MapBloc();
-  String
-      streetAddress; //this variable is used for the location based based on lat,long and shown when user click on marker or in the bottomSheet
+  String streetAddress;
 
   void initState() {
     _mapBloc.dispatch(FetchLocationEvent(
         latitude: fleetData.latitude, longitude: fleetData.longitude));
-//     getLocationAddress(); //this method will initialize the streetAddress based on lat,long using geoCoder
+    _createMarkerImageFromAsset();
+    currentLocation = CameraPosition(
+      tilt: 89.440717697143555,
+      target: LatLng(
+          double.parse(fleetData.latitude), double.parse(fleetData.longitude)),
+      zoom: 9.5746,
+    );
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    _createMarkerImageFromAsset(
-        context); //this method called for creating custom marker
-
     if (Platform.isAndroid) {
       return SafeArea(
         child: _mainWidget(),
@@ -64,6 +68,7 @@ class _LocationPage extends State<LocationPage> {
   Widget _mainWidget() {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         iconTheme: IconThemeData(color: AppColors.colorWhite),
         title: TextWidget(
             text: 'Location - ${fleetData.unitNbr} ',
@@ -92,17 +97,6 @@ class _LocationPage extends State<LocationPage> {
                 return NoResultFoundWidget();
               }
             }
-            if (state is InitialState) {
-              CurrentPositions locationData =
-                  fleetData; // this local variable is required to set lat long for cameraPosition because it accept only static data
-              currentLocation = CameraPosition(
-                tilt: 89.440717697143555,
-                target: LatLng(double.parse(locationData.latitude),
-                    double.parse(locationData.longitude)),
-                zoom: 9.5746,
-              );
-              return MapShimmer();
-            }
             return MapShimmer();
           },
         ),
@@ -112,12 +106,15 @@ class _LocationPage extends State<LocationPage> {
 
   //this is mapWidget which will be called after successState to implement map
   Widget _mapWidget() {
-
     //column widget will hold the map and bottom bar
     return Column(
       children: <Widget>[
         Expanded(
           child: GoogleMap(
+            mapType: MapType.normal,
+            myLocationEnabled: false,
+            myLocationButtonEnabled: false,
+            zoomGesturesEnabled: true,
             markers: _createMarker(),
             initialCameraPosition: currentLocation,
             onMapCreated: (GoogleMapController controller) {
@@ -140,22 +137,15 @@ class _LocationPage extends State<LocationPage> {
       ],
     );
   }
-
-  Future<void> _createMarkerImageFromAsset(BuildContext context) async {
+//Creating custom Icon for marker
+  Future<void> _createMarkerImageFromAsset() async {
+    await Future.delayed(Duration.zero);
     MediaQueryData mediaQueryData = MediaQuery.of(context);
-    if (markerIcon == null) {
-      final ImageConfiguration imageConfiguration =
-          ImageConfiguration(devicePixelRatio: mediaQueryData.devicePixelRatio);
-      BitmapDescriptor.fromAssetImage(imageConfiguration, 'images/ic_truck.png')
-          .then(_updateBitmap);
-    }
-  }
-
-  //this method called for initializing icon which will be used for marker
-  void _updateBitmap(BitmapDescriptor bitmap) {
-    setState(() {
-      markerIcon =
-          bitmap; //custom icon initialization after configuration of the icon
+    final ImageConfiguration imageConfiguration =
+        ImageConfiguration(devicePixelRatio: mediaQueryData.devicePixelRatio);
+    BitmapDescriptor.fromAssetImage(imageConfiguration, 'images/ic_truck.png')
+        .then((bitmap) {
+      markerIcon = bitmap;
     });
   }
 
@@ -165,7 +155,7 @@ class _LocationPage extends State<LocationPage> {
     super.dispose();
   }
 
-  //this method return the set of markers with positions,id,icon etc
+//This method create a custom marker with info window.
   Set<Marker> _createMarker() {
     return <Marker>[
       Marker(
