@@ -4,7 +4,6 @@ import 'package:forwardair_fleet_management/blocs/barrels/unavailability_reporti
 
 class UnavailabilityReportingBloc
     extends Bloc<UnavailabilityReportingEvents, UnavailabilityReportingStates> {
-
   //It will call to map initial State
   @override
   UnavailabilityReportingStates get initialState => InitialState();
@@ -24,6 +23,17 @@ class UnavailabilityReportingBloc
       yield PickedStartTimeState(pickedTime: event.pickedTime);
     } else if (event is PickedEndTimeEvent) {
       yield PickedEndTimeState(pickedTime: event.pickedTime);
+    } else if (event is TappedOnSubmitButtonEvent) {
+      yield InitialState();
+      yield TappedOnSubmitButtonState(
+          startDate: event.startDate,
+          endDate: event.endDate,
+          startTime: event.startTime,
+          endTime: event.endTime,
+          startLocation: event.startLocation,
+          reason: event.reason,
+          numberOfDays: event.numberOfDays);
+      //TODO: Calling API to submit leave.
     }
   }
 }
