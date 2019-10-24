@@ -18,7 +18,7 @@ class FleetErrorState extends FleetTrackerState {
 
 //It will handle success state for Fleet tracker page
 class FleetSuccessState extends FleetTrackerState {
-  final FleetTrackerModel fleetModel;
+  final List<CurrentPositions> fleetData;
 
-  FleetSuccessState({this.fleetModel}) : super([fleetModel]);
+  FleetSuccessState({this.fleetData}) : super([fleetData]);
 }
