@@ -167,10 +167,11 @@ class Constants {
   static const String TEXT_NOTE = 'Note';
   static const String TEXT_NOTE_CONTENT = 'To update or cancel request, please call dispatch';
   static const String TEXT_NOTIFY_UNAVAILABILITY = 'Notify Unavailability';
-  static const String TEXT_NUMBER_OF_DAYS = 'No.  of day(s):';
+  static const String TEXT_NUMBER_OF_DAYS = 'No. of day(s):';
   static const String TEXT_START_TIME = 'Start Time';
   static const String TEXT_END_TIME = 'End Time';
   static const String TEXT_REASON_OPTIONAL = 'Reason (Optional)';
+  static const String TEXT_SUBMIT = 'SUBMIT';
 
   //google map
   static const String TEXT_LOCATION_ERROR="Unable to fetch location! Please Try again";

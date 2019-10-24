@@ -594,11 +594,13 @@ class DashboardState extends State<DashboardPage> {
           ),
         ),
         onTap: () {
-          //To Open load/Miles Page
-          _dashboardBloc.dispatch(DrillDownPageEvent(
-              pageName: aTitle == Constants.TEXT_TOTAL_LOADS
-                  ? PageName.LOAD_PAGE
-                  : PageName.MILES_PAGE));
+          if (_dashboardBloc.isAPICalling == false) {
+            //To Open load/Miles Page
+            _dashboardBloc.dispatch(DrillDownPageEvent(
+                pageName: aTitle == Constants.TEXT_TOTAL_LOADS
+                    ? PageName.LOAD_PAGE
+                    : PageName.MILES_PAGE));
+          }
         },
       ),
     );
@@ -746,9 +748,11 @@ class DashboardState extends State<DashboardPage> {
         ),
       ),
       onTap: () {
-        //To Navigate To Fuel Page
-        _dashboardBloc
-            .dispatch(DrillDownPageEvent(pageName: PageName.FUEL_PAGE));
+        if (_dashboardBloc.isAPICalling == false) {
+          //To Navigate To Fuel Page
+          _dashboardBloc
+              .dispatch(DrillDownPageEvent(pageName: PageName.FUEL_PAGE));
+        }
       },
     );
   }
@@ -838,9 +842,12 @@ class DashboardState extends State<DashboardPage> {
         ),
       ),
       onTap: () {
-        //To navigate to compensation page.
-        _dashboardBloc
-            .dispatch(DrillDownPageEvent(pageName: PageName.COMPENSATION_PAGE));
+        if (_dashboardBloc.isAPICalling == false) {
+          //To navigate to compensation page.
+          _dashboardBloc
+              .dispatch(
+              DrillDownPageEvent(pageName: PageName.COMPENSATION_PAGE));
+        }
       },
     );
   }

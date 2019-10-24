@@ -155,7 +155,7 @@ class Utils {
     }
   }
 
-  //Findout past and upcoming dates with today's date
+  //Find out past and upcoming dates with today's date
   static bool findOutDateIsPastAndFuture(String inDate) {
     final date = DateTime.parse(inDate);
     final formatter = new DateFormat('yyyyMMdd');
@@ -201,11 +201,24 @@ class Utils {
     if (tod != null) {
       final now = new DateTime.now();
       final dt = DateTime(now.year, now.month, now.day, tod.hour, tod.minute);
-      final format = DateFormat.jm();
+     // final format = DateFormat.jm(); for 12 Hr format
+       final format = DateFormat.Hm(); //for 24 Hr format
       return format.format(dt);
     } else {
       return 'N/A';
     }
+  }
+
+  static validateStartAndEndDate(DateTime startDate, DateTime endDate) {
+    bool isValid = false;
+    if (startDate.isAfter(endDate)) {
+       isValid = false;
+    } else if (startDate.isBefore(endDate)) {
+      isValid = true;
+    } else if (startDate.isAtSameMomentAs(endDate)) {
+      isValid = true;
+    }
+    return isValid;
   }
 
 }
