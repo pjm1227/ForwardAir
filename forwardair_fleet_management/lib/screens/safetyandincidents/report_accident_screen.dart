@@ -201,7 +201,7 @@ class ReportAccidentState extends State<ReportAccidentPage> {
                         child: SizedBox(
                             width: 24,
                             height: 24,
-                            child: Image.asset('images/ic_current_location.png')),
+                            child: Image.asset('images/ic_profile_active.png')),
                       ),
                     ],
                   ),
@@ -261,7 +261,7 @@ class ReportAccidentState extends State<ReportAccidentPage> {
                           width: 24,
                           height: 24,
                           child:
-                              Image.asset('images/ic_calendar_red.png')),
+                              Image.asset('images/ic_company_news_active.png')),
                     ),
                   ],
                 ),
@@ -319,7 +319,7 @@ class ReportAccidentState extends State<ReportAccidentPage> {
                         child: SizedBox(
                             width: 24,
                             height: 24,
-                            child: Image.asset('images/ic_timer.png')),
+                            child: Image.asset('images/ic_profile_active.png')),
                       ),
                     ],
                   ),
@@ -429,11 +429,11 @@ class ReportAccidentState extends State<ReportAccidentPage> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('images/ic_add_photo.png'),
+                child: Image.asset('images/ic_dashboard_active.png'),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('images/ic_gallery.png'),
+                child: Image.asset('images/ic_dashboard_active.png'),
               )
             ],
           ),

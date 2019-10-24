@@ -82,7 +82,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                Image.asset('images/ic_edit_red.png'),
+                  Icon(Icons.edit,color: AppColors.colorRed,)
                 ],
               ),
             ),
@@ -100,7 +100,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Image.asset('images/ic_edit_red.png'),
+                  Icon(Icons.edit,color: AppColors.colorRed,)
                 ],
               ),
             ),
@@ -120,7 +120,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Image.asset('images/ic_edit_red.png'),
+                  Icon(Icons.edit,color: AppColors.colorRed,)
                 ],
               ),
             ),
@@ -138,7 +138,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Image.asset('images/ic_edit_red.png'),
+                  Icon(Icons.edit,color: AppColors.colorRed,)
                 ],
               ),
             ),
@@ -156,7 +156,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Image.asset('images/ic_edit_red.png'),
+                  Icon(Icons.edit,color: AppColors.colorRed,)
                 ],
               ),
             ),
@@ -174,7 +174,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Image.asset('images/ic_edit_red.png'),
+                  Icon(Icons.edit,color: AppColors.colorRed,)
                 ],
               ),
             ),

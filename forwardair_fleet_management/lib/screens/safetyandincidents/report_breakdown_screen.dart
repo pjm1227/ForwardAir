@@ -186,7 +186,7 @@ class ReportBreakdownState extends State<ReportBreakdownPage> {
                         child: SizedBox(
                             width: 24,
                             height: 24,
-                            child: Image.asset('images/ic_current_location.png')),
+                            child: Image.asset('images/ic_profile_active.png')),
                       ),
                     ],
                   ),
@@ -246,7 +246,7 @@ class ReportBreakdownState extends State<ReportBreakdownPage> {
                           width: 24,
                           height: 24,
                           child:
-                          Image.asset('images/ic_calendar_red.png')),
+                          Image.asset('images/ic_company_news_active.png')),
                     ),
                   ],
                 ),
@@ -304,7 +304,7 @@ class ReportBreakdownState extends State<ReportBreakdownPage> {
                         child: SizedBox(
                             width: 24,
                             height: 24,
-                            child: Image.asset('images/ic_timer.png')),
+                            child: Image.asset('images/ic_profile_active.png')),
                       ),
                     ],
                   ),
@@ -488,7 +488,7 @@ class ReportBreakdownState extends State<ReportBreakdownPage> {
                 child: SizedBox(
                     height: 48,
                     width: 48,
-                    child: Image.asset('images/ic_add_photo.png')),
+                    child: Image.asset('images/ic_safety&incident_active.png')),
               ),
             ),
             Padding(
@@ -497,7 +497,7 @@ class ReportBreakdownState extends State<ReportBreakdownPage> {
                 child: SizedBox(
                     height: 48,
                     width: 48,
-                    child: Image.asset('images/ic_gallery.png')),
+                    child: Image.asset('images/ic_safety&incident_active.png')),
               ),
             ),
           ],
