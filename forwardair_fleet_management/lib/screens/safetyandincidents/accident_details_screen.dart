@@ -82,7 +82,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Icon(Icons.edit,color: AppColors.colorRed,)
+                Image.asset('images/ic_edit_red.png'),
                 ],
               ),
             ),
@@ -100,7 +100,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Icon(Icons.edit,color: AppColors.colorRed,)
+                  Image.asset('images/ic_edit_red.png'),
                 ],
               ),
             ),
@@ -120,7 +120,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Icon(Icons.edit,color: AppColors.colorRed,)
+                  Image.asset('images/ic_edit_red.png'),
                 ],
               ),
             ),
@@ -138,7 +138,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Icon(Icons.edit,color: AppColors.colorRed,)
+                  Image.asset('images/ic_edit_red.png'),
                 ],
               ),
             ),
@@ -156,7 +156,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Icon(Icons.edit,color: AppColors.colorRed,)
+                  Image.asset('images/ic_edit_red.png'),
                 ],
               ),
             ),
@@ -174,7 +174,7 @@ class AccidentState extends State<AccidentDetailsPage> {
                     colorText: AppColors.colorAppBar,
                     isBold: true,
                   ),
-                  Icon(Icons.edit,color: AppColors.colorRed,)
+                  Image.asset('images/ic_edit_red.png'),
                 ],
               ),
             ),

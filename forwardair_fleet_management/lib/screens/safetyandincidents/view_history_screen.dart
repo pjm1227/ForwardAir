@@ -91,7 +91,7 @@ class ViewHistoryPage extends StatelessWidget {
                   SizedBox(
                       width: 12,
                       height: 12,
-                      child: Image.asset('images/ic_safety.png')),
+                      child: Image.asset('images/ic_location.png')),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -114,7 +114,7 @@ class ViewHistoryPage extends StatelessWidget {
                   SizedBox(
                       width: 12,
                       height: 12,
-                      child: Image.asset('images/ic_safety.png')),
+                      child: Image.asset('images/ic_date.png')),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -137,7 +137,7 @@ class ViewHistoryPage extends StatelessWidget {
                   SizedBox(
                       width: 12,
                       height: 12,
-                      child: Image.asset('images/ic_profile_active.png')),
+                      child: Image.asset('images/ic_reportedby.png')),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(

@@ -64,6 +64,7 @@ class _LocationPage extends State<LocationPage> {
   Widget _mainWidget() {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         iconTheme: IconThemeData(color: AppColors.colorWhite),
         title: TextWidget(
             text: 'Location - ${fleetData.unitNbr} ',
@@ -120,6 +121,7 @@ class _LocationPage extends State<LocationPage> {
           child: GoogleMap(
             markers: _createMarker(),
             initialCameraPosition: currentLocation,
+            myLocationButtonEnabled: false,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
             },
