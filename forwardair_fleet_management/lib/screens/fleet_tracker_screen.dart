@@ -13,7 +13,7 @@ import 'package:forwardair_fleet_management/utility/utils.dart';
 import 'package:forwardair_fleet_management/blocs/barrels/fleet_tracker.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'location_map.dart';
+import 'fleet_location_screen.dart';
 
 class FleetTrackerPage extends StatefulWidget {
   @override
@@ -355,6 +355,6 @@ class _FleetTrackerPage extends State<FleetTrackerPage> {
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: LocationPage(fleetData: fleetData)));
+            child: FleetLocationPage(fleetData: fleetData)));
   }
 }

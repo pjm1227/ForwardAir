@@ -449,8 +449,8 @@ class _SideMenuPageState extends State<SideMenuPage> {
         return FeaturesComingSoonPage(false);
       //  return ViewHistoryPage();
       case Constants.TEXT_REPORT_ACCIDENT:
-      return FeaturesComingSoonPage(false);
-        //return ReportAccidentPage();
+    //  return FeaturesComingSoonPage(false);
+        return ReportAccidentPage();
       case Constants.TEXT_REPORT_BREAKDOWN:
        // return ReportBreakdownPage();
       return FeaturesComingSoonPage(false);
