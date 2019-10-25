@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:forwardair_fleet_management/blocs/barrels/unavailability_reporting.dart';
 import 'package:forwardair_fleet_management/components/text_widget.dart';
+import 'package:forwardair_fleet_management/utility/callandmailservice.dart';
 import 'package:forwardair_fleet_management/utility/colors.dart';
 import 'package:forwardair_fleet_management/utility/constants.dart';
 import 'package:forwardair_fleet_management/utility/utils.dart';
@@ -33,12 +34,11 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
   //Start Time
   TimeOfDay _startTime = TimeOfDay.now();
   //End Time
-  TimeOfDay _endTime = TimeOfDay.now();
-  //TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 1)));
+  TimeOfDay _endTime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 1)));
   //Number of days Leave
   int numberOfDaysLeave = 1;
-  //Flag to show/Hide Time Picker
-  bool _isTimeWidgetVisible = true;
+  //To make a call and send mail
+  var _service = CallsAndMailService();
 
   @override
   void initState() {
@@ -111,149 +111,93 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
     });
   }
 
+  //This dialog will get displayed when unavailability is more than 30 days.
   void _showDialog(String message) {
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
-          child: Container(
-            height: 200.0,
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-              Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: TextWidget(
-                    text: message,
-                    textType: TextType.TEXT_MEDIUM,
-                  ),
-                ),
-                 Divider(height: 0.5,color: AppColors.colorBlack,),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-
-                  new FlatButton(
-                          color: AppColors.colorRed,
-                          child: TextWidget(
-                            text: Constants.TEXT_CALL,
-                            textType: TextType.TEXT_SMALL,
-                            colorText: AppColors.colorWhite,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                  new FlatButton(
-                    shape: RoundedRectangleBorder(side: BorderSide(color: AppColors.colorRed)),
-                    child: TextWidget(
-                      text: Constants.TEXT_CLOSE,
-                      textType: TextType.TEXT_SMALL,
-                      colorText: AppColors.colorRed,
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            child: Container(
+              height: 200.0,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: TextWidget(
+                        text: message,
+                        textType: TextType.TEXT_MEDIUM,
+                      ),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-            ),
-          ),
-
-                ],
+                    Divider(
+                      height: 0.5,
+                      color: AppColors.colorBlack,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          new FlatButton(
+                            color: AppColors.colorRed,
+                            child: TextWidget(
+                              text: Constants.TEXT_CALL + Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER,
+                              textType: TextType.TEXT_SMALL,
+                              colorText: AppColors.colorWhite,
+                            ),
+                            onPressed: () {
+                              //To make a call
+                              _reportingBloc.dispatch(TappedOnCallEvent());
+                            },
+                          ),
+                          new FlatButton(
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(color: AppColors.colorRed)),
+                            child: TextWidget(
+                              text: Constants.TEXT_CLOSE,
+                              textType: TextType.TEXT_SMALL,
+                              colorText: AppColors.colorRed,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      }
-    );
-
+          );
+        });
   }
 
-
-
-//  void _showDialog(String message) {
-//    // flutter defined function
-//    showDialog(
-//      context: context,
-//      builder: (BuildContext context) {
-//        // return object of type Dialog
-//        return AlertDialog(
-//          content: Container(
-//
-//        decoration: new BoxDecoration(
-//        color: AppColors.colorWhite,
-//        border: Border(
-//        bottom: BorderSide(
-//        width: 0.5, color: AppColors.colorBlack),
-//        ),),
-//            child:
-//              Padding(
-//                padding: const EdgeInsets.only(bottom: 20.0),
-//                child: TextWidget(
-//                  text: message,
-//                  textType: TextType.TEXT_MEDIUM,
-//                ),
-//              ),
-//          ),
-//          actions: <Widget>[
-//            // usually buttons at the bottom of the dialog
-//            Row(
-//              mainAxisAlignment: MainAxisAlignment.start,
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//                new FlatButton(
-//                  color: AppColors.colorRed,
-//                  child: TextWidget(
-//                    text: Constants.TEXT_CALL,
-//                    textType: TextType.TEXT_SMALL,
-//                    colorText: AppColors.colorWhite,
-//                  ),
-//                  onPressed: () {
-//                    Navigator.of(context).pop();
-//                  },
-//                ),
-//                new FlatButton(
-//                  shape: new BeveledRectangleBorder(),
-//                  child: TextWidget(
-//                    text: Constants.TEXT_CANCEL,
-//                    textType: TextType.TEXT_SMALL,
-//                    colorText: AppColors.colorRed,
-//                  ),
-//                  onPressed: () {
-//                    Navigator.of(context).pop();
-//                  },
-//                ),
-//              ],
-//            ),
-//
-//          ],
-//        );
-//      },
-//    );
-//  }
-
-  //This displays Alert Box
+  //To display alert dialogs
   showAlertDialog(BuildContext context, String message) {
-    Widget continueButton = FlatButton(
-      child: Text(Constants.TEXT_OK),
-      onPressed: () async {
-        Navigator.of(context).pop();
-      },
+    Widget okButton = Center(
+      child: FlatButton(
+        color: AppColors.colorBlue,
+        child: TextWidget(
+          text: Constants.TEXT_OK,
+          colorText: AppColors.colorWhite,
+        ),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
     );
-    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Alert"),
+      title: Text("Report Unavailability"),
       content: Text(message),
       actions: [
-        continueButton,
+        okButton,
       ],
     );
-    // show the alert dialog
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -339,13 +283,17 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
           UnavailabilityReportingStates>(
         listener: (context, state) {
           if (state is TappedOnSubmitButtonState) {
-            if (state.startLocation == '') {
-              showAlertDialog(
-                  context, Constants.TEXT_START_LOCATION_VALIDATION);
-            }
+
             if (state.numberOfDays > 30) {
               _showDialog(Constants.TEXT_CANNOT_COMPLETE_REQUEST);
+            } else {
+              if (state.startLocation == '') {
+                showAlertDialog(
+                    context, Constants.TEXT_START_LOCATION_VALIDATION);
+              }
             }
+          } else if (state is TappedOnCallState) {
+            _service.call(Constants.TEXT_DRIVER_RELATIONS_PHONENUMBER);
           }
         },
         bloc: _reportingBloc,
@@ -361,11 +309,6 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
               _startTime = state.pickedTime;
             } else if (state is PickedEndTimeState) {
               _endTime = state.pickedTime;
-            }
-            if (numberOfDaysLeave > 1) {
-              _isTimeWidgetVisible = true;//false;
-            } else {
-              _isTimeWidgetVisible = true;
             }
             return Column(
               children: <Widget>[
@@ -420,30 +363,26 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
                       ),
                     ),
                     //Start and End Time Widget
-                    _isTimeWidgetVisible == true
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                                _pickerWiget(
-                                    Image(
-                                        image: new AssetImage(
-                                            'images/ic_timer.png'),
-                                        fit: BoxFit.fill),
-                                    Utils.formatTimeOfDay(_startTime != null
-                                        ? _startTime
-                                        : TimeOfDay.now()),
-                                    Constants.TEXT_START_TIME),
-                                _pickerWiget(
-                                    Image(
-                                        image: new AssetImage(
-                                            'images/ic_timer.png'),
-                                        fit: BoxFit.fill),
-                                    Utils.formatTimeOfDay(_endTime != null
-                                        ? _endTime
-                                        : TimeOfDay.now()),
-                                    Constants.TEXT_END_TIME),
-                              ])
-                        : Container(),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _pickerWiget(
+                              Image(
+                                  image: new AssetImage('images/ic_timer.png'),
+                                  fit: BoxFit.fill),
+                              Utils.formatTimeOfDay(_startTime != null
+                                  ? _startTime
+                                  : TimeOfDay.now()),
+                              Constants.TEXT_START_TIME),
+                          _pickerWiget(
+                              Image(
+                                  image: new AssetImage('images/ic_timer.png'),
+                                  fit: BoxFit.fill),
+                              Utils.formatTimeOfDay(_endTime != null
+                                  ? _endTime
+                                  : TimeOfDay.now()),
+                              Constants.TEXT_END_TIME),
+                        ]),
                     //To display the Text Field for Location UI.
                     Container(
                       margin: EdgeInsets.only(
@@ -577,7 +516,8 @@ class UnavailabilityReportState extends State<UnavailabilityReportPage> {
 
   String displayNumberOfLeavesText() {
     if (_startDate != null && _endDate != null) {
-      numberOfDaysLeave = Utils.findNumberOfDaysBetweenStartAndEndDate(_startDate, _endDate);
+      numberOfDaysLeave =
+          Utils.findNumberOfDaysBetweenStartAndEndDate(_startDate, _endDate);
     }
     return '${Constants.TEXT_NUMBER_OF_DAYS + ' $numberOfDaysLeave'}';
   }

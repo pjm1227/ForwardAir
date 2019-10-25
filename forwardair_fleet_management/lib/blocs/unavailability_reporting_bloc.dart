@@ -34,6 +34,10 @@ class UnavailabilityReportingBloc
           reason: event.reason,
           numberOfDays: event.numberOfDays);
       //TODO: Calling API to submit leave.
+    }  //To make a call from Quick Contact Sheet
+    else if (event is TappedOnCallEvent) {
+      yield InitialState();
+      yield TappedOnCallState();
     }
   }
 }

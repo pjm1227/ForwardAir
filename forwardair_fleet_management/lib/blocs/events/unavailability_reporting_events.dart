@@ -54,3 +54,9 @@ class TappedOnSubmitButtonEvent extends UnavailabilityReportingEvents {
   TappedOnSubmitButtonEvent({this.startDate, this.endDate, this.startTime, this.endTime, this.reason, this.startLocation, this.numberOfDays})
       : super([]);
 }
+
+//To make a call
+class TappedOnCallEvent extends UnavailabilityReportingEvents {
+
+}
+

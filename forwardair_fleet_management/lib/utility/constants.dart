@@ -183,8 +183,9 @@ class Constants {
   static const String TEXT_START_DATE_SELECT_MESSAGE = 'Please select a start date.';
   static const String TEXT_START_LOCATION_VALIDATION = 'Please enter a valid start location.';
   static const String TEXT_CLOSE = 'CANCEL';
-  static const String TEXT_CALL = 'CALL 656456456456';
+  static const String TEXT_CALL = 'CALL ';
   static const String TEXT_OK = 'OK';
+
   //google map
   static const String TEXT_LOCATION_ERROR =
       "Unable to fetch location! Please Try again";
